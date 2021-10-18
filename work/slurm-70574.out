@@ -1,0 +1,18 @@
+Loading cudnn7.6-cuda10.2/7.6.5.32
+  Loading requirement: cuda10.2/toolkit/10.2.89
+Loading nccl2-cuda10.2-gcc/2.6.4
+  Loading requirement: gcc5/5.5.0
+ActionClip boot~
+<string>:1: YAMLLoadWarning: calling yaml.load() without Loader=... is deprecated, as the default Loader is unsafe. Please read https://msg.pyyaml.org/load for full details.
+<string>:1: YAMLLoadWarning: calling yaml.load() without Loader=... is deprecated, as the default Loader is unsafe. Please read https://msg.pyyaml.org/load for full details.
+<string>:1: YAMLLoadWarning: calling yaml.load() without Loader=... is deprecated, as the default Loader is unsafe. Please read https://msg.pyyaml.org/load for full details.
+/home/10501001/anaconda3/envs/ACTION-CLIP/lib/python3.9/site-packages/torch/nn/_reduction.py:42: UserWarning: size_average and reduce args will be deprecated, please use reduction='mean' instead.
+  warnings.warn(warning.format(ret))
+/home/10501001/projects/ActionCLIP/work/../train.py:53: YAMLLoadWarning: calling yaml.load() without Loader=... is deprecated, as the default Loader is unsafe. Please read https://msg.pyyaml.org/load for full details.
+  config = yaml.load(f)
+Traceback (most recent call last):
+  File "/home/10501001/projects/ActionCLIP/work/../train.py", line 224, in <module>
+    main()
+  File "/home/10501001/projects/ActionCLIP/work/../train.py", line 57, in main
+    wandb.init(project=config['network']['type'],
+AttributeError: 'NoneType' object has no attribute 'init'

@@ -1,0 +1,27 @@
+Loading cudnn7.6-cuda10.2/7.6.5.32
+  Loading requirement: cuda10.2/toolkit/10.2.89
+Loading nccl2-cuda10.2-gcc/2.6.4
+  Loading requirement: gcc5/5.5.0
+ActionClip boot~
+<string>:1: YAMLLoadWarning: calling yaml.load() without Loader=... is deprecated, as the default Loader is unsafe. Please read https://msg.pyyaml.org/load for full details.
+<string>:1: YAMLLoadWarning: calling yaml.load() without Loader=... is deprecated, as the default Loader is unsafe. Please read https://msg.pyyaml.org/load for full details.
+<string>:1: YAMLLoadWarning: calling yaml.load() without Loader=... is deprecated, as the default Loader is unsafe. Please read https://msg.pyyaml.org/load for full details.
+/home/10501001/anaconda3/envs/ACTION-CLIP/lib/python3.9/site-packages/torch/nn/_reduction.py:42: UserWarning: size_average and reduce args will be deprecated, please use reduction='mean' instead.
+  warnings.warn(warning.format(ret))
+/home/10501001/projects/ActionCLIP/work/../train.py:53: YAMLLoadWarning: calling yaml.load() without Loader=... is deprecated, as the default Loader is unsafe. Please read https://msg.pyyaml.org/load for full details.
+  config = yaml.load(f)
+wandb: ERROR api_key not configured (no-tty). call wandb.login(key=[your_api_key])
+Traceback (most recent call last):
+  File "/home/10501001/projects/ActionCLIP/work/../train.py", line 223, in <module>
+    main()
+  File "/home/10501001/projects/ActionCLIP/work/../train.py", line 56, in main
+    wandb.init(project=config['network']['type'],
+  File "/home/10501001/anaconda3/envs/ACTION-CLIP/lib/python3.9/site-packages/wandb/sdk/wandb_init.py", line 805, in init
+    wi.setup(kwargs)
+  File "/home/10501001/anaconda3/envs/ACTION-CLIP/lib/python3.9/site-packages/wandb/sdk/wandb_init.py", line 167, in setup
+    wandb_login._login(
+  File "/home/10501001/anaconda3/envs/ACTION-CLIP/lib/python3.9/site-packages/wandb/sdk/wandb_login.py", line 274, in _login
+    wlogin.prompt_api_key()
+  File "/home/10501001/anaconda3/envs/ACTION-CLIP/lib/python3.9/site-packages/wandb/sdk/wandb_login.py", line 209, in prompt_api_key
+    raise UsageError("api_key not configured (no-tty). call " + directive)
+wandb.errors.UsageError: api_key not configured (no-tty). call wandb.login(key=[your_api_key])

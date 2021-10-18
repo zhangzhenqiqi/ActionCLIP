@@ -20,16 +20,19 @@ import math
 import torch
 from RandAugment import RandAugment
 
+
 class GroupTransform(object):
     def __init__(self, transform):
         self.worker = transform
 
     def __call__(self, img_group):
         return [self.worker(img) for img in img_group]
-    
+
+
 class ToTorchFormatTensor(object):
     """ Converts a PIL.Image (RGB) or numpy.ndarray (H x W x C) in the range [0, 255]
     to a torch.FloatTensor of shape (C x H x W) in the range [0.0, 1.0] """
+
     def __init__(self, div=True):
         self.div = div
 
@@ -41,6 +44,7 @@ class ToTorchFormatTensor(object):
             img = img.view(pic.size[1], pic.size[0], len(pic.mode))
             img = img.transpose(0, 1).transpose(0, 2).contiguous()
         return img.float().div(255) if self.div else img.float()
+
 
 class Stack(object):
 
@@ -59,7 +63,7 @@ class Stack(object):
                 rst = np.concatenate(img_group, axis=2)
                 return rst
 
-    
+
 class VideoRecord(object):
     def __init__(self, row):
         self._data = row
@@ -91,7 +95,7 @@ class Action_DATASETS(data.Dataset):
         self.transform = transform
         self.random_shift = random_shift
         self.test_mode = test_mode
-        self.loop=False
+        self.loop = False
         self.index_bias = index_bias
         self.labels_file = labels_file
 
@@ -106,15 +110,16 @@ class Action_DATASETS(data.Dataset):
     def _load_image(self, directory, idx):
 
         return [Image.open(os.path.join(directory, self.image_tmpl.format(idx))).convert('RGB')]
+
     @property
     def total_length(self):
         return self.num_segments * self.seg_length
-    
+
     @property
     def classes(self):
         classes_all = pd.read_csv(self.labels_file)
         return classes_all.values.tolist()
-    
+
     def _parse_list(self):
         self.video_list = [VideoRecord(x.strip().split(' ')) for x in open(self.list_file)]
 
@@ -123,7 +128,7 @@ class Action_DATASETS(data.Dataset):
             if self.loop:
                 return np.mod(np.arange(
                     self.total_length) + randint(record.num_frames // 2),
-                    record.num_frames) + self.index_bias
+                              record.num_frames) + self.index_bias
             offsets = np.concatenate((
                 np.arange(record.num_frames),
                 randint(record.num_frames,
@@ -143,8 +148,8 @@ class Action_DATASETS(data.Dataset):
 
     def _get_val_indices(self, record):
         if self.num_segments == 1:
-            return np.array([record.num_frames //2], dtype=np.int) + self.index_bias
-        
+            return np.array([record.num_frames // 2], dtype=np.int) + self.index_bias
+
         if record.num_frames <= self.total_length:
             if self.loop:
                 return np.mod(np.arange(self.total_length), record.num_frames) + self.index_bias
@@ -163,15 +168,15 @@ class Action_DATASETS(data.Dataset):
     def __call__(self, img_group):
         return [self.worker(img) for img in img_group]
 
-
     def get(self, record, indices):
         images = list()
         for i, seg_ind in enumerate(indices):
             p = int(seg_ind)
             try:
-                seg_imgs = self._load_image(record.path, p)
+                seg_imgs = self._load_image('/home/10501001/datasets/ucf101/rawframes/' + record.path, p)
             except OSError:
-                print('ERROR: Could not read image "{}"'.format(record.path))
+                print('ERROR: Could not read image "{}"'.format(
+                    '/home/10501001/datasets/ucf101/rawframes/' + record.path))
                 print('invalid indices: {}'.format(indices))
                 raise
             images.extend(seg_imgs)

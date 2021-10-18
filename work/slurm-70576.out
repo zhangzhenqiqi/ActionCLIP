@@ -1,0 +1,18 @@
+Loading cudnn7.6-cuda10.2/7.6.5.32
+  Loading requirement: cuda10.2/toolkit/10.2.89
+Loading nccl2-cuda10.2-gcc/2.6.4
+  Loading requirement: gcc5/5.5.0
+ActionClip boot~
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+FileNotFoundError: [Errno 2] No such file or directory: ''
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+FileNotFoundError: [Errno 2] No such file or directory: ''
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+FileNotFoundError: [Errno 2] No such file or directory: ''
+/home/10501001/anaconda3/envs/ACTION-CLIP/lib/python3.9/site-packages/torch/nn/_reduction.py:42: UserWarning: size_average and reduce args will be deprecated, please use reduction='mean' instead.
+  warnings.warn(warning.format(ret))
+usage: train.py [-h] [--config CONFIG] [--log_time LOG_TIME]
+train.py: error: argument --config/-cfg: expected one argument

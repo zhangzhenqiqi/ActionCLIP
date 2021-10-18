@@ -1,4 +1,4 @@
-name: base
+name: ActionClip
 channels:
   - conda-forge
   - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main
@@ -208,4 +208,3 @@ dependencies:
     - yapf==0.31.0
     - yarl==1.6.3
     - zipp==3.4.1
-prefix: /home/ock/miniconda3

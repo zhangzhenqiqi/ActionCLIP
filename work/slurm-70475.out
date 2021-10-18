@@ -1,0 +1,6 @@
+Loading cudnn7.6-cuda10.2/7.6.5.32
+  Loading requirement: cuda10.2/toolkit/10.2.89
+Loading nccl2-cuda10.2-gcc/2.6.4
+  Loading requirement: gcc5/5.5.0
+ActionClip boot~
+hello

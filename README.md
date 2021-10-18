@@ -1,7 +1,7 @@
 # This is an official pytorch implementation of ActionCLIP: A New Paradigm for Video Action Recognition [[arXiv]](https://arxiv.org/abs/2109.08472)
 [Fork from here](https://github.com/sallymmx/actionclip#data-preparation)
-## Overview
 
+## Overview
 ![ActionCLIP](ActionCLIP.png)
 
 ## Content 

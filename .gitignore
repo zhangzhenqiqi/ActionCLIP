@@ -8,5 +8,6 @@ exp/
 thumb.sdb
 .DS_Store
 .idea
+.out
 wandb/
 trained_models/

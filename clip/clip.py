@@ -18,6 +18,7 @@ from .simple_tokenizer import SimpleTokenizer as _Tokenizer
 
 try:
     from torchvision.transforms import InterpolationMode
+
     BICUBIC = InterpolationMode.BICUBIC
 except ImportError:
     BICUBIC = Image.BICUBIC
@@ -33,6 +34,7 @@ _MODELS = {
     "ViT-B/32": "https://openaipublic.azureedge.net/clip/models/40d365715913c9da98579312b702a82c18be219cc2a73407c4526f58eba950af/ViT-B-32.pt",
     "ViT-B/16": "https://openaipublic.azureedge.net/clip/models/5806e77cd80f8b59890b7e101eabd078d9fb84e6937f9e85e4ecb61988df416f/ViT-B-16.pt",
 }
+
 
 def _download(url: str, root: str = os.path.expanduser("~/.cache/clip")):
     os.makedirs(root, exist_ok=True)
@@ -81,7 +83,8 @@ def available_models() -> List[str]:
     return list(_MODELS.keys())
 
 
-def load(name: str, device: Union[str, torch.device] = "cuda" if torch.cuda.is_available() else "cpu", jit=True, tsm=False, joint=False,T=8,dropout=0., emb_dropout=0.,pretrain=True):
+def load(name: str, device: Union[str, torch.device] = "cuda" if torch.cuda.is_available() else "cpu", jit=True,
+         tsm=False, joint=False, T=8, dropout=0., emb_dropout=0., pretrain=True):
     """Load a CLIP model
     模型用的就是Clip，video-encoder这里采用的是ViT-B，所以用其预训练模型参数以使得效果更好。
     如果想换成ResNet-50（ACTION-Net），那么对应的预训练模型也需要更换即可；pre-trained的参数并不是全部要对应，我们只需要选出我们
@@ -126,12 +129,13 @@ def load(name: str, device: Union[str, torch.device] = "cuda" if torch.cuda.is_a
             jit = False
         state_dict = torch.load(model_path, map_location="cpu")
 
-    if not jit:
+    if not jit:  # true
 
-        model = build_model(state_dict or model.state_dict(), joint=joint,tsm=tsm,T=T,dropout=dropout, emb_dropout=emb_dropout,pretrain=pretrain).to(device)
+        model = build_model(state_dict or model.state_dict(), joint=joint, tsm=tsm, T=T, dropout=dropout,
+                            emb_dropout=emb_dropout, pretrain=pretrain).to(device)
         if str(device) == "cpu":
             model.float()
-        
+
         return model, model.state_dict()
 
     # patch the device names

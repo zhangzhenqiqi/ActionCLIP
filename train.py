@@ -95,8 +95,8 @@ def main():
     model_text = torch.nn.DataParallel(model_text).cuda()
     model_image = torch.nn.DataParallel(model_image).cuda()
     fusion_model = torch.nn.DataParallel(fusion_model).cuda()
-    wandb.watch(model)
-    wandb.watch(fusion_model)
+    # wandb.watch(model)
+    # wandb.watch(fusion_model)
 
     print('model=' * 20)
     print(model)
@@ -184,14 +184,15 @@ def main():
                                             w)  # omit the Image.fromarray if the images already in PIL format, change this line to images=list_image if using preprocess inside the dataset class
             texts = texts.to(device)
 
-            image_embedding = model_image(images) # (16*8,512)
+            image_embedding = model_image(images)  # (16*8,512)
             image_embedding = image_embedding.view(b, t, -1)
             image_embedding = fusion_model(image_embedding)
 
             text_embedding = model_text(texts)
 
-            print('image_embedding size: ', image_embedding.size())  # (16,512) b=16
-            print('text_embedding size: ', text_embedding.size())  # (16,512) b=16
+            if epoch == 0 and kkk == 0:
+                print('image_embedding size: ', image_embedding.size())  # (16,512) b=16   (32,1024)b=32
+                print('text_embedding size: ', text_embedding.size())  # (16,512) b=16
 
             if config.network.fix_text:
                 text_embedding.detach_()

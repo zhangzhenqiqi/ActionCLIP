@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -J =ActionClip=
 #SBATCH --cpus-per-task=8
-#SBATCH --gres=gpu:1
+#SBATCH --gres=gpu:2
 
 #last-log
 #no-pretrain-

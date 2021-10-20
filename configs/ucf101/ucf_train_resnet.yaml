@@ -26,7 +26,7 @@ data:
     M: 0  #9
 network:
   arch: RN50  #ViT-B/32 ViT-B/16
-  init: True
+  init: False #是否使用预训练model的参数
   drop_out: 0.0
   emb_dropout: 0.0
   type: clip_ucf

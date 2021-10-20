@@ -74,17 +74,10 @@ class Action(nn.Module):
         print('=> Using ACTION')
 
     def forward(self, x):
-        nt, c, h, w = x.size()  # [128,64,56,56]
-
-        # n:batch-size
-        # t:segments
+        nt, c, h, w = x.size()
         n_batch = nt // self.n_segment
 
-        # x(nt,c,h,w)
-        # shift为时间偏移操作，来自TSM,但与官方实现貌似不同？
         x_shift = x.view(n_batch, self.n_segment, c, h, w)
-        # x_shift(n,t,c,h,w)
-
         x_shift = x_shift.permute([0, 3, 4, 2, 1])  # (n_batch, h, w, c, n_segment)
         x_shift = x_shift.contiguous().view(n_batch * h * w, c, self.n_segment)
         x_shift = self.action_shift(x_shift)  # (n_batch*h*w, c, n_segment)
@@ -92,78 +85,44 @@ class Action(nn.Module):
         x_shift = x_shift.permute([0, 4, 3, 1, 2])  # (n_batch, n_segment, c, h, w)
         x_shift = x_shift.contiguous().view(nt, c, h, w)
 
-        # TA_y = None
-        # ###STA
-        #
-        # if h == 56:
-        #     if h == 56:
-        #         Z_t = self.TA_conv1_56(x_shift)
-        #     elif h == 28:
-        #         Z_t = self.TA_conv1_28(x_shift)
-        #     elif h == 14:
-        #         Z_t = self.TA_conv1_14(x_shift)
-        #     elif h == 7:
-        #         Z_t = self.TA_conv1_7(x_shift)
-        #
-        #     Z_t = Z_t.view(n_batch, 1, 1, self.n_segment)
-        #     Epsilon_t = self.TA_deconv(Z_t)
-        #     Epsilon_t = Epsilon_t.transpose(1, 3)
-        #     Epsilon_t = self.relu(Epsilon_t)
-        #     S_t = self.TA_conv2(Epsilon_t)
-        #     W_t = self.sigmoid(S_t)
-        #     W_t = W_t.view(nt, 1, 1, 1)
-        #     TA_y = x_shift * W_t
-        #     if x_shift.size() != TA_y.size():
-        #         print(TA_y.size())
-
         # 3D convolution: c*T*h*w, spatial temporal excitation
         nt, c, h, w = x_shift.size()
-        x_p1 = x_shift.view(n_batch, self.n_segment, c, h, w).transpose(2, 1).contiguous()  # (n,c,t,h,w)
-        x_p1 = x_p1.mean(1, keepdim=True)  # channel pooling (n,1,t,h,w)
+        x_p1 = x_shift.view(n_batch, self.n_segment, c, h, w).transpose(2, 1).contiguous()
+        x_p1 = x_p1.mean(1, keepdim=True)
         x_p1 = self.action_p1_conv1(x_p1)
         x_p1 = x_p1.transpose(2, 1).contiguous().view(nt, 1, h, w)
-        # 和论文中略有不同但思路一样，这里统一维度(nt,c/1,h,w),paper:(n,t,c/1,h,w)
         x_p1 = self.sigmoid(x_p1)
-        if TA_y != None:
-            x_p1 = x_shift * x_p1 * TA_y + x_shift
-        else:
-            x_p1 = x_shift * x_p1 + x_shift
+        x_p1 = x_shift * x_p1 + x_shift
 
         # 2D convolution: c*T*1*1, channel excitation
-        x_p2 = self.avg_pool(x_shift)  # (nt,c,1,1)
-        x_p2 = self.action_p2_squeeze(x_p2)  # (nt,c/16,1,1)
+        x_p2 = self.avg_pool(x_shift)
+        x_p2 = self.action_p2_squeeze(x_p2)
         nt, c, h, w = x_p2.size()
-        x_p2 = x_p2.view(n_batch, self.n_segment, c, 1, 1).squeeze(-1).squeeze(-1).transpose(2,
-                                                                                             1).contiguous()  # (n,c/16,t)
+        x_p2 = x_p2.view(n_batch, self.n_segment, c, 1, 1).squeeze(-1).squeeze(-1).transpose(2, 1).contiguous()
         x_p2 = self.action_p2_conv1(x_p2)
-        x_p2 = self.relu(x_p2)  # (n,c/16,t)
-        x_p2 = x_p2.transpose(2, 1).contiguous().view(-1, c, 1, 1)  # (nt,c/16,1,1)
-        x_p2 = self.action_p2_expand(x_p2)  # (nt,c,1,1) 扩张通道
+        x_p2 = self.relu(x_p2)
+        x_p2 = x_p2.transpose(2, 1).contiguous().view(-1, c, 1, 1)
+        x_p2 = self.action_p2_expand(x_p2)
         x_p2 = self.sigmoid(x_p2)
         x_p2 = x_shift * x_p2 + x_shift
 
         # # 2D convolution: motion excitation
-        x3 = self.action_p3_squeeze(x_shift)  # (nt,c/16,h,w)
+        x3 = self.action_p3_squeeze(x_shift)
         x3 = self.action_p3_bn1(x3)
         nt, c, h, w = x3.size()
         x3_plus0, _ = x3.view(n_batch, self.n_segment, c, h, w).split([self.n_segment - 1, 1], dim=1)
-        # (n,t-1,c/16,h,w)  (n,1,c/16,h,w)
         x3_plus1 = self.action_p3_conv1(x3)
 
         _, x3_plus1 = x3_plus1.view(n_batch, self.n_segment, c, h, w).split([1, self.n_segment - 1], dim=1)
-        # (n,1,c/16,h,w)  (n,t-1,c/16,h,w)
-        x_p3 = x3_plus1 - x3_plus0  # 这里对应conv(x(t+1)) - x(t) 的操作 (n,t-1,c/16,h,w)
-
-        x_p3 = F.pad(x_p3, self.pad, mode="constant", value=0)  # (n,t,c/16,h,w) 填充第二维
-        x_p3 = self.avg_pool(x_p3.view(nt, c, h, w))  # (nt,c/16,1,1)
-
-        x_p3 = self.action_p3_expand(x_p3)  # (nt,c,1,1)
+        x_p3 = x3_plus1 - x3_plus0
+        x_p3 = F.pad(x_p3, self.pad, mode="constant", value=0)
+        x_p3 = self.avg_pool(x_p3.view(nt, c, h, w))
+        x_p3 = self.action_p3_expand(x_p3)
         x_p3 = self.sigmoid(x_p3)
         x_p3 = x_shift * x_p3 + x_shift
 
         out = self.net(x_p1 + x_p2 + x_p3)
         return out
-
 
 class TemporalPool(nn.Module):
     def __init__(self, net, n_segment):

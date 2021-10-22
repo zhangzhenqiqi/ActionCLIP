@@ -9,7 +9,7 @@ data:
   seg_length: 1
   split: 1
   #  batch_size: 32
-  batch_size: 16  #for debug with 16，32 is right！！
+  batch_size: 32  #for debug with 16，32 is right！！
   workers: 8
   gpus: 2
   num_classes: 101

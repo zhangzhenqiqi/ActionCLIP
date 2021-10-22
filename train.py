@@ -78,7 +78,7 @@ def main():
     model, clip_state_dict = clip.load(config.network.arch, device=device, jit=False, tsm=config.network.tsm,
                                        T=config.data.num_segments, dropout=config.network.drop_out,
                                        emb_dropout=config.network.emb_dropout, pretrain=config.network.init,
-                                       joint=config.network.joint)  # Must set jit=False for training  ViT-B/32
+                                       joint=config.network.joint,is_action=config.network.is_action)  # Must set jit=False for training  ViT-B/32
 
     transform_train = get_augmentation(True, config)
     transform_val = get_augmentation(False, config)
@@ -226,9 +226,9 @@ def main():
         print('Saving:')
         filename = "{}/last_model.pt".format(working_dir)
 
-        epoch_saving(epoch, model, fusion_model, optimizer, filename)
-        if is_best:
-            best_saving(working_dir, epoch, model, fusion_model, optimizer)
+        # epoch_saving(epoch, model, fusion_model, optimizer, filename)
+        # if is_best:
+            # best_saving(working_dir, epoch, model, fusion_model, optimizer)
 
 
 if __name__ == '__main__':

@@ -84,7 +84,7 @@ def available_models() -> List[str]:
 
 
 def load(name: str, device: Union[str, torch.device] = "cuda" if torch.cuda.is_available() else "cpu", jit=True,
-         tsm=False, joint=False, T=8, dropout=0., emb_dropout=0., pretrain=True):
+         tsm=False, joint=False, T=8, dropout=0., emb_dropout=0., pretrain=True, is_action=False):
     """Load a CLIP model
     模型用的就是Clip，video-encoder这里采用的是ViT-B，所以用其预训练模型参数以使得效果更好。
     如果想换成ResNet-50（ACTION-Net），那么对应的预训练模型也需要更换即可；pre-trained的参数并不是全部要对应，我们只需要选出我们
@@ -132,7 +132,7 @@ def load(name: str, device: Union[str, torch.device] = "cuda" if torch.cuda.is_a
     if not jit:  # true
 
         model = build_model(state_dict or model.state_dict(), joint=joint, tsm=tsm, T=T, dropout=dropout,
-                            emb_dropout=emb_dropout, pretrain=pretrain).to(device)
+                            emb_dropout=emb_dropout, pretrain=pretrain, is_action=is_action).to(device)
         if str(device) == "cpu":
             model.float()
 

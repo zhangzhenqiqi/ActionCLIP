@@ -327,13 +327,15 @@ class CLIP(nn.Module):
 
         if isinstance(vision_layers, (tuple, list)):
             vision_heads = vision_width * 32 // 64
-            self.visual = ModifiedResNet(
-                layers=vision_layers,
-                output_dim=embed_dim,
-                heads=vision_heads,
-                input_resolution=image_resolution,
-                width=vision_width
-            )
+            # self.visual = ModifiedResNet(
+            #     layers=vision_layers,
+            #     output_dim=embed_dim,
+            #     heads=vision_heads,
+            #     input_resolution=image_resolution,
+            #     width=vision_width
+            # )
+            import torchvision.models as models
+            self.visual = models.resnet50()
         else:
             vision_heads = vision_width // 64
             self.visual = VisualTransformer(
@@ -478,7 +480,8 @@ def convert_weights(model: nn.Module):
     model.apply(_convert_weights_to_fp16)
 
 
-def build_model(state_dict: dict, tsm=False, T=8, dropout=0., joint=False, emb_dropout=0., pretrain=True):
+def build_model(state_dict: dict, tsm=False, T=8, dropout=0., joint=False, emb_dropout=0., pretrain=True,
+                is_action=False):
     vit = "visual.proj" in state_dict
 
     if vit:
@@ -513,13 +516,6 @@ def build_model(state_dict: dict, tsm=False, T=8, dropout=0., joint=False, emb_d
         dropout=dropout, emb_dropout=emb_dropout
     )
 
-    ###为model添加Action-net模块，注意此时使用的是RN50，如果以后要求适应各种model，应当对此处进行修改。
-    print('Adding action...')
-    from ActionNet.action import make_temporal_shift
-    # 用于添加ACTION模块
-    make_temporal_shift(model.visual, T,
-                        n_div=8, place='blockres', temporal_pool=False)
-
     for key in ["input_resolution", "context_length", "vocab_size"]:
         if key in state_dict:
             del state_dict[key]
@@ -551,7 +547,16 @@ def build_model(state_dict: dict, tsm=False, T=8, dropout=0., joint=False, emb_d
         for k in list(state_dict.keys()):
             if not k.find("visual") > -1:
                 state_dict.pop(k)
+        # model.load_state_dict(state_dict, strict=False)
 
-        model.load_state_dict(state_dict, strict=False)
+    ##test
+    # import torchvision.models as modles
+    # model.visual = modles.resnet50(pretrained=True)
+    ###为model添加Action-net模块，注意此时使用的是RN50，如果以后要求适应各种model，应当对此处进行修改。
+    if is_action:
+        print('Adding action...')
+        from ActionNet.action import make_temporal_shift
+        # 用于添加ACTION模块
+        make_temporal_shift(model.visual, T, n_div=8, place='blockres', temporal_pool=False)
 
     return model.eval()

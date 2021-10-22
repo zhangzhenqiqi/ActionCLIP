@@ -336,6 +336,7 @@ class CLIP(nn.Module):
             # )
             import torchvision.models as models
             self.visual = models.resnet50()
+            self.visual.fc.out_features = 1024
         else:
             vision_heads = vision_width // 64
             self.visual = VisualTransformer(

@@ -31,7 +31,7 @@ echo 'ActionClip boot~'
 #fi
 
 #config=configs/ucf101/ucf_train.yaml
-config=configs/ucf101/ucf_train_resnet.yaml
+config=configs/k400/k400_train.yaml
 
 type=$(python -c "import yaml;print(yaml.load(open('${config}'))['network']['type'])")
 arch=$(python -c "import yaml;print(yaml.load(open('${config}'))['network']['arch'])")

@@ -1,2 +1,7 @@
 71606  使用了action和RN50.pt的参数
 71697  不使用action，不使用RN50.pt的参数
+71991  使用models.resnet50() 无预训练参数，很低 20不到
+72081   resnet50(True)
+72101  与72081相比batchsize=32  84%
+72119  modifiedResnet 不使用参数 33
+

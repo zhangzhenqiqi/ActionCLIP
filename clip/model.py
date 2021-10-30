@@ -315,7 +315,8 @@ class CLIP(nn.Module):
                  transformer_width: int,
                  transformer_heads: int,
                  transformer_layers: int, joint=False,
-                 tsm=False, T=8, dropout=0., emb_dropout=0.
+                 tsm=False, T=8, dropout=0., emb_dropout=0.,
+                 modifiedRN=True
                  ):
         super().__init__()
 
@@ -327,16 +328,21 @@ class CLIP(nn.Module):
 
         if isinstance(vision_layers, (tuple, list)):
             vision_heads = vision_width * 32 // 64
-            # self.visual = ModifiedResNet(
-            #     layers=vision_layers,
-            #     output_dim=embed_dim,
-            #     heads=vision_heads,
-            #     input_resolution=image_resolution,
-            #     width=vision_width
-            # )
-            import torchvision.models as models
-            self.visual = models.resnet50()
-            self.visual.fc = nn.Linear(2048, 1024)
+
+            if modifiedRN:
+                self.visual = ModifiedResNet(
+                    layers=vision_layers,
+                    output_dim=embed_dim,
+                    heads=vision_heads,
+                    input_resolution=image_resolution,
+                    width=vision_width
+                )
+
+            else:
+                ###ResNet 50
+                import torchvision.models as models
+                self.visual = models.resnet50(pretrained=True)
+                self.visual.fc = nn.Linear(2048, 1024)
         else:
             vision_heads = vision_width // 64
             self.visual = VisualTransformer(
@@ -514,7 +520,7 @@ def build_model(state_dict: dict, tsm=False, T=8, dropout=0., joint=False, emb_d
         embed_dim,
         image_resolution, vision_layers, vision_width, vision_patch_size,
         context_length, vocab_size, transformer_width, transformer_heads, transformer_layers, tsm=tsm, T=T, joint=joint,
-        dropout=dropout, emb_dropout=emb_dropout
+        dropout=dropout, emb_dropout=emb_dropout, modifiedRN=False
     )
 
     for key in ["input_resolution", "context_length", "vocab_size"]:
@@ -545,9 +551,9 @@ def build_model(state_dict: dict, tsm=False, T=8, dropout=0., joint=False, emb_d
     else:
         print('not using full clip pretrained model, only visual!')
 
-        for k in list(state_dict.keys()):
-            if not k.find("visual") > -1:
-                state_dict.pop(k)
+        # for k in list(state_dict.keys()):
+        #     if not k.find("visual") > -1:
+        #         state_dict.pop(k)
         # model.load_state_dict(state_dict, strict=False)
 
     ##test

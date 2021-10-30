@@ -54,8 +54,7 @@ def main():
     working_dir = os.path.join('./exp', config['network']['type'], config['network']['arch'], config['data']['dataset'],
                                args.log_time)
     wandb.init(project=config['network']['type'],
-               name='{}_{}_{}_{}'.format(args.log_time, config['network']['type'], config['network']['arch'],
-                                         config['data']['dataset']))
+               name='{}_{}_{}_{}'.format(args.log_time, config['network']['type'], config['network']['arch'],config['data']['dataset']))
     print('-' * 80)
     print(' ' * 20, "working dir: {}".format(working_dir))
     print('-' * 80)
@@ -227,8 +226,8 @@ def main():
         filename = "{}/last_model.pt".format(working_dir)
 
         # epoch_saving(epoch, model, fusion_model, optimizer, filename)
-        # if is_best:
-            # best_saving(working_dir, epoch, model, fusion_model, optimizer)
+        if is_best:
+            best_saving(working_dir, epoch, model, fusion_model, optimizer)
 
 
 if __name__ == '__main__':

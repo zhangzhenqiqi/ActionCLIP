@@ -1,0 +1,195 @@
+Loading cudnn7.6-cuda10.2/7.6.5.32
+  Loading requirement: cuda10.2/toolkit/10.2.89
+Loading nccl2-cuda10.2-gcc/2.6.4
+  Loading requirement: gcc5/5.5.0
+/cm/local/apps/slurm/var/spool/job73056/slurm_script: line 20: export: `=': not a valid identifier
+/cm/local/apps/slurm/var/spool/job73056/slurm_script: line 21: export: `=': not a valid identifier
+/cm/local/apps/slurm/var/spool/job73056/slurm_script: line 21: export: `5678': not a valid identifier
+Sun Oct 31 11:45:20 2021       
++-----------------------------------------------------------------------------+
+| NVIDIA-SMI 440.64.00    Driver Version: 440.64.00    CUDA Version: 10.2     |
+|-------------------------------+----------------------+----------------------+
+| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+|===============================+======================+======================|
+|   0  TITAN RTX           On   | 00000000:1B:00.0 Off |                  N/A |
+| 40%   40C    P8    14W / 280W |      0MiB / 24220MiB |      0%      Default |
++-------------------------------+----------------------+----------------------+
+|   1  TITAN RTX           On   | 00000000:3E:00.0 Off |                  N/A |
+| 41%   42C    P8    11W / 280W |      0MiB / 24220MiB |      0%      Default |
++-------------------------------+----------------------+----------------------+
+                                                                               
++-----------------------------------------------------------------------------+
+| Processes:                                                       GPU Memory |
+|  GPU       PID   Type   Process name                             Usage      |
+|=============================================================================|
+|  No running processes found                                                 |
++-----------------------------------------------------------------------------+
+ActionClip boot~
+<string>:1: YAMLLoadWarning: calling yaml.load() without Loader=... is deprecated, as the default Loader is unsafe. Please read https://msg.pyyaml.org/load for full details.
+<string>:1: YAMLLoadWarning: calling yaml.load() without Loader=... is deprecated, as the default Loader is unsafe. Please read https://msg.pyyaml.org/load for full details.
+<string>:1: YAMLLoadWarning: calling yaml.load() without Loader=... is deprecated, as the default Loader is unsafe. Please read https://msg.pyyaml.org/load for full details.
+/home/10501001/anaconda3/envs/ACTION-CLIP/lib/python3.9/site-packages/torch/nn/_reduction.py:42: UserWarning: size_average and reduce args will be deprecated, please use reduction='mean' instead.
+  warnings.warn(warning.format(ret))
+/home/10501001/projects/ActionCLIP/train.py:53: YAMLLoadWarning: calling yaml.load() without Loader=... is deprecated, as the default Loader is unsafe. Please read https://msg.pyyaml.org/load for full details.
+  config = yaml.load(f)
+wandb: Currently logged in as: wozzq (use `wandb login --relogin` to force relogin)
+wandb: wandb version 0.12.6 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.12.4
+wandb: Syncing run 20211031_114521_clip_k400_RN50_kinetics400
+wandb:  View project at https://wandb.ai/wozzq/clip_k400
+wandb:  View run at https://wandb.ai/wozzq/clip_k400/runs/203dmtgo
+wandb: Run data is saved locally in /home/10501001/projects/ActionCLIP/wandb/run-20211031_114530-203dmtgo
+wandb: Run `wandb offline` to turn off syncing.
+
+--------------------------------------------------------------------------------
+                     working dir: ./exp/clip_k400/RN50/kinetics400/20211031_114521
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+                               Config
+{   'data': {   'batch_size': 16,
+                'dataset': 'kinetics400',
+                'image_tmpl': 'img_{:05d}.jpg',
+                'index_bias': 1,
+                'input_size': 224,
+                'label_list': 'lists/kinetics_400_labels.csv',
+                'modality': 'RGB',
+                'num_classes': 400,
+                'num_segments': 8,
+                'randaug': {'M': 9, 'N': 2},
+                'random_shift': True,
+                'seg_length': 1,
+                'train_list': 'lists/k4001/train_frames.txt',
+                'val_list': 'lists/k4001/val_frames.txt',
+                'workers': 16},
+    'logging': {'eval_freq': 1, 'print_freq': 10},
+    'network': {   'arch': 'RN50',
+                   'describe': None,
+                   'drop_out': 0.0,
+                   'emb_dropout': 0.0,
+                   'init': False,
+                   'is_action': True,
+                   'joint': False,
+                   'sim_header': 'Transf',
+                   'tsm': False,
+                   'type': 'clip_k400'},
+    'pretrain': None,
+    'resume': None,
+    'seed': 1024,
+    'solver': {   'clip_gradient': 20,
+                  'epoch_offset': 0,
+                  'epochs': 50,
+                  'evaluate': False,
+                  'f_ratio': 10,
+                  'loss_type': 'nll',
+                  'lr': 5e-06,
+                  'lr_decay_factor': 0.1,
+                  'lr_decay_step': 15,
+                  'lr_warmup_step': 5,
+                  'momentum': 0.9,
+                  'optim': 'adamw',
+                  'ratio': 1,
+                  'start_epoch': 0,
+                  'type': 'cosine',
+                  'weight_decay': 0.2}}
+--------------------------------------------------------------------------------
+dropout used:[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+not using full clip pretrained model, only visual!
+Adding action...
+params in make_temporal_shift: 
+n_segment:  8
+n_div:  8
+place:  blockres
+temporal_pool:  False
+=> n_segment per stage: [8, 8, 8, 8]
+=> Processing stage with 3 blocks residual
+SA:  1644167168
+8
+64
+=> Using ACTION
+SA:  26306674688
+8
+256
+=> Using ACTION
+SA:  26306674688
+8
+256
+=> Using ACTION
+=> Processing stage with 4 blocks residual
+SA:  26306674688
+8
+256
+=> Using ACTION
+SA:  105226698752
+8
+512
+=> Using ACTION
+SA:  105226698752
+8
+512
+=> Using ACTION
+SA:  105226698752
+8
+512
+=> Using ACTION
+=> Processing stage with 6 blocks residual
+SA:  105226698752
+8
+512
+=> Using ACTION
+SA:  420906795008
+8
+1024
+=> Using ACTION
+SA:  420906795008
+8
+1024
+=> Using ACTION
+SA:  420906795008
+8
+1024
+=> Using ACTION
+SA:  420906795008
+8
+1024
+=> Using ACTION
+SA:  420906795008
+8
+1024
+=> Using ACTION
+=> Processing stage with 3 blocks residual
+SA:  420906795008
+8
+1024
+=> Using ACTION
+SA:  1683627180032
+8
+2048
+=> Using ACTION
+SA:  1683627180032
+8
+2048
+=> Using ACTION
+Using RandAugment!
+train transforms: [<utils.Augmentation.GroupTransform object at 0x2aab4a188610>, Compose(
+    <datasets.transforms_ss.GroupMultiScaleCrop object at 0x2aab4a188e50>
+    <datasets.transforms_ss.GroupRandomHorizontalFlip object at 0x2aab4a188eb0>
+    <datasets.transforms_ss.GroupRandomColorJitter object at 0x2aab4a188fd0>
+    <datasets.transforms_ss.GroupRandomGrayscale object at 0x2aab4a188ee0>
+    <datasets.transforms_ss.GroupGaussianBlur object at 0x2aab4a188e20>
+    <datasets.transforms_ss.GroupSolarization object at 0x2aab4a188d00>
+), Compose(
+    <datasets.transforms_ss.Stack object at 0x2aab4a188c70>
+    <datasets.transforms_ss.ToTorchFormatTensor object at 0x2aab4a188bb0>
+    <datasets.transforms_ss.GroupNormalize object at 0x2aab4a188b50>
+)]
+val transforms: [Compose(
+    <datasets.transforms_ss.GroupScale object at 0x2aab4a188a90>
+    <datasets.transforms_ss.GroupCenterCrop object at 0x2aab4a1889d0>
+), Compose(
+    <datasets.transforms_ss.Stack object at 0x2aab4a188850>
+    <datasets.transforms_ss.ToTorchFormatTensor object at 0x2aab4a1886d0>
+    <datasets.transforms_ss.GroupNormalize object at 0x2aab4a1887f0>
+)]
+layer=6

@@ -54,7 +54,8 @@ def main():
     working_dir = os.path.join('./exp', config['network']['type'], config['network']['arch'], config['data']['dataset'],
                                args.log_time)
     wandb.init(project=config['network']['type'],
-               name='{}_{}_{}_{}'.format(args.log_time, config['network']['type'], config['network']['arch'],config['data']['dataset']))
+               name='{}_{}_{}_{}'.format(args.log_time, config['network']['type'], config['network']['arch'],
+                                         config['data']['dataset']))
     print('-' * 80)
     print(' ' * 20, "working dir: {}".format(working_dir))
     print('-' * 80)
@@ -77,7 +78,8 @@ def main():
     model, clip_state_dict = clip.load(config.network.arch, device=device, jit=False, tsm=config.network.tsm,
                                        T=config.data.num_segments, dropout=config.network.drop_out,
                                        emb_dropout=config.network.emb_dropout, pretrain=config.network.init,
-                                       joint=config.network.joint,is_action=config.network.is_action)  # Must set jit=False for training  ViT-B/32
+                                       joint=config.network.joint,
+                                       is_action=config.network.is_action)  # Must set jit=False for training  ViT-B/32
 
     transform_train = get_augmentation(True, config)
     transform_val = get_augmentation(False, config)
@@ -91,11 +93,43 @@ def main():
     fusion_model = visual_prompt(config.network.sim_header, clip_state_dict, config.data.num_segments)
     model_text = TextCLIP(model)
     model_image = ImageCLIP(model)
-    model_text = torch.nn.DataParallel(model_text).cuda()
-    model_image = torch.nn.DataParallel(model_image).cuda()
-    fusion_model = torch.nn.DataParallel(fusion_model).cuda()
+
+    os.environ['MASTER_ADDR'] = 'localhost'
+    os.environ['MASTER_PORT'] = '5678'
+
+    torch.distributed.init_process_group(backend='nccl', world_size=2,
+                                         rank=0)
+    model_text = model_text.cuda()
+    model_text = torch.nn.parallel.DistributedDataParallel(model_text)
+    print("OK.1")
+    model_image = model_image.cuda()
+    model_image = torch.nn.parallel.DistributedDataParallel(model_image)
+    print("OK.2")
+    fusion_model = fusion_model.cuda()
+    fusion_model = torch.nn.parallel.DistributedDataParallel(fusion_model)
+    print("OK.3")
+
+    # model_text = torch.nn.DataParallel(model_text).cuda()
+    # model_image = torch.nn.DataParallel(model_image).cuda()
+    # fusion_model = torch.nn.DataParallel(fusion_model).cuda()
+
     # wandb.watch(model)
     # wandb.watch(fusion_model)
+
+    def testStr(s, d):
+        s = s.lower()
+        for c in d:
+            if s.find(c) != -1:
+                return False
+        return True
+
+    d = ['sigmoid', 'pool', 'dropout', 'relu', 'identity', 'gelu']
+    for name, mod in model.named_modules():
+        # print('mod type',type(mod))
+        # print(str(mod))
+        if len(list(mod.children())) == 0 and testStr(name, d) and testStr(str(mod), d):
+            print(name, ' : ', mod)
+            print('-', mod.weight.dtype)
 
     print('model=' * 20)
     print(model)

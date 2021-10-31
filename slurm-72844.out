@@ -1,0 +1,890 @@
+Loading cudnn7.6-cuda10.2/7.6.5.32
+  Loading requirement: cuda10.2/toolkit/10.2.89
+Loading nccl2-cuda10.2-gcc/2.6.4
+  Loading requirement: gcc5/5.5.0
+ActionClip boot~
+<string>:1: YAMLLoadWarning: calling yaml.load() without Loader=... is deprecated, as the default Loader is unsafe. Please read https://msg.pyyaml.org/load for full details.
+<string>:1: YAMLLoadWarning: calling yaml.load() without Loader=... is deprecated, as the default Loader is unsafe. Please read https://msg.pyyaml.org/load for full details.
+<string>:1: YAMLLoadWarning: calling yaml.load() without Loader=... is deprecated, as the default Loader is unsafe. Please read https://msg.pyyaml.org/load for full details.
+/home/10501001/anaconda3/envs/ACTION-CLIP/lib/python3.9/site-packages/torch/nn/_reduction.py:42: UserWarning: size_average and reduce args will be deprecated, please use reduction='mean' instead.
+  warnings.warn(warning.format(ret))
+/home/10501001/projects/ActionCLIP/train.py:53: YAMLLoadWarning: calling yaml.load() without Loader=... is deprecated, as the default Loader is unsafe. Please read https://msg.pyyaml.org/load for full details.
+  config = yaml.load(f)
+wandb: Currently logged in as: wozzq (use `wandb login --relogin` to force relogin)
+wandb: Tracking run with wandb version 0.12.4
+wandb: Syncing run 20211030_114002_clip_k400_RN50_kinetics400
+wandb:  View project at https://wandb.ai/wozzq/clip_k400
+wandb:  View run at https://wandb.ai/wozzq/clip_k400/runs/au4ne2ff
+wandb: Run data is saved locally in /home/10501001/projects/ActionCLIP/wandb/run-20211030_114006-au4ne2ff
+wandb: Run `wandb offline` to turn off syncing.
+
+--------------------------------------------------------------------------------
+                     working dir: ./exp/clip_k400/RN50/kinetics400/20211030_114002
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+                               Config
+{   'data': {   'batch_size': 16,
+                'dataset': 'kinetics400',
+                'image_tmpl': 'img_{:05d}.jpg',
+                'index_bias': 1,
+                'input_size': 224,
+                'label_list': 'lists/kinetics_400_labels.csv',
+                'modality': 'RGB',
+                'num_classes': 400,
+                'num_segments': 8,
+                'randaug': {'M': 9, 'N': 2},
+                'random_shift': True,
+                'seg_length': 1,
+                'train_list': 'lists/k4001/train_frames.txt',
+                'val_list': 'lists/k4001/val_frames.txt',
+                'workers': 16},
+    'logging': {'eval_freq': 1, 'print_freq': 10},
+    'network': {   'arch': 'RN50',
+                   'describe': None,
+                   'drop_out': 0.0,
+                   'emb_dropout': 0.0,
+                   'init': False,
+                   'is_action': False,
+                   'joint': False,
+                   'sim_header': 'Transf',
+                   'tsm': False,
+                   'type': 'clip_k400'},
+    'pretrain': None,
+    'resume': None,
+    'seed': 1024,
+    'solver': {   'clip_gradient': 20,
+                  'epoch_offset': 0,
+                  'epochs': 50,
+                  'evaluate': False,
+                  'f_ratio': 10,
+                  'loss_type': 'nll',
+                  'lr': 5e-06,
+                  'lr_decay_factor': 0.1,
+                  'lr_decay_step': 15,
+                  'lr_warmup_step': 5,
+                  'momentum': 0.9,
+                  'optim': 'adamw',
+                  'ratio': 1,
+                  'start_epoch': 0,
+                  'type': 'cosine',
+                  'weight_decay': 0.2}}
+--------------------------------------------------------------------------------
+dropout used:[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+not using full clip pretrained model, only visual!
+Using RandAugment!
+train transforms: [<utils.Augmentation.GroupTransform object at 0x2aab4a1846a0>, Compose(
+    <datasets.transforms_ss.GroupMultiScaleCrop object at 0x2aab4890f760>
+    <datasets.transforms_ss.GroupRandomHorizontalFlip object at 0x2aab4890f460>
+    <datasets.transforms_ss.GroupRandomColorJitter object at 0x2aab4a184d90>
+    <datasets.transforms_ss.GroupRandomGrayscale object at 0x2aab4a184f70>
+    <datasets.transforms_ss.GroupGaussianBlur object at 0x2aab4a184e80>
+    <datasets.transforms_ss.GroupSolarization object at 0x2aab4a184e20>
+), Compose(
+    <datasets.transforms_ss.Stack object at 0x2aab4a184d60>
+    <datasets.transforms_ss.ToTorchFormatTensor object at 0x2aab4a184c40>
+    <datasets.transforms_ss.GroupNormalize object at 0x2aab4a184be0>
+)]
+val transforms: [Compose(
+    <datasets.transforms_ss.GroupScale object at 0x2aab4a184b20>
+    <datasets.transforms_ss.GroupCenterCrop object at 0x2aab4a184a60>
+), Compose(
+    <datasets.transforms_ss.Stack object at 0x2aab4a1848e0>
+    <datasets.transforms_ss.ToTorchFormatTensor object at 0x2aab4a184760>
+    <datasets.transforms_ss.GroupNormalize object at 0x2aab4a184880>
+)]
+layer=6
+model=model=model=model=model=model=model=model=model=model=model=model=model=model=model=model=model=model=model=model=
+CLIP(
+  (visual): ModifiedResNet(
+    (conv1): Conv2d(3, 32, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+    (bn1): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (conv2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+    (bn2): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (conv3): Conv2d(32, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+    (bn3): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (avgpool): AvgPool2d(kernel_size=2, stride=2, padding=0)
+    (relu): ReLU(inplace=True)
+    (layer1): Sequential(
+      (0): Bottleneck(
+        (conv1): Conv2d(64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (avgpool): Identity()
+        (conv3): Conv2d(64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn3): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (relu): ReLU(inplace=True)
+        (downsample): Sequential(
+          (-1): AvgPool2d(kernel_size=1, stride=1, padding=0)
+          (0): Conv2d(64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+      )
+      (1): Bottleneck(
+        (conv1): Conv2d(256, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (avgpool): Identity()
+        (conv3): Conv2d(64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn3): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (relu): ReLU(inplace=True)
+      )
+      (2): Bottleneck(
+        (conv1): Conv2d(256, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (avgpool): Identity()
+        (conv3): Conv2d(64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn3): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (relu): ReLU(inplace=True)
+      )
+    )
+    (layer2): Sequential(
+      (0): Bottleneck(
+        (conv1): Conv2d(256, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (avgpool): AvgPool2d(kernel_size=2, stride=2, padding=0)
+        (conv3): Conv2d(128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn3): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (relu): ReLU(inplace=True)
+        (downsample): Sequential(
+          (-1): AvgPool2d(kernel_size=2, stride=2, padding=0)
+          (0): Conv2d(256, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+      )
+      (1): Bottleneck(
+        (conv1): Conv2d(512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (avgpool): Identity()
+        (conv3): Conv2d(128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn3): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (relu): ReLU(inplace=True)
+      )
+      (2): Bottleneck(
+        (conv1): Conv2d(512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (avgpool): Identity()
+        (conv3): Conv2d(128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn3): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (relu): ReLU(inplace=True)
+      )
+      (3): Bottleneck(
+        (conv1): Conv2d(512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (avgpool): Identity()
+        (conv3): Conv2d(128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn3): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (relu): ReLU(inplace=True)
+      )
+    )
+    (layer3): Sequential(
+      (0): Bottleneck(
+        (conv1): Conv2d(512, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (avgpool): AvgPool2d(kernel_size=2, stride=2, padding=0)
+        (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (relu): ReLU(inplace=True)
+        (downsample): Sequential(
+          (-1): AvgPool2d(kernel_size=2, stride=2, padding=0)
+          (0): Conv2d(512, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (1): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+      )
+      (1): Bottleneck(
+        (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (avgpool): Identity()
+        (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (relu): ReLU(inplace=True)
+      )
+      (2): Bottleneck(
+        (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (avgpool): Identity()
+        (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (relu): ReLU(inplace=True)
+      )
+      (3): Bottleneck(
+        (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (avgpool): Identity()
+        (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (relu): ReLU(inplace=True)
+      )
+      (4): Bottleneck(
+        (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (avgpool): Identity()
+        (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (relu): ReLU(inplace=True)
+      )
+      (5): Bottleneck(
+        (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (avgpool): Identity()
+        (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (relu): ReLU(inplace=True)
+      )
+    )
+    (layer4): Sequential(
+      (0): Bottleneck(
+        (conv1): Conv2d(1024, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (avgpool): AvgPool2d(kernel_size=2, stride=2, padding=0)
+        (conv3): Conv2d(512, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn3): BatchNorm2d(2048, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (relu): ReLU(inplace=True)
+        (downsample): Sequential(
+          (-1): AvgPool2d(kernel_size=2, stride=2, padding=0)
+          (0): Conv2d(1024, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (1): BatchNorm2d(2048, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+      )
+      (1): Bottleneck(
+        (conv1): Conv2d(2048, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (avgpool): Identity()
+        (conv3): Conv2d(512, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn3): BatchNorm2d(2048, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (relu): ReLU(inplace=True)
+      )
+      (2): Bottleneck(
+        (conv1): Conv2d(2048, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (avgpool): Identity()
+        (conv3): Conv2d(512, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn3): BatchNorm2d(2048, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (relu): ReLU(inplace=True)
+      )
+    )
+    (attnpool): AttentionPool2d(
+      (k_proj): Linear(in_features=2048, out_features=2048, bias=True)
+      (q_proj): Linear(in_features=2048, out_features=2048, bias=True)
+      (v_proj): Linear(in_features=2048, out_features=2048, bias=True)
+      (c_proj): Linear(in_features=2048, out_features=1024, bias=True)
+    )
+  )
+  (transformer): Transformer(
+    (resblocks): Sequential(
+      (0): ResidualAttentionBlock(
+        (attn): MultiheadAttention(
+          (out_proj): NonDynamicallyQuantizableLinear(in_features=512, out_features=512, bias=True)
+        )
+        (ln_1): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+        (drop_path): Identity()
+        (mlp): Sequential(
+          (c_fc): Linear(in_features=512, out_features=2048, bias=True)
+          (gelu): QuickGELU()
+          (c_proj): Linear(in_features=2048, out_features=512, bias=True)
+        )
+        (ln_2): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+      )
+      (1): ResidualAttentionBlock(
+        (attn): MultiheadAttention(
+          (out_proj): NonDynamicallyQuantizableLinear(in_features=512, out_features=512, bias=True)
+        )
+        (ln_1): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+        (drop_path): Identity()
+        (mlp): Sequential(
+          (c_fc): Linear(in_features=512, out_features=2048, bias=True)
+          (gelu): QuickGELU()
+          (c_proj): Linear(in_features=2048, out_features=512, bias=True)
+        )
+        (ln_2): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+      )
+      (2): ResidualAttentionBlock(
+        (attn): MultiheadAttention(
+          (out_proj): NonDynamicallyQuantizableLinear(in_features=512, out_features=512, bias=True)
+        )
+        (ln_1): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+        (drop_path): Identity()
+        (mlp): Sequential(
+          (c_fc): Linear(in_features=512, out_features=2048, bias=True)
+          (gelu): QuickGELU()
+          (c_proj): Linear(in_features=2048, out_features=512, bias=True)
+        )
+        (ln_2): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+      )
+      (3): ResidualAttentionBlock(
+        (attn): MultiheadAttention(
+          (out_proj): NonDynamicallyQuantizableLinear(in_features=512, out_features=512, bias=True)
+        )
+        (ln_1): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+        (drop_path): Identity()
+        (mlp): Sequential(
+          (c_fc): Linear(in_features=512, out_features=2048, bias=True)
+          (gelu): QuickGELU()
+          (c_proj): Linear(in_features=2048, out_features=512, bias=True)
+        )
+        (ln_2): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+      )
+      (4): ResidualAttentionBlock(
+        (attn): MultiheadAttention(
+          (out_proj): NonDynamicallyQuantizableLinear(in_features=512, out_features=512, bias=True)
+        )
+        (ln_1): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+        (drop_path): Identity()
+        (mlp): Sequential(
+          (c_fc): Linear(in_features=512, out_features=2048, bias=True)
+          (gelu): QuickGELU()
+          (c_proj): Linear(in_features=2048, out_features=512, bias=True)
+        )
+        (ln_2): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+      )
+      (5): ResidualAttentionBlock(
+        (attn): MultiheadAttention(
+          (out_proj): NonDynamicallyQuantizableLinear(in_features=512, out_features=512, bias=True)
+        )
+        (ln_1): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+        (drop_path): Identity()
+        (mlp): Sequential(
+          (c_fc): Linear(in_features=512, out_features=2048, bias=True)
+          (gelu): QuickGELU()
+          (c_proj): Linear(in_features=2048, out_features=512, bias=True)
+        )
+        (ln_2): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+      )
+      (6): ResidualAttentionBlock(
+        (attn): MultiheadAttention(
+          (out_proj): NonDynamicallyQuantizableLinear(in_features=512, out_features=512, bias=True)
+        )
+        (ln_1): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+        (drop_path): Identity()
+        (mlp): Sequential(
+          (c_fc): Linear(in_features=512, out_features=2048, bias=True)
+          (gelu): QuickGELU()
+          (c_proj): Linear(in_features=2048, out_features=512, bias=True)
+        )
+        (ln_2): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+      )
+      (7): ResidualAttentionBlock(
+        (attn): MultiheadAttention(
+          (out_proj): NonDynamicallyQuantizableLinear(in_features=512, out_features=512, bias=True)
+        )
+        (ln_1): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+        (drop_path): Identity()
+        (mlp): Sequential(
+          (c_fc): Linear(in_features=512, out_features=2048, bias=True)
+          (gelu): QuickGELU()
+          (c_proj): Linear(in_features=2048, out_features=512, bias=True)
+        )
+        (ln_2): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+      )
+      (8): ResidualAttentionBlock(
+        (attn): MultiheadAttention(
+          (out_proj): NonDynamicallyQuantizableLinear(in_features=512, out_features=512, bias=True)
+        )
+        (ln_1): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+        (drop_path): Identity()
+        (mlp): Sequential(
+          (c_fc): Linear(in_features=512, out_features=2048, bias=True)
+          (gelu): QuickGELU()
+          (c_proj): Linear(in_features=2048, out_features=512, bias=True)
+        )
+        (ln_2): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+      )
+      (9): ResidualAttentionBlock(
+        (attn): MultiheadAttention(
+          (out_proj): NonDynamicallyQuantizableLinear(in_features=512, out_features=512, bias=True)
+        )
+        (ln_1): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+        (drop_path): Identity()
+        (mlp): Sequential(
+          (c_fc): Linear(in_features=512, out_features=2048, bias=True)
+          (gelu): QuickGELU()
+          (c_proj): Linear(in_features=2048, out_features=512, bias=True)
+        )
+        (ln_2): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+      )
+      (10): ResidualAttentionBlock(
+        (attn): MultiheadAttention(
+          (out_proj): NonDynamicallyQuantizableLinear(in_features=512, out_features=512, bias=True)
+        )
+        (ln_1): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+        (drop_path): Identity()
+        (mlp): Sequential(
+          (c_fc): Linear(in_features=512, out_features=2048, bias=True)
+          (gelu): QuickGELU()
+          (c_proj): Linear(in_features=2048, out_features=512, bias=True)
+        )
+        (ln_2): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+      )
+      (11): ResidualAttentionBlock(
+        (attn): MultiheadAttention(
+          (out_proj): NonDynamicallyQuantizableLinear(in_features=512, out_features=512, bias=True)
+        )
+        (ln_1): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+        (drop_path): Identity()
+        (mlp): Sequential(
+          (c_fc): Linear(in_features=512, out_features=2048, bias=True)
+          (gelu): QuickGELU()
+          (c_proj): Linear(in_features=2048, out_features=512, bias=True)
+        )
+        (ln_2): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+      )
+    )
+  )
+  (token_embedding): Embedding(49408, 512)
+  (ln_final): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+  (dropout): Dropout(p=0.0, inplace=False)
+)
+fusion_model=fusion_model=fusion_model=fusion_model=fusion_model=fusion_model=fusion_model=fusion_model=fusion_model=fusion_model=fusion_model=fusion_model=fusion_model=fusion_model=fusion_model=fusion_model=fusion_model=fusion_model=fusion_model=fusion_model=
+DataParallel(
+  (module): visual_prompt(
+    (frame_position_embeddings): Embedding(77, 1024)
+    (transformer): TemporalTransformer(
+      (resblocks): Sequential(
+        (0): ResidualAttentionBlock(
+          (attn): MultiheadAttention(
+            (out_proj): NonDynamicallyQuantizableLinear(in_features=1024, out_features=1024, bias=True)
+          )
+          (ln_1): LayerNorm()
+          (mlp): Sequential(
+            (c_fc): Linear(in_features=1024, out_features=4096, bias=True)
+            (gelu): QuickGELU()
+            (c_proj): Linear(in_features=4096, out_features=1024, bias=True)
+          )
+          (ln_2): LayerNorm()
+        )
+        (1): ResidualAttentionBlock(
+          (attn): MultiheadAttention(
+            (out_proj): NonDynamicallyQuantizableLinear(in_features=1024, out_features=1024, bias=True)
+          )
+          (ln_1): LayerNorm()
+          (mlp): Sequential(
+            (c_fc): Linear(in_features=1024, out_features=4096, bias=True)
+            (gelu): QuickGELU()
+            (c_proj): Linear(in_features=4096, out_features=1024, bias=True)
+          )
+          (ln_2): LayerNorm()
+        )
+        (2): ResidualAttentionBlock(
+          (attn): MultiheadAttention(
+            (out_proj): NonDynamicallyQuantizableLinear(in_features=1024, out_features=1024, bias=True)
+          )
+          (ln_1): LayerNorm()
+          (mlp): Sequential(
+            (c_fc): Linear(in_features=1024, out_features=4096, bias=True)
+            (gelu): QuickGELU()
+            (c_proj): Linear(in_features=4096, out_features=1024, bias=True)
+          )
+          (ln_2): LayerNorm()
+        )
+        (3): ResidualAttentionBlock(
+          (attn): MultiheadAttention(
+            (out_proj): NonDynamicallyQuantizableLinear(in_features=1024, out_features=1024, bias=True)
+          )
+          (ln_1): LayerNorm()
+          (mlp): Sequential(
+            (c_fc): Linear(in_features=1024, out_features=4096, bias=True)
+            (gelu): QuickGELU()
+            (c_proj): Linear(in_features=4096, out_features=1024, bias=True)
+          )
+          (ln_2): LayerNorm()
+        )
+        (4): ResidualAttentionBlock(
+          (attn): MultiheadAttention(
+            (out_proj): NonDynamicallyQuantizableLinear(in_features=1024, out_features=1024, bias=True)
+          )
+          (ln_1): LayerNorm()
+          (mlp): Sequential(
+            (c_fc): Linear(in_features=1024, out_features=4096, bias=True)
+            (gelu): QuickGELU()
+            (c_proj): Linear(in_features=4096, out_features=1024, bias=True)
+          )
+          (ln_2): LayerNorm()
+        )
+        (5): ResidualAttentionBlock(
+          (attn): MultiheadAttention(
+            (out_proj): NonDynamicallyQuantizableLinear(in_features=1024, out_features=1024, bias=True)
+          )
+          (ln_1): LayerNorm()
+          (mlp): Sequential(
+            (c_fc): Linear(in_features=1024, out_features=4096, bias=True)
+            (gelu): QuickGELU()
+            (c_proj): Linear(in_features=4096, out_features=1024, bias=True)
+          )
+          (ln_2): LayerNorm()
+        )
+      )
+    )
+  )
+)
+random_shift:DotMap()
+random_shift:DotMap()
+/home/10501001/anaconda3/envs/ACTION-CLIP/lib/python3.9/site-packages/torch/utils/data/dataloader.py:478: UserWarning: This DataLoader will create 16 worker processes in total. Our suggested max number of worker in current system is 8, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(_create_warning_msg(
+=========using KL Loss=and has temperature and * bz==========
+=========using KL Loss=and has temperature and * bz==========
+5e-06
+5e-06
+5e-05
+AdamW
+positional_embedding: True
+text_projection: True
+logit_scale: True
+visual.conv1.weight: True
+visual.bn1.weight: True
+visual.bn1.bias: True
+visual.conv2.weight: True
+visual.bn2.weight: True
+visual.bn2.bias: True
+visual.conv3.weight: True
+visual.bn3.weight: True
+visual.bn3.bias: True
+visual.layer1.0.conv1.weight: True
+visual.layer1.0.bn1.weight: True
+visual.layer1.0.bn1.bias: True
+visual.layer1.0.conv2.weight: True
+visual.layer1.0.bn2.weight: True
+visual.layer1.0.bn2.bias: True
+visual.layer1.0.conv3.weight: True
+visual.layer1.0.bn3.weight: True
+visual.layer1.0.bn3.bias: True
+visual.layer1.0.downsample.0.weight: True
+visual.layer1.0.downsample.1.weight: True
+visual.layer1.0.downsample.1.bias: True
+visual.layer1.1.conv1.weight: True
+visual.layer1.1.bn1.weight: True
+visual.layer1.1.bn1.bias: True
+visual.layer1.1.conv2.weight: True
+visual.layer1.1.bn2.weight: True
+visual.layer1.1.bn2.bias: True
+visual.layer1.1.conv3.weight: True
+visual.layer1.1.bn3.weight: True
+visual.layer1.1.bn3.bias: True
+visual.layer1.2.conv1.weight: True
+visual.layer1.2.bn1.weight: True
+visual.layer1.2.bn1.bias: True
+visual.layer1.2.conv2.weight: True
+visual.layer1.2.bn2.weight: True
+visual.layer1.2.bn2.bias: True
+visual.layer1.2.conv3.weight: True
+visual.layer1.2.bn3.weight: True
+visual.layer1.2.bn3.bias: True
+visual.layer2.0.conv1.weight: True
+visual.layer2.0.bn1.weight: True
+visual.layer2.0.bn1.bias: True
+visual.layer2.0.conv2.weight: True
+visual.layer2.0.bn2.weight: True
+visual.layer2.0.bn2.bias: True
+visual.layer2.0.conv3.weight: True
+visual.layer2.0.bn3.weight: True
+visual.layer2.0.bn3.bias: True
+visual.layer2.0.downsample.0.weight: True
+visual.layer2.0.downsample.1.weight: True
+visual.layer2.0.downsample.1.bias: True
+visual.layer2.1.conv1.weight: True
+visual.layer2.1.bn1.weight: True
+visual.layer2.1.bn1.bias: True
+visual.layer2.1.conv2.weight: True
+visual.layer2.1.bn2.weight: True
+visual.layer2.1.bn2.bias: True
+visual.layer2.1.conv3.weight: True
+visual.layer2.1.bn3.weight: True
+visual.layer2.1.bn3.bias: True
+visual.layer2.2.conv1.weight: True
+visual.layer2.2.bn1.weight: True
+visual.layer2.2.bn1.bias: True
+visual.layer2.2.conv2.weight: True
+visual.layer2.2.bn2.weight: True
+visual.layer2.2.bn2.bias: True
+visual.layer2.2.conv3.weight: True
+visual.layer2.2.bn3.weight: True
+visual.layer2.2.bn3.bias: True
+visual.layer2.3.conv1.weight: True
+visual.layer2.3.bn1.weight: True
+visual.layer2.3.bn1.bias: True
+visual.layer2.3.conv2.weight: True
+visual.layer2.3.bn2.weight: True
+visual.layer2.3.bn2.bias: True
+visual.layer2.3.conv3.weight: True
+visual.layer2.3.bn3.weight: True
+visual.layer2.3.bn3.bias: True
+visual.layer3.0.conv1.weight: True
+visual.layer3.0.bn1.weight: True
+visual.layer3.0.bn1.bias: True
+visual.layer3.0.conv2.weight: True
+visual.layer3.0.bn2.weight: True
+visual.layer3.0.bn2.bias: True
+visual.layer3.0.conv3.weight: True
+visual.layer3.0.bn3.weight: True
+visual.layer3.0.bn3.bias: True
+visual.layer3.0.downsample.0.weight: True
+visual.layer3.0.downsample.1.weight: True
+visual.layer3.0.downsample.1.bias: True
+visual.layer3.1.conv1.weight: True
+visual.layer3.1.bn1.weight: True
+visual.layer3.1.bn1.bias: True
+visual.layer3.1.conv2.weight: True
+visual.layer3.1.bn2.weight: True
+visual.layer3.1.bn2.bias: True
+visual.layer3.1.conv3.weight: True
+visual.layer3.1.bn3.weight: True
+visual.layer3.1.bn3.bias: True
+visual.layer3.2.conv1.weight: True
+visual.layer3.2.bn1.weight: True
+visual.layer3.2.bn1.bias: True
+visual.layer3.2.conv2.weight: True
+visual.layer3.2.bn2.weight: True
+visual.layer3.2.bn2.bias: True
+visual.layer3.2.conv3.weight: True
+visual.layer3.2.bn3.weight: True
+visual.layer3.2.bn3.bias: True
+visual.layer3.3.conv1.weight: True
+visual.layer3.3.bn1.weight: True
+visual.layer3.3.bn1.bias: True
+visual.layer3.3.conv2.weight: True
+visual.layer3.3.bn2.weight: True
+visual.layer3.3.bn2.bias: True
+visual.layer3.3.conv3.weight: True
+visual.layer3.3.bn3.weight: True
+visual.layer3.3.bn3.bias: True
+visual.layer3.4.conv1.weight: True
+visual.layer3.4.bn1.weight: True
+visual.layer3.4.bn1.bias: True
+visual.layer3.4.conv2.weight: True
+visual.layer3.4.bn2.weight: True
+visual.layer3.4.bn2.bias: True
+visual.layer3.4.conv3.weight: True
+visual.layer3.4.bn3.weight: True
+visual.layer3.4.bn3.bias: True
+visual.layer3.5.conv1.weight: True
+visual.layer3.5.bn1.weight: True
+visual.layer3.5.bn1.bias: True
+visual.layer3.5.conv2.weight: True
+visual.layer3.5.bn2.weight: True
+visual.layer3.5.bn2.bias: True
+visual.layer3.5.conv3.weight: True
+visual.layer3.5.bn3.weight: True
+visual.layer3.5.bn3.bias: True
+visual.layer4.0.conv1.weight: True
+visual.layer4.0.bn1.weight: True
+visual.layer4.0.bn1.bias: True
+visual.layer4.0.conv2.weight: True
+visual.layer4.0.bn2.weight: True
+visual.layer4.0.bn2.bias: True
+visual.layer4.0.conv3.weight: True
+visual.layer4.0.bn3.weight: True
+visual.layer4.0.bn3.bias: True
+visual.layer4.0.downsample.0.weight: True
+visual.layer4.0.downsample.1.weight: True
+visual.layer4.0.downsample.1.bias: True
+visual.layer4.1.conv1.weight: True
+visual.layer4.1.bn1.weight: True
+visual.layer4.1.bn1.bias: True
+visual.layer4.1.conv2.weight: True
+visual.layer4.1.bn2.weight: True
+visual.layer4.1.bn2.bias: True
+visual.layer4.1.conv3.weight: True
+visual.layer4.1.bn3.weight: True
+visual.layer4.1.bn3.bias: True
+visual.layer4.2.conv1.weight: True
+visual.layer4.2.bn1.weight: True
+visual.layer4.2.bn1.bias: True
+visual.layer4.2.conv2.weight: True
+visual.layer4.2.bn2.weight: True
+visual.layer4.2.bn2.bias: True
+visual.layer4.2.conv3.weight: True
+visual.layer4.2.bn3.weight: True
+visual.layer4.2.bn3.bias: True
+visual.attnpool.positional_embedding: True
+visual.attnpool.k_proj.weight: True
+visual.attnpool.k_proj.bias: True
+visual.attnpool.q_proj.weight: True
+visual.attnpool.q_proj.bias: True
+visual.attnpool.v_proj.weight: True
+visual.attnpool.v_proj.bias: True
+visual.attnpool.c_proj.weight: True
+visual.attnpool.c_proj.bias: True
+transformer.resblocks.0.attn.in_proj_weight: True
+transformer.resblocks.0.attn.in_proj_bias: True
+transformer.resblocks.0.attn.out_proj.weight: True
+transformer.resblocks.0.attn.out_proj.bias: True
+transformer.resblocks.0.ln_1.weight: True
+transformer.resblocks.0.ln_1.bias: True
+transformer.resblocks.0.mlp.c_fc.weight: True
+transformer.resblocks.0.mlp.c_fc.bias: True
+transformer.resblocks.0.mlp.c_proj.weight: True
+transformer.resblocks.0.mlp.c_proj.bias: True
+transformer.resblocks.0.ln_2.weight: True
+transformer.resblocks.0.ln_2.bias: True
+transformer.resblocks.1.attn.in_proj_weight: True
+transformer.resblocks.1.attn.in_proj_bias: True
+transformer.resblocks.1.attn.out_proj.weight: True
+transformer.resblocks.1.attn.out_proj.bias: True
+transformer.resblocks.1.ln_1.weight: True
+transformer.resblocks.1.ln_1.bias: True
+transformer.resblocks.1.mlp.c_fc.weight: True
+transformer.resblocks.1.mlp.c_fc.bias: True
+transformer.resblocks.1.mlp.c_proj.weight: True
+transformer.resblocks.1.mlp.c_proj.bias: True
+transformer.resblocks.1.ln_2.weight: True
+transformer.resblocks.1.ln_2.bias: True
+transformer.resblocks.2.attn.in_proj_weight: True
+transformer.resblocks.2.attn.in_proj_bias: True
+transformer.resblocks.2.attn.out_proj.weight: True
+transformer.resblocks.2.attn.out_proj.bias: True
+transformer.resblocks.2.ln_1.weight: True
+transformer.resblocks.2.ln_1.bias: True
+transformer.resblocks.2.mlp.c_fc.weight: True
+transformer.resblocks.2.mlp.c_fc.bias: True
+transformer.resblocks.2.mlp.c_proj.weight: True
+transformer.resblocks.2.mlp.c_proj.bias: True
+transformer.resblocks.2.ln_2.weight: True
+transformer.resblocks.2.ln_2.bias: True
+transformer.resblocks.3.attn.in_proj_weight: True
+transformer.resblocks.3.attn.in_proj_bias: True
+transformer.resblocks.3.attn.out_proj.weight: True
+transformer.resblocks.3.attn.out_proj.bias: True
+transformer.resblocks.3.ln_1.weight: True
+transformer.resblocks.3.ln_1.bias: True
+transformer.resblocks.3.mlp.c_fc.weight: True
+transformer.resblocks.3.mlp.c_fc.bias: True
+transformer.resblocks.3.mlp.c_proj.weight: True
+transformer.resblocks.3.mlp.c_proj.bias: True
+transformer.resblocks.3.ln_2.weight: True
+transformer.resblocks.3.ln_2.bias: True
+transformer.resblocks.4.attn.in_proj_weight: True
+transformer.resblocks.4.attn.in_proj_bias: True
+transformer.resblocks.4.attn.out_proj.weight: True
+transformer.resblocks.4.attn.out_proj.bias: True
+transformer.resblocks.4.ln_1.weight: True
+transformer.resblocks.4.ln_1.bias: True
+transformer.resblocks.4.mlp.c_fc.weight: True
+transformer.resblocks.4.mlp.c_fc.bias: True
+transformer.resblocks.4.mlp.c_proj.weight: True
+transformer.resblocks.4.mlp.c_proj.bias: True
+transformer.resblocks.4.ln_2.weight: True
+transformer.resblocks.4.ln_2.bias: True
+transformer.resblocks.5.attn.in_proj_weight: True
+transformer.resblocks.5.attn.in_proj_bias: True
+transformer.resblocks.5.attn.out_proj.weight: True
+transformer.resblocks.5.attn.out_proj.bias: True
+transformer.resblocks.5.ln_1.weight: True
+transformer.resblocks.5.ln_1.bias: True
+transformer.resblocks.5.mlp.c_fc.weight: True
+transformer.resblocks.5.mlp.c_fc.bias: True
+transformer.resblocks.5.mlp.c_proj.weight: True
+transformer.resblocks.5.mlp.c_proj.bias: True
+transformer.resblocks.5.ln_2.weight: True
+transformer.resblocks.5.ln_2.bias: True
+transformer.resblocks.6.attn.in_proj_weight: True
+transformer.resblocks.6.attn.in_proj_bias: True
+transformer.resblocks.6.attn.out_proj.weight: True
+transformer.resblocks.6.attn.out_proj.bias: True
+transformer.resblocks.6.ln_1.weight: True
+transformer.resblocks.6.ln_1.bias: True
+transformer.resblocks.6.mlp.c_fc.weight: True
+transformer.resblocks.6.mlp.c_fc.bias: True
+transformer.resblocks.6.mlp.c_proj.weight: True
+transformer.resblocks.6.mlp.c_proj.bias: True
+transformer.resblocks.6.ln_2.weight: True
+transformer.resblocks.6.ln_2.bias: True
+transformer.resblocks.7.attn.in_proj_weight: True
+transformer.resblocks.7.attn.in_proj_bias: True
+transformer.resblocks.7.attn.out_proj.weight: True
+transformer.resblocks.7.attn.out_proj.bias: True
+transformer.resblocks.7.ln_1.weight: True
+transformer.resblocks.7.ln_1.bias: True
+transformer.resblocks.7.mlp.c_fc.weight: True
+transformer.resblocks.7.mlp.c_fc.bias: True
+transformer.resblocks.7.mlp.c_proj.weight: True
+transformer.resblocks.7.mlp.c_proj.bias: True
+transformer.resblocks.7.ln_2.weight: True
+transformer.resblocks.7.ln_2.bias: True
+transformer.resblocks.8.attn.in_proj_weight: True
+transformer.resblocks.8.attn.in_proj_bias: True
+transformer.resblocks.8.attn.out_proj.weight: True
+transformer.resblocks.8.attn.out_proj.bias: True
+transformer.resblocks.8.ln_1.weight: True
+transformer.resblocks.8.ln_1.bias: True
+transformer.resblocks.8.mlp.c_fc.weight: True
+transformer.resblocks.8.mlp.c_fc.bias: True
+transformer.resblocks.8.mlp.c_proj.weight: True
+transformer.resblocks.8.mlp.c_proj.bias: True
+transformer.resblocks.8.ln_2.weight: True
+transformer.resblocks.8.ln_2.bias: True
+transformer.resblocks.9.attn.in_proj_weight: True
+transformer.resblocks.9.attn.in_proj_bias: True
+transformer.resblocks.9.attn.out_proj.weight: True
+transformer.resblocks.9.attn.out_proj.bias: True
+transformer.resblocks.9.ln_1.weight: True
+transformer.resblocks.9.ln_1.bias: True
+transformer.resblocks.9.mlp.c_fc.weight: True
+transformer.resblocks.9.mlp.c_fc.bias: True
+transformer.resblocks.9.mlp.c_proj.weight: True
+transformer.resblocks.9.mlp.c_proj.bias: True
+transformer.resblocks.9.ln_2.weight: True
+transformer.resblocks.9.ln_2.bias: True
+transformer.resblocks.10.attn.in_proj_weight: True
+transformer.resblocks.10.attn.in_proj_bias: True
+transformer.resblocks.10.attn.out_proj.weight: True
+transformer.resblocks.10.attn.out_proj.bias: True
+transformer.resblocks.10.ln_1.weight: True
+transformer.resblocks.10.ln_1.bias: True
+transformer.resblocks.10.mlp.c_fc.weight: True
+transformer.resblocks.10.mlp.c_fc.bias: True
+transformer.resblocks.10.mlp.c_proj.weight: True
+transformer.resblocks.10.mlp.c_proj.bias: True
+transformer.resblocks.10.ln_2.weight: True
+transformer.resblocks.10.ln_2.bias: True
+transformer.resblocks.11.attn.in_proj_weight: True
+transformer.resblocks.11.attn.in_proj_bias: True
+transformer.resblocks.11.attn.out_proj.weight: True
+transformer.resblocks.11.attn.out_proj.bias: True
+transformer.resblocks.11.ln_1.weight: True
+transformer.resblocks.11.ln_1.bias: True
+transformer.resblocks.11.mlp.c_fc.weight: True
+transformer.resblocks.11.mlp.c_fc.bias: True
+transformer.resblocks.11.mlp.c_proj.weight: True
+transformer.resblocks.11.mlp.c_proj.bias: True
+transformer.resblocks.11.ln_2.weight: True
+transformer.resblocks.11.ln_2.bias: True
+token_embedding.weight: True
+ln_final.weight: True
+ln_final.bias: True
+  0% 0/14661 [00:00<?, ?it/s]/home/10501001/anaconda3/envs/ACTION-CLIP/lib/python3.9/site-packages/torch/optim/lr_scheduler.py:129: UserWarning: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
+  warnings.warn("Detected call of `lr_scheduler.step()` before `optimizer.step()`. "
+/home/10501001/anaconda3/envs/ACTION-CLIP/lib/python3.9/site-packages/torch/optim/lr_scheduler.py:154: UserWarning: The epoch parameter in `scheduler.step()` was not necessary and is being deprecated where possible. Please use `scheduler.step()` to step the scheduler. During the deprecation, if epoch is different from None, the closed form is used instead of the new chainable form, where available. Please open an issue if you are unable to replicate your use case: https://github.com/pytorch/pytorch/issues/new/choose.
+  warnings.warn(EPOCH_DEPRECATION_WARNING, UserWarning)
+image_embedding size:  torch.Size([16, 1024])
+text_embedding size:  torch.Size([16, 1024])
+/home/10501001/anaconda3/envs/ACTION-CLIP/lib/python3.9/site-packages/torch/nn/functional.py:2741: UserWarning: reduction: 'mean' divides the total loss by both the batch size and the support size.'batchmean' divides only by the batch size, and aligns with the KL div math definition.'mean' will be changed to behave the same as 'batchmean' in the next major release.
+  warnings.warn(
+  0% 1/14661 [00:13<55:03:07, 13.52s/it]  0% 2/14661 [00:13<23:46:44,  5.84s/it]  0% 3/14661 [00:14<13:46:47,  3.38s/it]  0% 4/14661 [00:14<9:04:52,  2.23s/it]   0% 5/14661 [00:15<6:30:01,  1.60s/it]  0% 6/14661 [00:15<4:55:11,  1.21s/it]  0% 7/14661 [00:16<3:54:45,  1.04it/s]  0% 8/14661 [00:16<3:29:09,  1.17it/s]  0% 9/14661 [00:17<2:58:45,  1.37it/s]  0% 10/14661 [00:17<2:36:24,  1.56it/s]  0% 11/14661 [00:18<2:21:06,  1.73it/s]  0% 12/14661 [00:18<2:11:10,  1.86it/s]  0% 13/14661 [00:19<2:05:56,  1.94it/s]  0% 14/14661 [00:19<2:02:55,  1.99it/s]  0% 15/14661 [00:20<1:59:16,  2.05it/s]  0% 16/14661 [00:20<1:56:58,  2.09it/s]  0% 17/14661 [00:21<1:55:50,  2.11it/s]  0% 18/14661 [00:21<1:54:24,  2.13it/s]  0% 19/14661 [00:21<1:53:42,  2.15it/s]  0% 20/14661 [00:22<1:52:42,  2.17it/s]  0% 21/14661 [00:22<1:54:25,  2.13it/s]  0% 22/14661 [00:23<1:54:33,  2.13it/s]  0% 23/14661 [00:23<1:54:58,  2.12it/s]  0% 24/14661 [00:24<1:53:49,  2.14it/s]  0% 25/14661 [00:24<1:53:46,  2.14it/s]  0% 26/14661 [00:25<1:53:31,  2.15it/s]  0% 27/14661 [00:25<1:53:09,  2.16it/s]  0% 28/14661 [00:26<1:54:45,  2.13it/s]  0% 29/14661 [00:26<2:00:02,  2.03it/s]  0% 30/14661 [00:27<2:00:59,  2.02it/s]  0% 31/14661 [00:27<2:03:40,  1.97it/s]  0% 32/14661 [00:28<1:59:28,  2.04it/s]  0% 33/14661 [00:28<1:57:34,  2.07it/s]  0% 34/14661 [00:29<1:56:03,  2.10it/s]  0% 35/14661 [00:29<1:54:08,  2.14it/s]  0% 36/14661 [00:30<1:54:01,  2.14it/s]  0% 37/14661 [00:30<1:56:17,  2.10it/s]  0% 38/14661 [00:30<1:55:29,  2.11it/s]  0% 39/14661 [00:31<1:54:14,  2.13it/s]  0% 40/14661 [00:31<1:53:28,  2.15it/s]  0% 41/14661 [00:32<1:54:27,  2.13it/s]  0% 42/14661 [00:32<1:52:42,  2.16it/s]  0% 43/14661 [00:33<1:52:19,  2.17it/s]  0% 44/14661 [00:33<1:52:58,  2.16it/s]  0% 45/14661 [00:34<1:53:10,  2.15it/s]  0% 46/14661 [00:34<1:52:47,  2.16it/s]  0% 47/14661 [00:35<1:53:07,  2.15it/s]  0% 48/14661 [00:35<1:52:54,  2.16it/s]  0% 49/14661 [00:36<1:53:19,  2.15it/s]  0% 50/14661 [00:36<1:52:06,  2.17it/s]  0% 51/14661 [00:36<1:50:51,  2.20it/s]  0% 52/14661 [00:37<1:49:51,  2.22it/s]  0% 53/14661 [00:37<1:50:08,  2.21it/s]  0% 54/14661 [00:38<1:50:12,  2.21it/s]  0% 55/14661 [00:38<1:50:57,  2.19it/s]  0% 56/14661 [00:39<1:50:48,  2.20it/s]  0% 57/14661 [00:39<1:52:38,  2.16it/s]  0% 58/14661 [00:40<1:50:58,  2.19it/s]  0% 59/14661 [00:40<1:50:33,  2.20it/s]  0% 60/14661 [00:41<1:50:00,  2.21it/s]  0% 61/14661 [00:41<1:49:32,  2.22it/s]  0% 62/14661 [00:41<1:49:40,  2.22it/s]  0% 63/14661 [00:42<1:51:07,  2.19it/s]  0% 64/14661 [00:42<1:51:57,  2.17it/s]  0% 65/14661 [00:43<1:54:00,  2.13it/s]  0% 66/14661 [00:43<1:53:42,  2.14it/s]  0% 67/14661 [00:44<1:53:23,  2.14it/s]  0% 68/14661 [00:44<1:52:55,  2.15it/s]  0% 69/14661 [00:45<1:53:37,  2.14it/s]  0% 70/14661 [00:45<1:52:25,  2.16it/s]  0% 71/14661 [00:46<1:53:59,  2.13it/s]  0% 72/14661 [00:46<1:54:36,  2.12it/s]  0% 73/14661 [00:47<1:54:00,  2.13it/s]  1% 74/14661 [00:47<1:57:14,  2.07it/s]  1% 75/14661 [00:48<1:54:14,  2.13it/s]  1% 76/14661 [00:48<1:54:17,  2.13it/s]  1% 77/14661 [00:49<1:54:19,  2.13it/s]  1% 78/14661 [00:49<1:53:19,  2.14it/s]  1% 79/14661 [00:49<1:55:10,  2.11it/s]  1% 80/14661 [00:50<1:54:20,  2.13it/s]  1% 81/14661 [00:50<1:53:38,  2.14it/s]  1% 82/14661 [00:51<1:51:54,  2.17it/s]  1% 83/14661 [00:51<1:51:23,  2.18it/s]  1% 84/14661 [00:52<1:53:13,  2.15it/s]  1% 85/14661 [00:52<1:54:05,  2.13it/s]  1% 86/14661 [00:53<1:52:54,  2.15it/s]  1% 87/14661 [00:53<1:52:19,  2.16it/s]  1% 88/14661 [00:54<1:51:26,  2.18it/s]  1% 89/14661 [00:54<1:50:51,  2.19it/s]  1% 90/14661 [00:55<1:50:38,  2.19it/s]  1% 91/14661 [00:55<1:49:55,  2.21it/s]  1% 92/14661 [00:56<2:07:15,  1.91it/s]  1% 93/14661 [00:56<2:05:43,  1.93it/s]  1% 94/14661 [00:57<2:01:41,  1.99it/s]  1% 95/14661 [00:57<1:58:57,  2.04it/s]  1% 96/14661 [00:58<1:57:00,  2.07it/s]  1% 97/14661 [00:58<1:55:07,  2.11it/s]  1% 98/14661 [00:58<1:52:44,  2.15it/s]  1% 99/14661 [00:59<1:51:28,  2.18it/s]  1% 100/14661 [00:59<1:52:04,  2.17it/s]  1% 101/14661 [01:00<1:54:05,  2.13it/s]  1% 102/14661 [01:00<1:52:48,  2.15it/s]  1% 103/14661 [01:01<1:55:50,  2.09it/s]  1% 104/14661 [01:01<1:55:19,  2.10it/s]  1% 105/14661 [01:02<1:54:12,  2.12it/s]  1% 106/14661 [01:02<1:52:47,  2.15it/s]  1% 107/14661 [01:03<1:54:32,  2.12it/s]  1% 108/14661 [01:03<1:56:15,  2.09it/s]  1% 109/14661 [01:04<1:55:55,  2.09it/s]  1% 110/14661 [01:04<1:57:22,  2.07it/s]  1% 111/14661 [01:05<1:58:16,  2.05it/s]  1% 112/14661 [01:05<1:59:10,  2.03it/s]  1% 113/14661 [01:06<2:03:07,  1.97it/s]  1% 114/14661 [01:06<2:01:17,  2.00it/s]  1% 115/14661 [01:07<1:59:53,  2.02it/s]  1% 116/14661 [01:07<1:59:21,  2.03it/s]  1% 117/14661 [01:08<1:58:00,  2.05it/s]  1% 118/14661 [01:08<1:55:19,  2.10it/s]  1% 119/14661 [01:08<1:52:32,  2.15it/s]  1% 120/14661 [01:09<1:52:27,  2.16it/s]  1% 121/14661 [01:09<1:52:42,  2.15it/s]  1% 122/14661 [01:10<1:55:26,  2.10it/s]  1% 123/14661 [01:10<1:55:59,  2.09it/s]  1% 124/14661 [01:11<1:53:28,  2.14it/s]  1% 125/14661 [01:11<1:53:26,  2.14it/s]  1% 126/14661 [01:12<1:52:54,  2.15it/s]  1% 127/14661 [01:12<1:52:16,  2.16it/s]  1% 128/14661 [01:13<1:51:11,  2.18it/s]  1% 129/14661 [01:13<1:51:01,  2.18it/s]  1% 130/14661 [01:14<1:51:38,  2.17it/s]  1% 131/14661 [01:14<1:51:16,  2.18it/s]  1% 132/14661 [01:15<1:51:37,  2.17it/s]  1% 133/14661 [01:15<1:53:56,  2.12it/s]  1% 134/14661 [01:15<1:53:25,  2.13it/s]  1% 135/14661 [01:16<1:54:20,  2.12it/s]  1% 136/14661 [01:16<1:54:21,  2.12it/s]  1% 137/14661 [01:17<1:54:16,  2.12it/s]  1% 138/14661 [01:17<1:52:03,  2.16it/s]  1% 139/14661 [01:18<1:52:38,  2.15it/s]  1% 140/14661 [01:18<1:51:15,  2.18it/s]  1% 141/14661 [01:19<1:50:50,  2.18it/s]  1% 142/14661 [01:19<1:51:46,  2.16it/s]  1% 143/14661 [01:20<1:51:39,  2.17it/s]  1% 144/14661 [01:20<1:51:43,  2.17it/s]  1% 145/14661 [01:21<1:52:47,  2.15it/s]  1% 146/14661 [01:21<1:51:26,  2.17it/s]  1% 147/14661 [01:22<1:51:11,  2.18it/s]  1% 148/14661 [01:22<1:51:53,  2.16it/s]  1% 149/14661 [01:22<1:51:19,  2.17it/s]  1% 150/14661 [01:23<1:49:07,  2.22it/s]  1% 151/14661 [01:23<1:51:36,  2.17it/s]  1% 152/14661 [01:24<1:53:00,  2.14it/s]  1% 153/14661 [01:24<1:52:43,  2.15it/s]  1% 154/14661 [01:25<1:57:19,  2.06it/s]  1% 155/14661 [01:25<1:55:06,  2.10it/s]  1% 156/14661 [01:26<1:57:13,  2.06it/s]  1% 157/14661 [01:26<1:57:44,  2.05it/s]  1% 158/14661 [01:27<1:58:31,  2.04it/s]  1% 159/14661 [01:27<1:58:39,  2.04it/s]  1% 160/14661 [01:28<1:57:22,  2.06it/s]  1% 161/14661 [01:28<1:56:11,  2.08it/s]  1% 162/14661 [01:29<1:55:23,  2.09it/s]  1% 163/14661 [01:29<1:54:33,  2.11it/s]  1% 164/14661 [01:30<1:53:04,  2.14it/s]  1% 165/14661 [01:30<1:52:31,  2.15it/s]  1% 166/14661 [01:31<1:52:01,  2.16it/s]  1% 167/14661 [01:31<1:52:02,  2.16it/s]  1% 168/14661 [01:31<1:51:55,  2.16it/s]  1% 169/14661 [01:32<1:52:03,  2.16it/s]  1% 170/14661 [01:32<1:51:56,  2.16it/s]  1% 171/14661 [01:33<1:52:28,  2.15it/s]  1% 172/14661 [01:33<1:53:10,  2.13it/s]  1% 173/14661 [01:34<1:52:10,  2.15it/s]  1% 174/14661 [01:34<1:56:25,  2.07it/s]  1% 175/14661 [01:35<1:57:05,  2.06it/s]  1% 176/14661 [01:35<1:56:20,  2.08it/s]  1% 177/14661 [01:36<1:55:05,  2.10it/s]  1% 178/14661 [01:36<1:53:56,  2.12it/s]  1% 179/14661 [01:37<1:52:54,  2.14it/s]  1% 180/14661 [01:37<1:52:33,  2.14it/s]  1% 181/14661 [01:38<1:51:38,  2.16it/s]  1% 182/14661 [01:38<1:51:40,  2.16it/s]  1% 183/14661 [01:39<1:53:04,  2.13it/s]  1% 184/14661 [01:39<1:53:23,  2.13it/s]  1% 185/14661 [01:39<1:51:42,  2.16it/s]  1% 186/14661 [01:40<1:51:12,  2.17it/s]  1% 187/14661 [01:40<1:51:22,  2.17it/s]  1% 188/14661 [01:41<2:05:00,  1.93it/s]  1% 189/14661 [01:41<2:00:21,  2.00it/s]  1% 190/14661 [01:42<1:56:53,  2.06it/s]  1% 191/14661 [01:42<1:53:52,  2.12it/s]  1% 192/14661 [01:43<1:54:36,  2.10it/s]  1% 193/14661 [01:43<1:53:52,  2.12it/s]  1% 194/14661 [01:44<1:51:43,  2.16it/s]  1% 195/14661 [01:44<1:51:20,  2.17it/s]  1% 196/14661 [01:45<1:52:41,  2.14it/s]  1% 197/14661 [01:45<1:51:29,  2.16it/s]  1% 198/14661 [01:46<1:51:22,  2.16it/s]  1% 199/14661 [01:46<1:49:52,  2.19it/s]  1% 200/14661 [01:47<1:53:02,  2.13it/s]  1% 201/14661 [01:47<1:54:21,  2.11it/s]  1% 202/14661 [01:47<1:52:54,  2.13it/s]  1% 203/14661 [01:48<1:52:13,  2.15it/s]  1% 204/14661 [01:48<1:52:28,  2.14it/s]  1% 205/14661 [01:49<1:52:05,  2.15it/s]  1% 206/14661 [01:49<1:54:24,  2.11it/s]  1% 207/14661 [01:50<1:53:30,  2.12it/s]  1% 208/14661 [01:50<1:52:51,  2.13it/s]  1% 209/14661 [01:51<1:53:24,  2.12it/s]  1% 210/14661 [01:51<1:51:49,  2.15it/s]  1% 211/14661 [01:52<1:52:42,  2.14it/s]  1% 212/14661 [01:52<1:51:44,  2.16it/s]  1% 213/14661 [01:53<1:54:13,  2.11it/s]  1% 214/14661 [01:53<1:53:52,  2.11it/s]  1% 215/14661 [01:54<1:52:21,  2.14it/s]  1% 216/14661 [01:54<1:51:24,  2.16it/s]  1% 217/14661 [01:54<1:50:59,  2.17it/s]  1% 218/14661 [01:55<1:51:55,  2.15it/s]  1% 219/14661 [01:55<1:51:27,  2.16it/s]  2% 220/14661 [01:56<1:55:05,  2.09it/s]  2% 221/14661 [01:56<1:55:51,  2.08it/s]  2% 222/14661 [01:57<1:54:14,  2.11it/s]  2% 223/14661 [01:57<1:53:00,  2.13it/s]  2% 224/14661 [01:58<1:52:30,  2.14it/s]  2% 225/14661 [01:58<1:53:03,  2.13it/s]  2% 226/14661 [01:59<1:51:24,  2.16it/s]  2% 227/14661 [01:59<1:50:17,  2.18it/s]  2% 228/14661 [02:00<1:50:41,  2.17it/s]  2% 229/14661 [02:00<1:50:55,  2.17it/s]  2% 230/14661 [02:01<1:50:44,  2.17it/s]  2% 231/14661 [02:01<1:49:30,  2.20it/s]  2% 232/14661 [02:01<1:53:08,  2.13it/s]  2% 233/14661 [02:02<1:55:01,  2.09it/s]  2% 234/14661 [02:02<1:53:04,  2.13it/s]  2% 235/14661 [02:03<1:51:32,  2.16it/s]  2% 236/14661 [02:03<1:50:32,  2.18it/s]  2% 237/14661 [02:04<1:49:49,  2.19it/s]  2% 238/14661 [02:04<1:51:57,  2.15it/s]  2% 239/14661 [02:05<1:51:47,  2.15it/s]  2% 240/14661 [02:05<1:50:44,  2.17it/s]  2% 241/14661 [02:06<1:49:43,  2.19it/s]  2% 242/14661 [02:06<1:48:51,  2.21it/s]  2% 243/14661 [02:07<1:48:10,  2.22it/s]  2% 244/14661 [02:07<1:47:59,  2.23it/s]  2% 245/14661 [02:07<1:47:06,  2.24it/s]  2% 246/14661 [02:08<1:47:08,  2.24it/s]  2% 247/14661 [02:08<1:47:28,  2.24it/s]  2% 248/14661 [02:09<1:47:41,  2.23it/s]  2% 249/14661 [02:09<1:48:17,  2.22it/s]  2% 250/14661 [02:10<1:47:58,  2.22it/s]  2% 251/14661 [02:10<1:48:31,  2.21it/s]  2% 252/14661 [02:11<1:48:35,  2.21it/s]  2% 253/14661 [02:11<1:48:31,  2.21it/s]  2% 254/14661 [02:11<1:49:33,  2.19it/s]  2% 255/14661 [02:12<1:49:40,  2.19it/s]  2% 256/14661 [02:12<1:49:03,  2.20it/s]  2% 257/14661 [02:13<1:49:52,  2.18it/s]  2% 258/14661 [02:13<1:50:36,  2.17it/s]  2% 259/14661 [02:14<1:51:44,  2.15it/s]  2% 260/14661 [02:14<1:50:36,  2.17it/s]  2% 261/14661 [02:15<1:49:17,  2.20it/s]  2% 262/14661 [02:15<1:59:09,  2.01it/s]  2% 263/14661 [02:16<1:56:05,  2.07it/s]  2% 264/14661 [02:16<1:52:30,  2.13it/s]  2% 265/14661 [02:17<1:51:01,  2.16it/s]  2% 266/14661 [02:17<1:49:10,  2.20it/s]  2% 267/14661 [02:18<1:48:41,  2.21it/s]  2% 268/14661 [02:18<1:50:20,  2.17it/s]  2% 269/14661 [02:18<1:51:51,  2.14it/s]  2% 270/14661 [02:19<1:52:20,  2.14it/s]  2% 271/14661 [02:19<1:51:14,  2.16it/s]  2% 272/14661 [02:20<1:51:08,  2.16it/s]  2% 273/14661 [02:20<1:49:25,  2.19it/s]  2% 274/14661 [02:21<1:49:18,  2.19it/s]  2% 275/14661 [02:21<1:48:59,  2.20it/s]  2% 276/14661 [02:22<1:48:53,  2.20it/s]  2% 277/14661 [02:22<1:49:50,  2.18it/s]  2% 278/14661 [02:23<1:48:31,  2.21it/s]  2% 279/14661 [02:23<1:49:55,  2.18it/s]  2% 280/14661 [02:23<1:49:43,  2.18it/s]  2% 281/14661 [02:24<1:50:32,  2.17it/s]  2% 282/14661 [02:24<1:50:32,  2.17it/s]  2% 283/14661 [02:25<1:51:49,  2.14it/s]  2% 284/14661 [02:25<1:50:52,  2.16it/s]  2% 285/14661 [02:26<1:50:26,  2.17it/s]  2% 286/14661 [02:26<1:49:15,  2.19it/s]  2% 287/14661 [02:27<1:47:39,  2.23it/s]  2% 288/14661 [02:27<1:50:25,  2.17it/s]  2% 289/14661 [02:28<1:50:27,  2.17it/s]  2% 290/14661 [02:28<1:50:27,  2.17it/s]  2% 291/14661 [02:29<1:49:05,  2.20it/s]  2% 292/14661 [02:29<1:49:10,  2.19it/s]  2% 293/14661 [02:29<1:51:05,  2.16it/s]  2% 294/14661 [02:30<1:51:54,  2.14it/s]  2% 295/14661 [02:30<1:51:36,  2.15it/s]  2% 296/14661 [02:31<1:51:09,  2.15it/s]  2% 297/14661 [02:31<1:51:51,  2.14it/s]  2% 298/14661 [02:32<1:54:57,  2.08it/s]  2% 299/14661 [02:32<1:54:02,  2.10it/s]  2% 300/14661 [02:33<1:52:40,  2.12it/s]  2% 301/14661 [02:33<1:51:50,  2.14it/s]  2% 302/14661 [02:34<1:50:38,  2.16it/s]  2% 303/14661 [02:34<1:49:39,  2.18it/s]  2% 304/14661 [02:35<1:49:33,  2.18it/s]  2% 305/14661 [02:35<1:51:23,  2.15it/s]  2% 306/14661 [02:36<1:50:23,  2.17it/s]  2% 307/14661 [02:36<1:49:08,  2.19it/s]  2% 308/14661 [02:36<1:50:03,  2.17it/s]  2% 309/14661 [02:37<1:50:09,  2.17it/s]  2% 310/14661 [02:37<1:51:15,  2.15it/s]  2% 311/14661 [02:38<1:51:09,  2.15it/s]  2% 312/14661 [02:38<1:50:58,  2.16it/s]  2% 313/14661 [02:39<1:49:47,  2.18it/s]  2% 314/14661 [02:39<1:49:05,  2.19it/s]  2% 315/14661 [02:40<1:50:18,  2.17it/s]  2% 316/14661 [02:40<1:49:21,  2.19it/s]  2% 317/14661 [02:41<1:48:59,  2.19it/s]  2% 318/14661 [02:41<1:48:22,  2.21it/s]  2% 319/14661 [02:42<1:49:21,  2.19it/s]  2% 320/14661 [02:42<1:50:18,  2.17it/s]  2% 321/14661 [02:42<1:50:12,  2.17it/s]  2% 322/14661 [02:43<1:50:56,  2.15it/s]  2% 323/14661 [02:43<1:51:25,  2.14it/s]  2% 324/14661 [02:44<1:50:00,  2.17it/s]  2% 325/14661 [02:44<1:49:20,  2.19it/s]  2% 326/14661 [02:45<1:48:57,  2.19it/s]  2% 327/14661 [02:45<1:48:50,  2.19it/s]  2% 328/14661 [02:46<1:48:52,  2.19it/s]  2% 329/14661 [02:46<1:49:46,  2.18it/s]  2% 330/14661 [02:47<1:49:02,  2.19it/s]  2% 331/14661 [02:47<1:50:40,  2.16it/s]  2% 332/14661 [02:47<1:50:12,  2.17it/s]  2% 333/14661 [02:48<1:48:59,  2.19it/s]  2% 334/14661 [02:48<1:49:29,  2.18it/s]  2% 335/14661 [02:49<1:49:37,  2.18it/s]  2% 336/14661 [02:49<1:48:19,  2.20it/s]  2% 337/14661 [02:50<1:48:37,  2.20it/s]  2% 338/14661 [02:50<1:49:28,  2.18it/s]  2% 339/14661 [02:51<1:49:28,  2.18it/s]  2% 340/14661 [02:51<1:49:56,  2.17it/s]  2% 341/14661 [02:52<1:49:11,  2.19it/s]  2% 342/14661 [02:52<1:49:46,  2.17it/s]  2% 343/14661 [02:53<1:50:10,  2.17it/s]  2% 344/14661 [02:53<1:49:22,  2.18it/s]  2% 345/14661 [02:53<1:48:37,  2.20it/s]  2% 346/14661 [02:54<1:58:48,  2.01it/s]  2% 347/14661 [02:55<1:59:17,  2.00it/s]  2% 348/14661 [02:55<1:56:47,  2.04it/s]  2% 349/14661 [02:55<1:54:05,  2.09it/s]  2% 350/14661 [02:56<1:52:39,  2.12it/s]  2% 351/14661 [02:56<1:51:43,  2.13it/s]  2% 352/14661 [02:57<1:51:44,  2.13it/s]  2% 353/14661 [02:57<1:51:08,  2.15it/s]  2% 354/14661 [02:58<1:51:35,  2.14it/s]  2% 355/14661 [02:58<1:50:49,  2.15it/s]  2% 356/14661 [02:59<1:48:37,  2.19it/s]  2% 357/14661 [02:59<1:51:08,  2.15it/s]  2% 358/14661 [03:00<1:51:22,  2.14it/s]  2% 359/14661 [03:00<1:50:34,  2.16it/s]  2% 360/14661 [03:01<1:54:26,  2.08it/s]  2% 361/14661 [03:01<1:52:57,  2.11it/s]  2% 362/14661 [03:02<1:51:59,  2.13it/s]  2% 363/14661 [03:02<1:50:08,  2.16it/s]  2% 364/14661 [03:02<1:48:58,  2.19it/s]  2% 365/14661 [03:03<1:50:37,  2.15it/s]  2% 366/14661 [03:03<1:49:56,  2.17it/s]  3% 367/14661 [03:04<1:51:03,  2.15it/s]  3% 368/14661 [03:04<1:51:08,  2.14it/s]  3% 369/14661 [03:05<1:50:43,  2.15it/s]  3% 370/14661 [03:05<1:51:34,  2.13it/s]  3% 371/14661 [03:06<1:51:31,  2.14it/s]  3% 372/14661 [03:06<1:51:14,  2.14it/s]  3% 373/14661 [03:07<1:50:05,  2.16it/s]  3% 374/14661 [03:07<1:49:23,  2.18it/s]  3% 375/14661 [03:08<1:49:05,  2.18it/s]  3% 376/14661 [03:08<1:47:49,  2.21it/s]  3% 377/14661 [03:08<1:48:07,  2.20it/s]  3% 378/14661 [03:09<1:49:52,  2.17it/s]  3% 379/14661 [03:09<1:51:15,  2.14it/s]  3% 380/14661 [03:10<1:53:04,  2.11it/s]  3% 381/14661 [03:10<1:51:41,  2.13it/s]  3% 382/14661 [03:11<1:49:49,  2.17it/s]  3% 383/14661 [03:11<1:48:20,  2.20it/s]  3% 384/14661 [03:12<1:49:48,  2.17it/s]  3% 385/14661 [03:12<1:51:51,  2.13it/s]  3% 386/14661 [03:13<1:50:09,  2.16it/s]  3% 387/14661 [03:13<1:49:06,  2.18it/s]  3% 388/14661 [03:14<1:50:28,  2.15it/s]  3% 389/14661 [03:14<1:51:23,  2.14it/s]  3% 390/14661 [03:14<1:50:25,  2.15it/s]  3% 391/14661 [03:15<1:50:07,  2.16it/s]  3% 392/14661 [03:15<1:49:36,  2.17it/s]  3% 393/14661 [03:16<1:50:32,  2.15it/s]  3% 394/14661 [03:16<1:51:22,  2.14it/s]  3% 395/14661 [03:17<1:49:48,  2.17it/s]  3% 396/14661 [03:17<1:48:07,  2.20it/s]  3% 397/14661 [03:18<1:46:58,  2.22it/s]  3% 398/14661 [03:18<1:46:48,  2.23it/s]  3% 399/14661 [03:19<1:46:49,  2.23it/s]  3% 400/14661 [03:19<1:47:24,  2.21it/s]  3% 401/14661 [03:19<1:49:11,  2.18it/s]  3% 402/14661 [03:20<1:53:56,  2.09it/s]  3% 403/14661 [03:20<1:51:25,  2.13it/s]  3% 404/14661 [03:21<1:50:24,  2.15it/s]  3% 405/14661 [03:21<1:50:10,  2.16it/s]  3% 406/14661 [03:22<1:49:31,  2.17it/s]  3% 407/14661 [03:22<1:51:50,  2.12it/s]  3% 408/14661 [03:23<1:52:06,  2.12it/s]  3% 409/14661 [03:23<1:53:38,  2.09it/s]  3% 410/14661 [03:24<1:51:56,  2.12it/s]  3% 411/14661 [03:24<1:51:28,  2.13it/s]  3% 412/14661 [03:25<1:50:50,  2.14it/s]  3% 413/14661 [03:25<1:49:29,  2.17it/s]  3% 414/14661 [03:26<1:47:32,  2.21it/s]  3% 415/14661 [03:26<1:46:46,  2.22it/s]  3% 416/14661 [03:26<1:48:30,  2.19it/s]  3% 417/14661 [03:27<1:48:41,  2.18it/s]  3% 418/14661 [03:27<1:48:08,  2.19it/s]  3% 419/14661 [03:28<1:48:52,  2.18it/s]  3% 420/14661 [03:28<1:53:24,  2.09it/s]  3% 421/14661 [03:29<1:52:04,  2.12it/s]  3% 422/14661 [03:29<1:50:13,  2.15it/s]  3% 423/14661 [03:30<1:52:08,  2.12it/s]  3% 424/14661 [03:30<1:51:22,  2.13it/s]  3% 425/14661 [03:31<1:49:50,  2.16it/s]  3% 426/14661 [03:31<1:49:34,  2.17it/s]  3% 427/14661 [03:32<1:49:07,  2.17it/s]  3% 428/14661 [03:32<1:48:29,  2.19it/s]  3% 429/14661 [03:33<1:49:48,  2.16it/s]  3% 430/14661 [03:33<1:49:30,  2.17it/s]  3% 431/14661 [03:34<1:53:33,  2.09it/s]  3% 432/14661 [03:34<1:52:11,  2.11it/s]  3% 433/14661 [03:34<1:56:43,  2.03it/s]  3% 434/14661 [03:35<1:56:02,  2.04it/s]  3% 435/14661 [03:35<1:52:39,  2.10it/s]  3% 436/14661 [03:36<1:50:39,  2.14it/s]  3% 437/14661 [03:36<1:50:14,  2.15it/s]  3% 438/14661 [03:37<1:48:59,  2.17it/s]  3% 439/14661 [03:37<1:48:12,  2.19it/s]  3% 440/14661 [03:38<1:47:55,  2.20it/s]  3% 441/14661 [03:38<1:48:56,  2.18it/s]  3% 442/14661 [03:39<2:01:48,  1.95it/s]  3% 443/14661 [03:39<1:58:11,  2.00it/s]  3% 444/14661 [03:40<1:55:41,  2.05it/s]  3% 445/14661 [03:40<1:53:03,  2.10it/s]  3% 446/14661 [03:41<1:50:29,  2.14it/s]  3% 447/14661 [03:41<1:49:26,  2.16it/s]  3% 448/14661 [03:42<1:49:36,  2.16it/s]  3% 449/14661 [03:42<1:49:18,  2.17it/s]  3% 450/14661 [03:42<1:50:05,  2.15it/s]  3% 451/14661 [03:43<1:49:40,  2.16it/s]  3% 452/14661 [03:43<1:48:54,  2.17it/s]  3% 453/14661 [03:44<1:47:08,  2.21it/s]  3% 454/14661 [03:44<1:47:47,  2.20it/s]  3% 455/14661 [03:45<1:47:15,  2.21it/s]  3% 456/14661 [03:45<1:46:39,  2.22it/s]  3% 457/14661 [03:46<1:47:34,  2.20it/s]  3% 458/14661 [03:46<1:49:37,  2.16it/s]  3% 459/14661 [03:47<1:49:23,  2.16it/s]  3% 460/14661 [03:47<1:50:14,  2.15it/s]  3% 461/14661 [03:48<1:54:28,  2.07it/s]  3% 462/14661 [03:48<1:52:35,  2.10it/s]  3% 463/14661 [03:49<1:54:48,  2.06it/s]  3% 464/14661 [03:49<1:57:45,  2.01it/s]  3% 465/14661 [03:50<1:56:54,  2.02it/s]  3% 466/14661 [03:50<1:55:09,  2.05it/s]  3% 467/14661 [03:50<1:53:10,  2.09it/s]  3% 468/14661 [03:51<1:51:06,  2.13it/s]  3% 469/14661 [03:51<1:49:21,  2.16it/s]  3% 470/14661 [03:52<1:52:38,  2.10it/s]  3% 471/14661 [03:52<1:51:01,  2.13it/s]  3% 472/14661 [03:53<1:50:06,  2.15it/s]  3% 473/14661 [03:53<1:48:31,  2.18it/s]  3% 474/14661 [03:54<1:47:23,  2.20it/s]  3% 475/14661 [03:54<1:47:23,  2.20it/s]  3% 476/14661 [03:55<1:47:24,  2.20it/s]  3% 477/14661 [03:55<1:48:34,  2.18it/s]  3% 478/14661 [03:56<1:49:19,  2.16it/s]  3% 479/14661 [03:56<1:48:31,  2.18it/s]  3% 480/14661 [03:56<1:48:06,  2.19it/s]  3% 481/14661 [03:57<1:47:37,  2.20it/s]  3% 482/14661 [03:57<1:47:10,  2.20it/s]  3% 483/14661 [03:58<1:47:05,  2.21it/s]  3% 484/14661 [03:58<1:49:48,  2.15it/s]  3% 485/14661 [03:59<1:50:09,  2.14it/s]  3% 486/14661 [03:59<1:51:37,  2.12it/s]  3% 487/14661 [04:00<1:50:00,  2.15it/s]  3% 488/14661 [04:00<1:48:39,  2.17it/s]  3% 489/14661 [04:01<1:48:10,  2.18it/s]  3% 490/14661 [04:01<1:50:03,  2.15it/s]  3% 491/14661 [04:02<1:49:53,  2.15it/s]  3% 492/14661 [04:02<1:48:52,  2.17it/s]  3% 493/14661 [04:02<1:48:48,  2.17it/s]  3% 494/14661 [04:03<1:48:22,  2.18it/s]  3% 495/14661 [04:03<1:47:10,  2.20it/s]  3% 496/14661 [04:04<1:47:13,  2.20it/s]  3% 497/14661 [04:04<1:48:13,  2.18it/s]  3% 498/14661 [04:05<1:47:05,  2.20it/s]  3% 499/14661 [04:05<1:46:02,  2.23it/s]  3% 500/14661 [04:06<1:46:47,  2.21it/s]  3% 501/14661 [04:06<1:49:30,  2.16it/s]  3% 502/14661 [04:07<1:52:17,  2.10it/s]  3% 503/14661 [04:07<1:50:05,  2.14it/s]  3% 504/14661 [04:07<1:49:17,  2.16it/s]  3% 505/14661 [04:08<1:49:36,  2.15it/s]  3% 506/14661 [04:08<1:49:37,  2.15it/s]  3% 507/14661 [04:09<1:50:37,  2.13it/s]  3% 508/14661 [04:09<1:50:53,  2.13it/s]  3% 509/14661 [04:10<1:50:05,  2.14it/s]  3% 510/14661 [04:10<1:49:54,  2.15it/s]  3% 511/14661 [04:11<1:49:14,  2.16it/s]  3% 512/14661 [04:11<1:49:29,  2.15it/s]  3% 513/14661 [04:12<1:52:07,  2.10it/s]  4% 514/14661 [04:12<1:53:39,  2.07it/s]  4% 515/14661 [04:13<1:52:31,  2.10it/s]  4% 516/14661 [04:13<2:00:27,  1.96it/s]  4% 517/14661 [04:14<1:57:56,  2.00it/s]  4% 518/14661 [04:14<1:55:22,  2.04it/s]  4% 519/14661 [04:15<1:52:26,  2.10it/s]  4% 520/14661 [04:15<1:50:28,  2.13it/s]  4% 521/14661 [04:16<1:49:25,  2.15it/s]  4% 522/14661 [04:16<1:50:10,  2.14it/s]  4% 523/14661 [04:16<1:48:44,  2.17it/s]  4% 524/14661 [04:17<1:50:05,  2.14it/s]  4% 525/14661 [04:17<1:51:12,  2.12it/s]  4% 526/14661 [04:18<1:50:39,  2.13it/s]  4% 527/14661 [04:18<1:51:13,  2.12it/s]  4% 528/14661 [04:19<1:49:41,  2.15it/s]  4% 529/14661 [04:19<1:50:38,  2.13it/s]  4% 530/14661 [04:20<1:51:29,  2.11it/s]  4% 531/14661 [04:20<1:54:02,  2.06it/s]  4% 532/14661 [04:21<1:53:13,  2.08it/s]  4% 533/14661 [04:21<1:52:48,  2.09it/s]  4% 534/14661 [04:22<1:52:11,  2.10it/s]  4% 535/14661 [04:22<1:52:29,  2.09it/s]  4% 536/14661 [04:23<1:51:46,  2.11it/s]  4% 537/14661 [04:23<1:51:50,  2.10it/s]  4% 538/14661 [04:24<1:51:33,  2.11it/s]  4% 539/14661 [04:24<1:51:09,  2.12it/s]  4% 540/14661 [04:25<1:50:08,  2.14it/s]  4% 541/14661 [04:25<1:48:29,  2.17it/s]  4% 542/14661 [04:25<1:48:03,  2.18it/s]  4% 543/14661 [04:26<1:48:08,  2.18it/s]  4% 544/14661 [04:26<1:50:08,  2.14it/s]  4% 545/14661 [04:27<1:48:46,  2.16it/s]  4% 546/14661 [04:27<1:47:24,  2.19it/s]  4% 547/14661 [04:28<1:46:15,  2.21it/s]  4% 548/14661 [04:28<1:46:12,  2.21it/s]  4% 549/14661 [04:29<1:48:58,  2.16it/s]  4% 550/14661 [04:29<1:49:17,  2.15it/s]  4% 551/14661 [04:30<1:50:16,  2.13it/s]  4% 552/14661 [04:30<1:49:16,  2.15it/s]  4% 553/14661 [04:31<1:48:53,  2.16it/s]  4% 554/14661 [04:31<1:49:28,  2.15it/s]  4% 555/14661 [04:31<1:48:42,  2.16it/s]  4% 556/14661 [04:32<1:47:50,  2.18it/s]  4% 557/14661 [04:32<1:49:26,  2.15it/s]  4% 558/14661 [04:33<1:51:12,  2.11it/s]  4% 559/14661 [04:33<1:50:05,  2.13it/s]  4% 560/14661 [04:34<1:48:23,  2.17it/s]  4% 561/14661 [04:34<1:48:16,  2.17it/s]  4% 562/14661 [04:35<1:50:44,  2.12it/s]  4% 563/14661 [04:35<1:50:03,  2.13it/s]  4% 564/14661 [04:36<1:49:27,  2.15it/s]  4% 565/14661 [04:36<1:49:58,  2.14it/s]  4% 566/14661 [04:37<1:49:11,  2.15it/s]  4% 567/14661 [04:37<1:48:38,  2.16it/s]  4% 568/14661 [04:38<1:48:33,  2.16it/s]  4% 569/14661 [04:38<1:47:35,  2.18it/s]  4% 570/14661 [04:38<1:49:33,  2.14it/s]  4% 571/14661 [04:39<1:48:19,  2.17it/s]  4% 572/14661 [04:39<1:47:44,  2.18it/s]  4% 573/14661 [04:40<1:46:41,  2.20it/s]  4% 574/14661 [04:40<1:46:01,  2.21it/s]  4% 575/14661 [04:41<1:47:21,  2.19it/s]  4% 576/14661 [04:41<1:47:14,  2.19it/s]  4% 577/14661 [04:42<1:47:52,  2.18it/s]  4% 578/14661 [04:42<1:48:00,  2.17it/s]  4% 579/14661 [04:43<1:48:36,  2.16it/s]  4% 580/14661 [04:43<1:49:21,  2.15it/s]  4% 581/14661 [04:44<1:49:45,  2.14it/s]  4% 582/14661 [04:44<1:49:58,  2.13it/s]  4% 583/14661 [04:44<1:49:34,  2.14it/s]  4% 584/14661 [04:45<1:47:53,  2.17it/s]  4% 585/14661 [04:45<1:48:25,  2.16it/s]  4% 586/14661 [04:46<1:49:28,  2.14it/s]  4% 587/14661 [04:46<1:49:31,  2.14it/s]  4% 588/14661 [04:47<1:49:30,  2.14it/s]  4% 589/14661 [04:47<1:49:16,  2.15it/s]  4% 590/14661 [04:48<1:48:49,  2.16it/s]  4% 591/14661 [04:48<1:52:50,  2.08it/s]  4% 592/14661 [04:49<1:53:21,  2.07it/s]  4% 593/14661 [04:49<1:51:06,  2.11it/s]  4% 594/14661 [04:50<1:48:56,  2.15it/s]  4% 595/14661 [04:50<1:47:43,  2.18it/s]  4% 596/14661 [04:51<1:49:14,  2.15it/s]  4% 597/14661 [04:51<1:47:53,  2.17it/s]  4% 598/14661 [04:51<1:48:19,  2.16it/s]  4% 599/14661 [04:52<1:59:55,  1.95it/s]  4% 600/14661 [04:53<1:55:53,  2.02it/s]  4% 601/14661 [04:53<1:53:17,  2.07it/s]  4% 602/14661 [04:53<1:49:59,  2.13it/s]  4% 603/14661 [04:54<1:49:14,  2.14it/s]  4% 604/14661 [04:54<1:50:09,  2.13it/s]  4% 605/14661 [04:55<1:49:37,  2.14it/s]  4% 606/14661 [04:55<1:51:50,  2.09it/s]  4% 607/14661 [04:56<1:53:11,  2.07it/s]  4% 608/14661 [04:56<1:51:39,  2.10it/s]  4% 609/14661 [04:57<1:50:18,  2.12it/s]  4% 610/14661 [04:57<1:49:13,  2.14it/s]  4% 611/14661 [04:58<1:49:07,  2.15it/s]  4% 612/14661 [04:58<1:48:24,  2.16it/s]  4% 613/14661 [04:59<1:47:08,  2.19it/s]  4% 614/14661 [04:59<1:46:12,  2.20it/s]  4% 615/14661 [05:00<1:51:12,  2.11it/s]  4% 616/14661 [05:00<1:51:36,  2.10it/s]  4% 617/14661 [05:00<1:49:56,  2.13it/s]  4% 618/14661 [05:01<1:49:28,  2.14it/s]  4% 619/14661 [05:01<1:49:33,  2.14it/s]  4% 620/14661 [05:02<1:50:19,  2.12it/s]  4% 621/14661 [05:02<1:49:31,  2.14it/s]  4% 622/14661 [05:03<1:47:46,  2.17it/s]  4% 623/14661 [05:03<1:46:39,  2.19it/s]  4% 624/14661 [05:04<1:48:02,  2.17it/s]  4% 625/14661 [05:04<1:48:54,  2.15it/s]  4% 626/14661 [05:05<1:48:12,  2.16it/s]  4% 627/14661 [05:05<1:50:54,  2.11it/s]  4% 628/14661 [05:06<1:50:53,  2.11it/s]  4% 629/14661 [05:06<1:51:22,  2.10it/s]  4% 630/14661 [05:07<1:50:00,  2.13it/s]  4% 631/14661 [05:07<1:50:05,  2.12it/s]  4% 632/14661 [05:07<1:48:41,  2.15it/s]  4% 633/14661 [05:08<1:48:59,  2.15it/s]  4% 634/14661 [05:08<1:48:04,  2.16it/s]  4% 635/14661 [05:09<1:47:50,  2.17it/s]  4% 636/14661 [05:09<1:47:25,  2.18it/s]  4% 637/14661 [05:10<1:46:36,  2.19it/s]  4% 638/14661 [05:10<1:46:42,  2.19it/s]  4% 639/14661 [05:11<1:46:48,  2.19it/s]  4% 640/14661 [05:11<1:46:33,  2.19it/s]  4% 641/14661 [05:12<1:45:53,  2.21it/s]  4% 642/14661 [05:12<1:45:19,  2.22it/s]  4% 643/14661 [05:12<1:47:19,  2.18it/s]  4% 644/14661 [05:13<1:46:52,  2.19it/s]  4% 645/14661 [05:13<1:47:02,  2.18it/s]  4% 646/14661 [05:14<1:46:37,  2.19it/s]  4% 647/14661 [05:14<1:46:44,  2.19it/s]  4% 648/14661 [05:15<1:46:50,  2.19it/s]  4% 649/14661 [05:15<1:47:28,  2.17it/s]  4% 650/14661 [05:16<1:47:28,  2.17it/s]  4% 651/14661 [05:16<1:48:09,  2.16it/s]  4% 652/14661 [05:17<1:47:20,  2.18it/s]  4% 653/14661 [05:17<1:47:18,  2.18it/s]  4% 654/14661 [05:18<1:46:27,  2.19it/s]  4% 655/14661 [05:18<1:46:02,  2.20it/s]  4% 656/14661 [05:18<1:47:03,  2.18it/s]  4% 657/14661 [05:19<1:47:56,  2.16it/s]  4% 658/14661 [05:19<1:47:33,  2.17it/s]  4% 659/14661 [05:20<1:47:53,  2.16it/s]  5% 660/14661 [05:20<1:47:47,  2.16it/s]  5% 661/14661 [05:21<1:47:40,  2.17it/s]  5% 662/14661 [05:21<1:47:57,  2.16it/s]  5% 663/14661 [05:22<1:48:00,  2.16it/s]  5% 664/14661 [05:22<1:48:34,  2.15it/s]  5% 665/14661 [05:23<1:47:30,  2.17it/s]  5% 666/14661 [05:23<1:46:53,  2.18it/s]  5% 667/14661 [05:24<1:46:08,  2.20it/s]  5% 668/14661 [05:24<1:47:26,  2.17it/s]  5% 669/14661 [05:24<1:48:14,  2.15it/s]  5% 670/14661 [05:25<1:48:11,  2.16it/s]  5% 671/14661 [05:25<1:48:47,  2.14it/s]  5% 672/14661 [05:26<1:47:20,  2.17it/s]  5% 673/14661 [05:26<1:47:53,  2.16it/s]  5% 674/14661 [05:27<1:48:02,  2.16it/s]  5% 675/14661 [05:27<1:48:56,  2.14it/s]  5% 676/14661 [05:28<1:50:05,  2.12it/s]  5% 677/14661 [05:28<1:49:36,  2.13it/s]  5% 678/14661 [05:29<1:50:30,  2.11it/s]  5% 679/14661 [05:29<1:50:34,  2.11it/s]  5% 680/14661 [05:30<1:49:42,  2.12it/s]  5% 681/14661 [05:30<1:48:45,  2.14it/s]  5% 682/14661 [05:31<1:47:32,  2.17it/s]  5% 683/14661 [05:31<1:47:30,  2.17it/s]  5% 684/14661 [05:31<1:45:46,  2.20it/s]  5% 685/14661 [05:32<1:45:54,  2.20it/s]  5% 686/14661 [05:32<1:46:21,  2.19it/s]  5% 687/14661 [05:33<1:47:14,  2.17it/s]  5% 688/14661 [05:33<1:46:51,  2.18it/s]  5% 689/14661 [05:34<1:46:38,  2.18it/s]  5% 690/14661 [05:34<1:47:11,  2.17it/s]  5% 691/14661 [05:35<1:48:06,  2.15it/s]  5% 692/14661 [05:35<1:48:09,  2.15it/s]  5% 693/14661 [05:36<1:49:28,  2.13it/s]  5% 694/14661 [05:36<1:49:35,  2.12it/s]  5% 695/14661 [05:37<1:56:11,  2.00it/s]  5% 696/14661 [05:37<1:54:40,  2.03it/s]  5% 697/14661 [05:38<1:54:43,  2.03it/s]  5% 698/14661 [05:38<1:53:17,  2.05it/s]  5% 699/14661 [05:39<1:50:11,  2.11it/s]  5% 700/14661 [05:39<1:49:00,  2.13it/s]  5% 701/14661 [05:39<1:49:03,  2.13it/s]  5% 702/14661 [05:40<1:48:57,  2.14it/s]  5% 703/14661 [05:40<1:49:13,  2.13it/s]  5% 704/14661 [05:41<1:48:22,  2.15it/s]  5% 705/14661 [05:41<1:47:20,  2.17it/s]  5% 706/14661 [05:42<1:48:24,  2.15it/s]  5% 707/14661 [05:42<1:46:42,  2.18it/s]  5% 708/14661 [05:43<1:46:08,  2.19it/s]  5% 709/14661 [05:43<1:45:36,  2.20it/s]  5% 710/14661 [05:44<1:47:31,  2.16it/s]  5% 711/14661 [05:44<1:48:45,  2.14it/s]  5% 712/14661 [05:45<1:48:04,  2.15it/s]  5% 713/14661 [05:45<1:49:08,  2.13it/s]  5% 714/14661 [05:45<1:48:07,  2.15it/s]  5% 715/14661 [05:46<1:48:26,  2.14it/s]  5% 716/14661 [05:46<1:48:10,  2.15it/s]  5% 717/14661 [05:47<1:48:22,  2.14it/s]  5% 718/14661 [05:47<1:47:56,  2.15it/s]  5% 719/14661 [05:48<1:47:45,  2.16it/s]  5% 720/14661 [05:48<1:46:19,  2.19it/s]  5% 721/14661 [05:49<1:46:25,  2.18it/s]  5% 722/14661 [05:49<1:46:32,  2.18it/s]  5% 723/14661 [05:50<1:47:51,  2.15it/s]  5% 724/14661 [05:50<1:46:17,  2.19it/s]  5% 725/14661 [05:51<1:45:05,  2.21it/s]  5% 726/14661 [05:51<1:45:51,  2.19it/s]  5% 727/14661 [05:51<1:46:50,  2.17it/s]  5% 728/14661 [05:52<1:47:48,  2.15it/s]  5% 729/14661 [05:52<1:50:16,  2.11it/s]  5% 730/14661 [05:53<1:48:55,  2.13it/s]  5% 731/14661 [05:53<1:48:53,  2.13it/s]  5% 732/14661 [05:54<1:48:42,  2.14it/s]  5% 733/14661 [05:54<1:49:59,  2.11it/s]  5% 734/14661 [05:55<1:48:51,  2.13it/s]  5% 735/14661 [05:55<1:47:29,  2.16it/s]  5% 736/14661 [05:56<1:47:48,  2.15it/s]  5% 737/14661 [05:56<1:48:00,  2.15it/s]  5% 738/14661 [05:57<1:46:43,  2.17it/s]  5% 739/14661 [05:57<1:46:11,  2.19it/s]  5% 740/14661 [05:58<1:47:20,  2.16it/s]  5% 741/14661 [05:58<1:47:02,  2.17it/s]  5% 742/14661 [05:58<1:46:51,  2.17it/s]  5% 743/14661 [05:59<1:45:45,  2.19it/s]  5% 744/14661 [05:59<1:47:56,  2.15it/s]  5% 745/14661 [06:00<1:46:50,  2.17it/s]  5% 746/14661 [06:00<1:47:37,  2.15it/s]  5% 747/14661 [06:01<1:48:45,  2.13it/s]  5% 748/14661 [06:01<1:47:31,  2.16it/s]  5% 749/14661 [06:02<1:46:41,  2.17it/s]  5% 750/14661 [06:02<1:47:38,  2.15it/s]  5% 751/14661 [06:03<1:47:11,  2.16it/s]  5% 752/14661 [06:03<1:46:41,  2.17it/s]  5% 753/14661 [06:04<1:47:06,  2.16it/s]  5% 754/14661 [06:04<1:47:12,  2.16it/s]  5% 755/14661 [06:04<1:47:46,  2.15it/s]  5% 756/14661 [06:05<1:46:41,  2.17it/s]  5% 757/14661 [06:05<1:48:33,  2.13it/s]  5% 758/14661 [06:06<1:47:38,  2.15it/s]  5% 759/14661 [06:06<1:48:26,  2.14it/s]  5% 760/14661 [06:07<1:51:44,  2.07it/s]  5% 761/14661 [06:07<1:58:21,  1.96it/s]  5% 762/14661 [06:08<1:58:17,  1.96it/s]  5% 763/14661 [06:08<1:56:59,  1.98it/s]  5% 764/14661 [06:09<1:53:22,  2.04it/s]  5% 765/14661 [06:09<1:50:19,  2.10it/s]  5% 766/14661 [06:10<1:48:33,  2.13it/s]  5% 767/14661 [06:10<1:48:05,  2.14it/s]  5% 768/14661 [06:11<1:46:46,  2.17it/s]  5% 769/14661 [06:11<1:58:59,  1.95it/s]  5% 770/14661 [06:12<1:54:28,  2.02it/s]  5% 771/14661 [06:12<1:55:19,  2.01it/s]  5% 772/14661 [06:13<1:51:58,  2.07it/s]  5% 773/14661 [06:13<1:52:25,  2.06it/s]  5% 774/14661 [06:14<1:51:03,  2.08it/s]  5% 775/14661 [06:14<1:52:50,  2.05it/s]  5% 776/14661 [06:15<1:50:29,  2.09it/s]  5% 777/14661 [06:15<1:49:03,  2.12it/s]  5% 778/14661 [06:16<1:49:57,  2.10it/s]  5% 779/14661 [06:16<1:53:10,  2.04it/s]  5% 780/14661 [06:17<1:55:28,  2.00it/s]  5% 781/14661 [06:17<1:56:59,  1.98it/s]  5% 782/14661 [06:18<1:53:52,  2.03it/s]  5% 783/14661 [06:18<1:54:11,  2.03it/s]  5% 784/14661 [06:19<1:53:40,  2.03it/s]  5% 785/14661 [06:19<1:52:00,  2.06it/s]  5% 786/14661 [06:20<1:51:18,  2.08it/s]  5% 787/14661 [06:20<1:50:11,  2.10it/s]  5% 788/14661 [06:20<1:49:14,  2.12it/s]  5% 789/14661 [06:21<1:47:51,  2.14it/s]  5% 790/14661 [06:21<1:47:36,  2.15it/s]  5% 791/14661 [06:22<1:47:14,  2.16it/s]  5% 792/14661 [06:22<1:46:21,  2.17it/s]  5% 793/14661 [06:23<1:46:06,  2.18it/s]  5% 794/14661 [06:23<1:46:31,  2.17it/s]  5% 795/14661 [06:24<1:46:39,  2.17it/s]  5% 796/14661 [06:24<1:45:20,  2.19it/s]  5% 797/14661 [06:25<1:45:23,  2.19it/s]  5% 798/14661 [06:25<1:45:28,  2.19it/s]  5% 799/14661 [06:26<1:46:28,  2.17it/s]  5% 800/14661 [06:26<1:46:13,  2.17it/s]  5% 801/14661 [06:26<1:45:32,  2.19it/s]  5% 802/14661 [06:27<1:45:11,  2.20it/s]  5% 803/14661 [06:27<1:50:12,  2.10it/s]  5% 804/14661 [06:28<1:48:01,  2.14it/s]  5% 805/14661 [06:28<1:46:41,  2.16it/s]  5% 806/14661 [06:29<1:49:09,  2.12it/s]  6% 807/14661 [06:29<1:48:21,  2.13it/s]  6% 808/14661 [06:30<1:47:09,  2.15it/s]  6% 809/14661 [06:30<1:46:15,  2.17it/s]  6% 810/14661 [06:31<1:45:44,  2.18it/s]  6% 811/14661 [06:31<1:45:29,  2.19it/s]  6% 812/14661 [06:32<2:12:36,  1.74it/s]  6% 813/14661 [06:32<2:04:50,  1.85it/s]  6% 814/14661 [06:33<1:59:50,  1.93it/s]  6% 815/14661 [06:33<1:57:44,  1.96it/s]  6% 816/14661 [06:34<1:55:02,  2.01it/s]  6% 817/14661 [06:34<1:52:58,  2.04it/s]  6% 818/14661 [06:35<1:51:23,  2.07it/s]  6% 819/14661 [06:35<1:49:05,  2.11it/s]  6% 820/14661 [06:36<1:48:05,  2.13it/s]  6% 821/14661 [06:36<1:47:25,  2.15it/s]  6% 822/14661 [06:37<1:47:11,  2.15it/s]  6% 823/14661 [06:37<1:45:57,  2.18it/s]  6% 824/14661 [06:37<1:46:57,  2.16it/s]  6% 825/14661 [06:38<1:46:54,  2.16it/s]  6% 826/14661 [06:38<1:47:35,  2.14it/s]  6% 827/14661 [06:39<1:49:17,  2.11it/s]  6% 828/14661 [06:39<1:48:14,  2.13it/s]  6% 829/14661 [06:40<1:46:54,  2.16it/s]  6% 830/14661 [06:40<1:47:19,  2.15it/s]  6% 831/14661 [06:41<1:47:03,  2.15it/s]  6% 832/14661 [06:41<1:45:28,  2.19it/s]  6% 833/14661 [06:42<1:46:36,  2.16it/s]  6% 834/14661 [06:42<1:45:43,  2.18it/s]  6% 835/14661 [06:43<1:48:59,  2.11it/s]  6% 836/14661 [06:43<1:48:51,  2.12it/s]  6% 837/14661 [06:44<1:47:15,  2.15it/s]  6% 838/14661 [06:44<1:46:33,  2.16it/s]  6% 839/14661 [06:44<1:48:10,  2.13it/s]  6% 840/14661 [06:45<1:49:51,  2.10it/s]  6% 841/14661 [06:45<1:48:41,  2.12it/s]  6% 842/14661 [06:46<1:46:58,  2.15it/s]  6% 843/14661 [06:46<1:47:13,  2.15it/s]  6% 844/14661 [06:47<1:48:25,  2.12it/s]  6% 845/14661 [06:47<1:47:34,  2.14it/s]  6% 846/14661 [06:48<1:47:11,  2.15it/s]  6% 847/14661 [06:48<1:48:54,  2.11it/s]  6% 848/14661 [06:49<1:46:53,  2.15it/s]  6% 849/14661 [06:49<1:46:55,  2.15it/s]  6% 850/14661 [06:50<1:48:05,  2.13it/s]  6% 851/14661 [06:50<1:47:06,  2.15it/s]  6% 852/14661 [06:51<1:54:28,  2.01it/s]  6% 853/14661 [06:51<1:51:52,  2.06it/s]  6% 854/14661 [06:52<1:50:55,  2.07it/s]  6% 855/14661 [06:52<1:49:06,  2.11it/s]  6% 856/14661 [06:53<1:49:42,  2.10it/s]  6% 857/14661 [06:53<1:48:18,  2.12it/s]  6% 858/14661 [06:53<1:48:48,  2.11it/s]  6% 859/14661 [06:54<1:48:10,  2.13it/s]  6% 860/14661 [06:54<1:47:37,  2.14it/s]  6% 861/14661 [06:55<1:47:10,  2.15it/s]  6% 862/14661 [06:55<1:48:12,  2.13it/s]  6% 863/14661 [06:56<1:47:16,  2.14it/s]  6% 864/14661 [06:56<1:46:39,  2.16it/s]  6% 865/14661 [06:57<1:47:24,  2.14it/s]  6% 866/14661 [06:57<1:47:35,  2.14it/s]  6% 867/14661 [06:58<1:46:36,  2.16it/s]  6% 868/14661 [06:58<1:46:29,  2.16it/s]  6% 869/14661 [06:59<1:46:50,  2.15it/s]  6% 870/14661 [06:59<1:45:22,  2.18it/s]  6% 871/14661 [07:00<1:45:47,  2.17it/s]  6% 872/14661 [07:00<1:45:15,  2.18it/s]  6% 873/14661 [07:00<1:47:02,  2.15it/s]  6% 874/14661 [07:01<1:47:59,  2.13it/s]  6% 875/14661 [07:01<1:47:46,  2.13it/s]  6% 876/14661 [07:02<1:50:04,  2.09it/s]  6% 877/14661 [07:02<1:48:52,  2.11it/s]  6% 878/14661 [07:03<1:47:03,  2.15it/s]  6% 879/14661 [07:03<1:45:42,  2.17it/s]  6% 880/14661 [07:04<1:49:29,  2.10it/s]  6% 881/14661 [07:04<1:51:56,  2.05it/s]  6% 882/14661 [07:05<1:54:53,  2.00it/s]  6% 883/14661 [07:05<1:52:05,  2.05it/s]  6% 884/14661 [07:06<1:50:34,  2.08it/s]  6% 885/14661 [07:06<1:49:01,  2.11it/s]  6% 886/14661 [07:07<1:47:49,  2.13it/s]  6% 887/14661 [07:07<1:47:06,  2.14it/s]  6% 888/14661 [07:08<1:45:16,  2.18it/s]  6% 889/14661 [07:08<1:45:11,  2.18it/s]  6% 890/14661 [07:08<1:44:21,  2.20it/s]  6% 891/14661 [07:09<1:45:18,  2.18it/s]  6% 892/14661 [07:09<1:45:19,  2.18it/s]  6% 893/14661 [07:10<1:44:20,  2.20it/s]  6% 894/14661 [07:10<1:43:59,  2.21it/s]  6% 895/14661 [07:11<1:44:38,  2.19it/s]  6% 896/14661 [07:11<1:47:35,  2.13it/s]  6% 897/14661 [07:12<1:48:44,  2.11it/s]  6% 898/14661 [07:12<1:47:35,  2.13it/s]  6% 899/14661 [07:13<1:47:39,  2.13it/s]  6% 900/14661 [07:13<1:47:37,  2.13it/s]  6% 901/14661 [07:14<1:46:43,  2.15it/s]  6% 902/14661 [07:14<1:45:08,  2.18it/s]  6% 903/14661 [07:14<1:44:53,  2.19it/s]  6% 904/14661 [07:15<1:44:36,  2.19it/s]  6% 905/14661 [07:15<1:45:12,  2.18it/s]  6% 906/14661 [07:16<1:44:48,  2.19it/s]  6% 907/14661 [07:16<1:45:10,  2.18it/s]  6% 908/14661 [07:17<1:46:35,  2.15it/s]  6% 909/14661 [07:17<1:46:38,  2.15it/s]  6% 910/14661 [07:18<1:44:46,  2.19it/s]  6% 911/14661 [07:18<1:45:40,  2.17it/s]  6% 912/14661 [07:19<1:44:19,  2.20it/s]  6% 913/14661 [07:19<1:43:57,  2.20it/s]  6% 914/14661 [07:20<1:44:52,  2.18it/s]  6% 915/14661 [07:20<1:46:16,  2.16it/s]  6% 916/14661 [07:20<1:47:05,  2.14it/s]  6% 917/14661 [07:21<1:48:27,  2.11it/s]  6% 918/14661 [07:21<1:47:25,  2.13it/s]  6% 919/14661 [07:22<1:52:01,  2.04it/s]  6% 920/14661 [07:22<1:50:04,  2.08it/s]  6% 921/14661 [07:23<1:48:29,  2.11it/s]  6% 922/14661 [07:23<1:50:56,  2.06it/s]  6% 923/14661 [07:24<1:49:39,  2.09it/s]  6% 924/14661 [07:24<1:47:59,  2.12it/s]  6% 925/14661 [07:25<1:48:36,  2.11it/s]  6% 926/14661 [07:25<1:50:06,  2.08it/s]  6% 927/14661 [07:26<1:50:35,  2.07it/s]  6% 928/14661 [07:26<1:48:55,  2.10it/s]  6% 929/14661 [07:27<1:48:41,  2.11it/s]  6% 930/14661 [07:27<1:47:37,  2.13it/s]  6% 931/14661 [07:28<1:48:08,  2.12it/s]  6% 932/14661 [07:28<1:48:58,  2.10it/s]  6% 933/14661 [07:29<1:47:53,  2.12it/s]  6% 934/14661 [07:29<1:47:35,  2.13it/s]  6% 935/14661 [07:30<1:47:30,  2.13it/s]  6% 936/14661 [07:30<1:48:41,  2.10it/s]  6% 937/14661 [07:30<1:48:13,  2.11it/s]  6% 938/14661 [07:31<1:47:09,  2.13it/s]  6% 939/14661 [07:31<1:47:01,  2.14it/s]  6% 940/14661 [07:32<1:47:21,  2.13it/s]  6% 941/14661 [07:32<1:48:13,  2.11it/s]  6% 942/14661 [07:33<1:47:08,  2.13it/s]  6% 943/14661 [07:33<1:45:35,  2.17it/s]  6% 944/14661 [07:34<1:47:23,  2.13it/s]  6% 945/14661 [07:34<1:49:54,  2.08it/s]  6% 946/14661 [07:35<1:48:55,  2.10it/s]  6% 947/14661 [07:35<1:49:01,  2.10it/s]  6% 948/14661 [07:36<2:01:00,  1.89it/s]  6% 949/14661 [07:36<1:57:29,  1.95it/s]  6% 950/14661 [07:37<1:53:16,  2.02it/s]  6% 951/14661 [07:37<1:50:49,  2.06it/s]  6% 952/14661 [07:38<1:49:11,  2.09it/s]  7% 953/14661 [07:38<1:47:45,  2.12it/s]  7% 954/14661 [07:39<1:49:26,  2.09it/s]  7% 955/14661 [07:39<1:48:43,  2.10it/s]  7% 956/14661 [07:40<1:50:16,  2.07it/s]  7% 957/14661 [07:40<1:49:31,  2.09it/s]  7% 958/14661 [07:41<1:47:45,  2.12it/s]  7% 959/14661 [07:41<1:46:49,  2.14it/s]  7% 960/14661 [07:41<1:45:37,  2.16it/s]  7% 961/14661 [07:42<1:47:00,  2.13it/s]  7% 962/14661 [07:42<1:47:21,  2.13it/s]  7% 963/14661 [07:43<1:46:43,  2.14it/s]  7% 964/14661 [07:43<1:46:04,  2.15it/s]  7% 965/14661 [07:44<1:44:30,  2.18it/s]  7% 966/14661 [07:44<1:43:58,  2.20it/s]  7% 967/14661 [07:45<1:44:26,  2.19it/s]  7% 968/14661 [07:45<1:43:43,  2.20it/s]  7% 969/14661 [07:46<1:42:43,  2.22it/s]  7% 970/14661 [07:46<1:44:12,  2.19it/s]  7% 971/14661 [07:46<1:43:18,  2.21it/s]  7% 972/14661 [07:47<1:42:28,  2.23it/s]  7% 973/14661 [07:47<1:44:45,  2.18it/s]  7% 974/14661 [07:48<1:47:39,  2.12it/s]  7% 975/14661 [07:48<1:45:58,  2.15it/s]  7% 976/14661 [07:49<1:45:37,  2.16it/s]  7% 977/14661 [07:49<1:47:28,  2.12it/s]  7% 978/14661 [07:50<1:47:42,  2.12it/s]  7% 979/14661 [07:50<1:48:18,  2.11it/s]  7% 980/14661 [07:51<1:46:50,  2.13it/s]  7% 981/14661 [07:51<1:45:41,  2.16it/s]  7% 982/14661 [07:52<1:44:25,  2.18it/s]  7% 983/14661 [07:52<1:43:53,  2.19it/s]  7% 984/14661 [07:53<1:44:03,  2.19it/s]  7% 985/14661 [07:53<1:43:56,  2.19it/s]  7% 986/14661 [07:53<1:45:25,  2.16it/s]  7% 987/14661 [07:54<1:45:42,  2.16it/s]  7% 988/14661 [07:54<1:47:12,  2.13it/s]  7% 989/14661 [07:55<1:45:38,  2.16it/s]  7% 990/14661 [07:55<1:45:07,  2.17it/s]  7% 991/14661 [07:56<1:45:20,  2.16it/s]  7% 992/14661 [07:56<1:45:03,  2.17it/s]  7% 993/14661 [07:57<1:44:24,  2.18it/s]  7% 994/14661 [07:57<1:44:44,  2.17it/s]  7% 995/14661 [07:58<1:44:09,  2.19it/s]  7% 996/14661 [07:58<1:45:58,  2.15it/s]  7% 997/14661 [07:59<1:47:05,  2.13it/s]  7% 998/14661 [07:59<1:45:24,  2.16it/s]  7% 999/14661 [07:59<1:44:58,  2.17it/s]  7% 1000/14661 [08:00<1:44:15,  2.18it/s]  7% 1001/14661 [08:00<1:45:22,  2.16it/s]  7% 1002/14661 [08:01<1:44:47,  2.17it/s]  7% 1003/14661 [08:01<1:43:14,  2.20it/s]  7% 1004/14661 [08:02<1:42:36,  2.22it/s]  7% 1005/14661 [08:02<1:43:28,  2.20it/s]  7% 1006/14661 [08:03<1:43:39,  2.20it/s]  7% 1007/14661 [08:03<1:43:55,  2.19it/s]  7% 1008/14661 [08:04<1:44:38,  2.17it/s]  7% 1009/14661 [08:04<1:46:10,  2.14it/s]  7% 1010/14661 [08:05<1:44:47,  2.17it/s]  7% 1011/14661 [08:05<1:45:53,  2.15it/s]  7% 1012/14661 [08:05<1:45:31,  2.16it/s]  7% 1013/14661 [08:06<1:44:45,  2.17it/s]  7% 1014/14661 [08:06<1:46:11,  2.14it/s]  7% 1015/14661 [08:07<1:47:14,  2.12it/s]  7% 1016/14661 [08:07<1:45:40,  2.15it/s]  7% 1017/14661 [08:08<1:44:05,  2.18it/s]  7% 1018/14661 [08:08<1:43:22,  2.20it/s]  7% 1019/14661 [08:09<1:42:11,  2.23it/s]  7% 1020/14661 [08:09<1:42:16,  2.22it/s]  7% 1021/14661 [08:10<1:42:58,  2.21it/s]  7% 1022/14661 [08:10<1:52:33,  2.02it/s]  7% 1023/14661 [08:11<1:49:07,  2.08it/s]  7% 1024/14661 [08:11<1:47:05,  2.12it/s]  7% 1025/14661 [08:12<1:46:58,  2.12it/s]  7% 1026/14661 [08:12<1:46:56,  2.13it/s]  7% 1027/14661 [08:12<1:46:37,  2.13it/s]  7% 1028/14661 [08:13<1:45:43,  2.15it/s]  7% 1029/14661 [08:13<1:45:36,  2.15it/s]  7% 1030/14661 [08:14<1:44:46,  2.17it/s]  7% 1031/14661 [08:14<1:45:23,  2.16it/s]  7% 1032/14661 [08:15<1:46:37,  2.13it/s]  7% 1033/14661 [08:15<1:46:08,  2.14it/s]  7% 1034/14661 [08:16<1:44:36,  2.17it/s]  7% 1035/14661 [08:16<1:44:51,  2.17it/s]  7% 1036/14661 [08:17<1:44:03,  2.18it/s]  7% 1037/14661 [08:17<1:43:29,  2.19it/s]  7% 1038/14661 [08:18<1:44:13,  2.18it/s]  7% 1039/14661 [08:18<1:43:30,  2.19it/s]  7% 1040/14661 [08:18<1:43:54,  2.18it/s]  7% 1041/14661 [08:19<1:44:33,  2.17it/s]  7% 1042/14661 [08:19<1:44:42,  2.17it/s]  7% 1043/14661 [08:20<1:43:22,  2.20it/s]  7% 1044/14661 [08:20<1:43:36,  2.19it/s]  7% 1045/14661 [08:21<1:44:25,  2.17it/s]  7% 1046/14661 [08:21<1:46:57,  2.12it/s]  7% 1047/14661 [08:22<1:46:20,  2.13it/s]  7% 1048/14661 [08:22<1:45:41,  2.15it/s]  7% 1049/14661 [08:23<1:45:06,  2.16it/s]  7% 1050/14661 [08:23<1:44:20,  2.17it/s]  7% 1051/14661 [08:24<1:43:59,  2.18it/s]  7% 1052/14661 [08:24<1:44:15,  2.18it/s]  7% 1053/14661 [08:24<1:44:16,  2.17it/s]  7% 1054/14661 [08:25<1:46:14,  2.13it/s]  7% 1055/14661 [08:25<1:47:06,  2.12it/s]  7% 1056/14661 [08:26<1:45:58,  2.14it/s]  7% 1057/14661 [08:26<1:46:30,  2.13it/s]  7% 1058/14661 [08:27<1:45:30,  2.15it/s]  7% 1059/14661 [08:27<1:45:39,  2.15it/s]  7% 1060/14661 [08:28<1:46:22,  2.13it/s]  7% 1061/14661 [08:28<1:46:26,  2.13it/s]  7% 1062/14661 [08:29<1:45:01,  2.16it/s]  7% 1063/14661 [08:29<1:43:42,  2.19it/s]  7% 1064/14661 [08:30<1:44:50,  2.16it/s]  7% 1065/14661 [08:30<1:44:59,  2.16it/s]  7% 1066/14661 [08:31<1:45:38,  2.14it/s]  7% 1067/14661 [08:31<1:44:59,  2.16it/s]  7% 1068/14661 [08:31<1:44:46,  2.16it/s]  7% 1069/14661 [08:32<1:45:00,  2.16it/s]  7% 1070/14661 [08:32<1:45:00,  2.16it/s]  7% 1071/14661 [08:33<1:44:31,  2.17it/s]  7% 1072/14661 [08:33<1:43:58,  2.18it/s]  7% 1073/14661 [08:34<1:45:19,  2.15it/s]  7% 1074/14661 [08:34<1:46:01,  2.14it/s]  7% 1075/14661 [08:35<1:46:29,  2.13it/s]  7% 1076/14661 [08:35<1:45:20,  2.15it/s]  7% 1077/14661 [08:36<1:44:13,  2.17it/s]  7% 1078/14661 [08:36<1:43:57,  2.18it/s]  7% 1079/14661 [08:36<1:43:06,  2.20it/s]  7% 1080/14661 [08:37<1:44:29,  2.17it/s]  7% 1081/14661 [08:37<1:44:31,  2.17it/s]  7% 1082/14661 [08:38<1:43:52,  2.18it/s]  7% 1083/14661 [08:38<1:43:36,  2.18it/s]  7% 1084/14661 [08:39<1:43:34,  2.18it/s]  7% 1085/14661 [08:39<1:44:46,  2.16it/s]  7% 1086/14661 [08:40<1:44:49,  2.16it/s]  7% 1087/14661 [08:40<1:42:59,  2.20it/s]  7% 1088/14661 [08:41<1:42:50,  2.20it/s]  7% 1089/14661 [08:41<1:43:25,  2.19it/s]  7% 1090/14661 [08:42<1:45:48,  2.14it/s]  7% 1091/14661 [08:42<1:44:36,  2.16it/s]  7% 1092/14661 [08:42<1:43:53,  2.18it/s]  7% 1093/14661 [08:43<1:43:39,  2.18it/s]  7% 1094/14661 [08:43<1:44:46,  2.16it/s]  7% 1095/14661 [08:44<1:44:40,  2.16it/s]  7% 1096/14661 [08:44<1:43:49,  2.18it/s]  7% 1097/14661 [08:45<1:45:01,  2.15it/s]  7% 1098/14661 [08:45<1:43:55,  2.18it/s]  7% 1099/14661 [08:46<1:45:05,  2.15it/s]  8% 1100/14661 [08:46<1:48:02,  2.09it/s]  8% 1101/14661 [08:47<1:45:59,  2.13it/s]  8% 1102/14661 [08:47<1:45:12,  2.15it/s]  8% 1103/14661 [08:48<1:45:52,  2.13it/s]  8% 1104/14661 [08:48<1:45:21,  2.14it/s]  8% 1105/14661 [08:49<1:54:42,  1.97it/s]  8% 1106/14661 [08:49<1:51:18,  2.03it/s]  8% 1107/14661 [08:50<1:48:35,  2.08it/s]  8% 1108/14661 [08:50<1:46:20,  2.12it/s]  8% 1109/14661 [08:51<1:46:24,  2.12it/s]  8% 1110/14661 [08:51<1:47:14,  2.11it/s]  8% 1111/14661 [08:51<1:48:22,  2.08it/s]  8% 1112/14661 [08:52<1:47:32,  2.10it/s]  8% 1113/14661 [08:52<1:48:35,  2.08it/s]  8% 1114/14661 [08:53<1:48:58,  2.07it/s]  8% 1115/14661 [08:53<1:46:20,  2.12it/s]  8% 1116/14661 [08:54<1:45:46,  2.13it/s]  8% 1117/14661 [08:54<1:43:50,  2.17it/s]  8% 1118/14661 [08:55<1:45:50,  2.13it/s]  8% 1119/14661 [08:55<1:44:17,  2.16it/s]  8% 1120/14661 [08:56<1:43:06,  2.19it/s]  8% 1121/14661 [08:56<1:43:29,  2.18it/s]  8% 1122/14661 [08:57<1:42:44,  2.20it/s]  8% 1123/14661 [08:57<1:43:37,  2.18it/s]  8% 1124/14661 [08:57<1:42:59,  2.19it/s]  8% 1125/14661 [08:58<1:42:55,  2.19it/s]  8% 1126/14661 [08:58<1:42:53,  2.19it/s]  8% 1127/14661 [08:59<1:43:44,  2.17it/s]  8% 1128/14661 [08:59<1:45:20,  2.14it/s]  8% 1129/14661 [09:00<1:44:45,  2.15it/s]  8% 1130/14661 [09:00<1:44:39,  2.15it/s]  8% 1131/14661 [09:01<1:45:03,  2.15it/s]  8% 1132/14661 [09:01<1:43:53,  2.17it/s]  8% 1133/14661 [09:02<1:46:01,  2.13it/s]  8% 1134/14661 [09:02<1:44:28,  2.16it/s]  8% 1135/14661 [09:03<1:45:30,  2.14it/s]  8% 1136/14661 [09:03<1:46:38,  2.11it/s]  8% 1137/14661 [09:04<1:48:28,  2.08it/s]  8% 1138/14661 [09:04<1:46:19,  2.12it/s]  8% 1139/14661 [09:05<1:46:58,  2.11it/s]  8% 1140/14661 [09:05<1:45:35,  2.13it/s]  8% 1141/14661 [09:05<1:43:59,  2.17it/s]  8% 1142/14661 [09:06<1:42:59,  2.19it/s]  8% 1143/14661 [09:06<1:41:43,  2.21it/s]  8% 1144/14661 [09:07<1:43:22,  2.18it/s]  8% 1145/14661 [09:07<1:46:08,  2.12it/s]  8% 1146/14661 [09:08<1:45:16,  2.14it/s]  8% 1147/14661 [09:08<1:47:20,  2.10it/s]  8% 1148/14661 [09:09<1:48:28,  2.08it/s]  8% 1149/14661 [09:09<1:53:32,  1.98it/s]  8% 1150/14661 [09:10<1:57:39,  1.91it/s]  8% 1151/14661 [09:10<1:59:19,  1.89it/s]  8% 1152/14661 [09:11<1:59:18,  1.89it/s]  8% 1153/14661 [09:12<2:02:00,  1.85it/s]  8% 1154/14661 [09:12<2:01:45,  1.85it/s]  8% 1155/14661 [09:13<1:57:31,  1.92it/s]  8% 1156/14661 [09:13<1:53:18,  1.99it/s]  8% 1157/14661 [09:13<1:49:34,  2.05it/s]  8% 1158/14661 [09:14<1:47:32,  2.09it/s]  8% 1159/14661 [09:14<1:47:15,  2.10it/s]  8% 1160/14661 [09:15<1:45:28,  2.13it/s]  8% 1161/14661 [09:15<1:46:52,  2.11it/s]  8% 1162/14661 [09:16<1:44:55,  2.14it/s]  8% 1163/14661 [09:16<1:43:45,  2.17it/s]  8% 1164/14661 [09:17<1:43:41,  2.17it/s]  8% 1165/14661 [09:17<1:44:45,  2.15it/s]  8% 1166/14661 [09:18<1:43:57,  2.16it/s]  8% 1167/14661 [09:18<1:43:35,  2.17it/s]  8% 1168/14661 [09:19<1:43:37,  2.17it/s]  8% 1169/14661 [09:19<1:43:05,  2.18it/s]  8% 1170/14661 [09:19<1:44:21,  2.15it/s]  8% 1171/14661 [09:20<1:43:43,  2.17it/s]  8% 1172/14661 [09:20<1:42:59,  2.18it/s]  8% 1173/14661 [09:21<1:43:03,  2.18it/s]  8% 1174/14661 [09:21<1:45:54,  2.12it/s]  8% 1175/14661 [09:22<1:46:45,  2.11it/s]  8% 1176/14661 [09:22<1:45:45,  2.13it/s]  8% 1177/14661 [09:23<1:44:21,  2.15it/s]  8% 1178/14661 [09:23<1:42:57,  2.18it/s]  8% 1179/14661 [09:24<1:43:21,  2.17it/s]  8% 1180/14661 [09:24<1:42:34,  2.19it/s]  8% 1181/14661 [09:25<1:41:50,  2.21it/s]  8% 1182/14661 [09:25<1:41:20,  2.22it/s]  8% 1183/14661 [09:25<1:41:04,  2.22it/s]  8% 1184/14661 [09:26<1:42:43,  2.19it/s]  8% 1185/14661 [09:26<1:42:34,  2.19it/s]  8% 1186/14661 [09:27<1:42:05,  2.20it/s]  8% 1187/14661 [09:27<1:42:08,  2.20it/s]  8% 1188/14661 [09:28<1:41:12,  2.22it/s]  8% 1189/14661 [09:28<1:41:47,  2.21it/s]  8% 1190/14661 [09:29<1:42:46,  2.18it/s]  8% 1191/14661 [09:29<1:43:37,  2.17it/s]  8% 1192/14661 [09:30<1:45:37,  2.13it/s]  8% 1193/14661 [09:30<1:44:59,  2.14it/s]  8% 1194/14661 [09:30<1:44:14,  2.15it/s]  8% 1195/14661 [09:31<1:53:04,  1.98it/s]  8% 1196/14661 [09:32<1:49:37,  2.05it/s]  8% 1197/14661 [09:32<1:48:01,  2.08it/s]  8% 1198/14661 [09:32<1:46:35,  2.10it/s]  8% 1199/14661 [09:33<1:48:07,  2.08it/s]  8% 1200/14661 [09:33<1:46:47,  2.10it/s]  8% 1201/14661 [09:34<1:56:42,  1.92it/s]  8% 1202/14661 [09:35<1:53:18,  1.98it/s]  8% 1203/14661 [09:35<1:48:49,  2.06it/s]  8% 1204/14661 [09:35<1:46:55,  2.10it/s]  8% 1205/14661 [09:36<1:44:42,  2.14it/s]  8% 1206/14661 [09:36<1:44:37,  2.14it/s]  8% 1207/14661 [09:37<1:44:23,  2.15it/s]  8% 1208/14661 [09:37<1:44:15,  2.15it/s]  8% 1209/14661 [09:38<1:44:30,  2.15it/s]  8% 1210/14661 [09:38<1:43:14,  2.17it/s]  8% 1211/14661 [09:39<1:44:03,  2.15it/s]  8% 1212/14661 [09:39<1:44:29,  2.15it/s]  8% 1213/14661 [09:40<1:47:06,  2.09it/s]  8% 1214/14661 [09:40<1:45:42,  2.12it/s]  8% 1215/14661 [09:41<1:44:05,  2.15it/s]  8% 1216/14661 [09:41<1:43:57,  2.16it/s]  8% 1217/14661 [09:41<1:45:08,  2.13it/s]  8% 1218/14661 [09:42<1:44:15,  2.15it/s]  8% 1219/14661 [09:42<1:43:26,  2.17it/s]  8% 1220/14661 [09:43<1:43:06,  2.17it/s]  8% 1221/14661 [09:43<1:42:29,  2.19it/s]  8% 1222/14661 [09:44<1:41:05,  2.22it/s]  8% 1223/14661 [09:44<1:41:30,  2.21it/s]  8% 1224/14661 [09:45<1:41:01,  2.22it/s]  8% 1225/14661 [09:45<1:43:19,  2.17it/s]  8% 1226/14661 [09:46<1:42:47,  2.18it/s]  8% 1227/14661 [09:46<1:43:00,  2.17it/s]  8% 1228/14661 [09:46<1:42:39,  2.18it/s]  8% 1229/14661 [09:47<1:44:08,  2.15it/s]  8% 1230/14661 [09:47<1:43:37,  2.16it/s]  8% 1231/14661 [09:48<1:42:43,  2.18it/s]  8% 1232/14661 [09:48<1:44:01,  2.15it/s]  8% 1233/14661 [09:49<1:44:35,  2.14it/s]  8% 1234/14661 [09:49<1:42:51,  2.18it/s]  8% 1235/14661 [09:50<1:43:28,  2.16it/s]  8% 1236/14661 [09:50<1:44:08,  2.15it/s]  8% 1237/14661 [09:51<1:41:56,  2.19it/s]  8% 1238/14661 [09:51<1:42:08,  2.19it/s]  8% 1239/14661 [09:52<1:43:30,  2.16it/s]  8% 1240/14661 [09:52<1:44:21,  2.14it/s]  8% 1241/14661 [09:53<1:44:29,  2.14it/s]  8% 1242/14661 [09:53<1:45:32,  2.12it/s]  8% 1243/14661 [09:53<1:45:24,  2.12it/s]  8% 1244/14661 [09:54<1:43:22,  2.16it/s]  8% 1245/14661 [09:54<1:43:35,  2.16it/s]  8% 1246/14661 [09:55<1:44:00,  2.15it/s]  9% 1247/14661 [09:55<1:43:39,  2.16it/s]  9% 1248/14661 [09:56<1:42:34,  2.18it/s]  9% 1249/14661 [09:56<1:44:35,  2.14it/s]  9% 1250/14661 [09:57<1:44:33,  2.14it/s]  9% 1251/14661 [09:57<1:43:09,  2.17it/s]  9% 1252/14661 [09:58<1:42:17,  2.18it/s]  9% 1253/14661 [09:58<1:42:56,  2.17it/s]  9% 1254/14661 [09:59<1:42:34,  2.18it/s]  9% 1255/14661 [09:59<1:42:45,  2.17it/s]  9% 1256/14661 [09:59<1:45:28,  2.12it/s]  9% 1257/14661 [10:00<1:43:31,  2.16it/s]  9% 1258/14661 [10:00<1:43:25,  2.16it/s]  9% 1259/14661 [10:01<1:46:39,  2.09it/s]  9% 1260/14661 [10:01<1:46:26,  2.10it/s]  9% 1261/14661 [10:02<1:46:06,  2.10it/s]  9% 1262/14661 [10:02<1:47:04,  2.09it/s]  9% 1263/14661 [10:03<1:47:17,  2.08it/s]  9% 1264/14661 [10:03<1:47:24,  2.08it/s]  9% 1265/14661 [10:04<1:46:22,  2.10it/s]  9% 1266/14661 [10:04<1:45:57,  2.11it/s]  9% 1267/14661 [10:05<1:44:41,  2.13it/s]  9% 1268/14661 [10:05<1:43:40,  2.15it/s]  9% 1269/14661 [10:06<1:44:25,  2.14it/s]  9% 1270/14661 [10:06<1:46:28,  2.10it/s]  9% 1271/14661 [10:07<1:47:38,  2.07it/s]  9% 1272/14661 [10:07<1:47:01,  2.08it/s]  9% 1273/14661 [10:08<1:45:40,  2.11it/s]  9% 1274/14661 [10:08<1:45:00,  2.12it/s]  9% 1275/14661 [10:09<1:54:14,  1.95it/s]  9% 1276/14661 [10:09<1:50:48,  2.01it/s]  9% 1277/14661 [10:10<1:47:48,  2.07it/s]  9% 1278/14661 [10:10<1:45:26,  2.12it/s]  9% 1279/14661 [10:10<1:44:33,  2.13it/s]  9% 1280/14661 [10:11<1:42:53,  2.17it/s]  9% 1281/14661 [10:11<1:41:57,  2.19it/s]  9% 1282/14661 [10:12<1:42:47,  2.17it/s]  9% 1283/14661 [10:12<1:42:22,  2.18it/s]  9% 1284/14661 [10:13<1:41:20,  2.20it/s]  9% 1285/14661 [10:13<1:42:23,  2.18it/s]  9% 1286/14661 [10:14<1:42:48,  2.17it/s]  9% 1287/14661 [10:14<1:47:20,  2.08it/s]  9% 1288/14661 [10:15<1:46:24,  2.09it/s]  9% 1289/14661 [10:15<1:45:19,  2.12it/s]  9% 1290/14661 [10:16<1:43:38,  2.15it/s]  9% 1291/14661 [10:16<1:44:35,  2.13it/s]  9% 1292/14661 [10:16<1:43:24,  2.15it/s]  9% 1293/14661 [10:17<1:42:35,  2.17it/s]  9% 1294/14661 [10:17<1:41:48,  2.19it/s]  9% 1295/14661 [10:18<1:41:43,  2.19it/s]  9% 1296/14661 [10:18<1:41:43,  2.19it/s]  9% 1297/14661 [10:19<1:41:43,  2.19it/s]  9% 1298/14661 [10:19<1:41:34,  2.19it/s]  9% 1299/14661 [10:20<1:43:40,  2.15it/s]  9% 1300/14661 [10:20<1:43:48,  2.15it/s]  9% 1301/14661 [10:21<1:43:20,  2.15it/s]  9% 1302/14661 [10:21<1:42:47,  2.17it/s]  9% 1303/14661 [10:22<1:43:08,  2.16it/s]  9% 1304/14661 [10:22<1:43:26,  2.15it/s]  9% 1305/14661 [10:22<1:45:36,  2.11it/s]  9% 1306/14661 [10:23<1:44:43,  2.13it/s]  9% 1307/14661 [10:23<1:43:18,  2.15it/s]  9% 1308/14661 [10:24<1:41:59,  2.18it/s]  9% 1309/14661 [10:24<1:42:22,  2.17it/s]  9% 1310/14661 [10:25<1:41:18,  2.20it/s]  9% 1311/14661 [10:25<1:41:28,  2.19it/s]  9% 1312/14661 [10:26<1:41:56,  2.18it/s]  9% 1313/14661 [10:26<1:43:55,  2.14it/s]  9% 1314/14661 [10:27<1:44:12,  2.13it/s]  9% 1315/14661 [10:27<1:43:55,  2.14it/s]  9% 1316/14661 [10:28<1:43:44,  2.14it/s]  9% 1317/14661 [10:28<1:41:39,  2.19it/s]  9% 1318/14661 [10:28<1:40:58,  2.20it/s]  9% 1319/14661 [10:29<1:40:59,  2.20it/s]  9% 1320/14661 [10:29<1:40:12,  2.22it/s]  9% 1321/14661 [10:30<1:40:20,  2.22it/s]  9% 1322/14661 [10:30<1:40:49,  2.21it/s]  9% 1323/14661 [10:31<1:40:54,  2.20it/s]  9% 1324/14661 [10:31<1:40:17,  2.22it/s]  9% 1325/14661 [10:32<1:39:08,  2.24it/s]  9% 1326/14661 [10:32<1:39:21,  2.24it/s]  9% 1327/14661 [10:32<1:38:42,  2.25it/s]  9% 1328/14661 [10:33<1:38:52,  2.25it/s]  9% 1329/14661 [10:33<1:39:19,  2.24it/s]  9% 1330/14661 [10:34<1:39:32,  2.23it/s]  9% 1331/14661 [10:34<1:41:05,  2.20it/s]  9% 1332/14661 [10:35<1:42:15,  2.17it/s]  9% 1333/14661 [10:35<1:41:36,  2.19it/s]  9% 1334/14661 [10:36<1:41:43,  2.18it/s]  9% 1335/14661 [10:36<1:41:05,  2.20it/s]  9% 1336/14661 [10:37<1:42:06,  2.17it/s]  9% 1337/14661 [10:37<1:42:48,  2.16it/s]  9% 1338/14661 [10:38<1:43:04,  2.15it/s]  9% 1339/14661 [10:38<1:44:03,  2.13it/s]  9% 1340/14661 [10:38<1:43:40,  2.14it/s]  9% 1341/14661 [10:39<1:44:42,  2.12it/s]  9% 1342/14661 [10:39<1:44:25,  2.13it/s]  9% 1343/14661 [10:40<1:42:43,  2.16it/s]  9% 1344/14661 [10:40<1:42:22,  2.17it/s]  9% 1345/14661 [10:41<1:43:09,  2.15it/s]  9% 1346/14661 [10:41<1:42:40,  2.16it/s]  9% 1347/14661 [10:42<1:42:44,  2.16it/s]  9% 1348/14661 [10:42<1:42:50,  2.16it/s]  9% 1349/14661 [10:43<1:42:28,  2.17it/s]  9% 1350/14661 [10:43<1:41:31,  2.19it/s]  9% 1351/14661 [10:44<1:44:34,  2.12it/s]  9% 1352/14661 [10:44<1:44:36,  2.12it/s]  9% 1353/14661 [10:45<1:43:15,  2.15it/s]  9% 1354/14661 [10:45<1:44:20,  2.13it/s]  9% 1355/14661 [10:45<1:45:10,  2.11it/s]  9% 1356/14661 [10:46<1:45:29,  2.10it/s]  9% 1357/14661 [10:46<1:45:20,  2.10it/s]  9% 1358/14661 [10:47<1:53:25,  1.95it/s]  9% 1359/14661 [10:48<1:49:56,  2.02it/s]  9% 1360/14661 [10:48<1:48:58,  2.03it/s]  9% 1361/14661 [10:48<1:47:38,  2.06it/s]  9% 1362/14661 [10:49<1:45:46,  2.10it/s]  9% 1363/14661 [10:49<1:44:47,  2.11it/s]  9% 1364/14661 [10:50<1:42:49,  2.16it/s]  9% 1365/14661 [10:50<1:42:19,  2.17it/s]  9% 1366/14661 [10:51<1:42:39,  2.16it/s]  9% 1367/14661 [10:51<1:43:02,  2.15it/s]  9% 1368/14661 [10:52<1:42:05,  2.17it/s]  9% 1369/14661 [10:52<1:42:08,  2.17it/s]  9% 1370/14661 [10:53<1:42:23,  2.16it/s]  9% 1371/14661 [10:53<1:43:30,  2.14it/s]  9% 1372/14661 [10:54<1:42:18,  2.16it/s]  9% 1373/14661 [10:54<1:42:26,  2.16it/s]  9% 1374/14661 [10:54<1:41:34,  2.18it/s]  9% 1375/14661 [10:55<1:41:48,  2.18it/s]  9% 1376/14661 [10:55<1:41:53,  2.17it/s]  9% 1377/14661 [10:56<1:41:11,  2.19it/s]  9% 1378/14661 [10:56<1:41:26,  2.18it/s]  9% 1379/14661 [10:57<1:43:45,  2.13it/s]  9% 1380/14661 [10:57<1:43:36,  2.14it/s]  9% 1381/14661 [10:58<1:43:48,  2.13it/s]  9% 1382/14661 [10:58<1:44:23,  2.12it/s]  9% 1383/14661 [10:59<1:42:25,  2.16it/s]  9% 1384/14661 [10:59<1:42:01,  2.17it/s]  9% 1385/14661 [11:00<1:42:22,  2.16it/s]  9% 1386/14661 [11:00<1:43:13,  2.14it/s]  9% 1387/14661 [11:00<1:42:31,  2.16it/s]  9% 1388/14661 [11:01<1:42:31,  2.16it/s]  9% 1389/14661 [11:01<1:42:05,  2.17it/s]  9% 1390/14661 [11:02<1:43:44,  2.13it/s]  9% 1391/14661 [11:02<1:48:01,  2.05it/s]  9% 1392/14661 [11:03<1:47:26,  2.06it/s] 10% 1393/14661 [11:03<1:45:21,  2.10it/s] 10% 1394/14661 [11:04<1:44:14,  2.12it/s] 10% 1395/14661 [11:04<1:43:55,  2.13it/s] 10% 1396/14661 [11:05<1:43:02,  2.15it/s] 10% 1397/14661 [11:05<1:42:24,  2.16it/s] 10% 1398/14661 [11:06<1:44:01,  2.13it/s] 10% 1399/14661 [11:06<1:44:45,  2.11it/s] 10% 1400/14661 [11:07<1:44:05,  2.12it/s] 10% 1401/14661 [11:07<1:43:47,  2.13it/s] 10% 1402/14661 [11:08<1:43:01,  2.14it/s] 10% 1403/14661 [11:08<1:41:12,  2.18it/s] 10% 1404/14661 [11:08<1:42:11,  2.16it/s] 10% 1405/14661 [11:09<1:42:07,  2.16it/s] 10% 1406/14661 [11:09<1:44:10,  2.12it/s] 10% 1407/14661 [11:10<1:43:45,  2.13it/s] 10% 1408/14661 [11:10<1:42:08,  2.16it/s] 10% 1409/14661 [11:11<1:41:44,  2.17it/s] 10% 1410/14661 [11:11<1:42:16,  2.16it/s] 10% 1411/14661 [11:12<1:40:59,  2.19it/s] 10% 1412/14661 [11:12<1:43:32,  2.13it/s] 10% 1413/14661 [11:13<1:42:01,  2.16it/s] 10% 1414/14661 [11:13<1:41:38,  2.17it/s] 10% 1415/14661 [11:14<1:42:02,  2.16it/s] 10% 1416/14661 [11:14<1:43:14,  2.14it/s] 10% 1417/14661 [11:15<1:42:53,  2.15it/s] 10% 1418/14661 [11:15<1:42:51,  2.15it/s] 10% 1419/14661 [11:15<1:42:31,  2.15it/s] 10% 1420/14661 [11:16<1:41:23,  2.18it/s] 10% 1421/14661 [11:16<1:41:55,  2.16it/s] 10% 1422/14661 [11:17<1:41:59,  2.16it/s] 10% 1423/14661 [11:17<1:40:54,  2.19it/s] 10% 1424/14661 [11:18<1:41:09,  2.18it/s] 10% 1425/14661 [11:18<1:41:26,  2.17it/s] 10% 1426/14661 [11:19<1:41:25,  2.17it/s] 10% 1427/14661 [11:19<1:41:22,  2.18it/s] 10% 1428/14661 [11:20<1:40:52,  2.19it/s] 10% 1429/14661 [11:20<1:40:38,  2.19it/s] 10% 1430/14661 [11:20<1:41:01,  2.18it/s] 10% 1431/14661 [11:21<1:41:40,  2.17it/s] 10% 1432/14661 [11:21<1:41:12,  2.18it/s] 10% 1433/14661 [11:22<1:40:53,  2.19it/s] 10% 1434/14661 [11:22<1:41:29,  2.17it/s] 10% 1435/14661 [11:23<1:40:36,  2.19it/s] 10% 1436/14661 [11:23<1:40:09,  2.20it/s] 10% 1437/14661 [11:24<1:39:38,  2.21it/s] 10% 1438/14661 [11:24<1:41:45,  2.17it/s] 10% 1439/14661 [11:25<1:42:25,  2.15it/s] 10% 1440/14661 [11:25<1:41:30,  2.17it/s] 10% 1441/14661 [11:26<1:41:44,  2.17it/s] 10% 1442/14661 [11:26<1:41:40,  2.17it/s] 10% 1443/14661 [11:26<1:42:58,  2.14it/s] 10% 1444/14661 [11:27<1:42:09,  2.16it/s] 10% 1445/14661 [11:27<1:41:16,  2.18it/s] 10% 1446/14661 [11:28<1:39:56,  2.20it/s] 10% 1447/14661 [11:28<1:40:46,  2.19it/s] 10% 1448/14661 [11:29<1:42:37,  2.15it/s] 10% 1449/14661 [11:29<1:43:39,  2.12it/s] 10% 1450/14661 [11:30<1:43:33,  2.13it/s] 10% 1451/14661 [11:30<1:47:00,  2.06it/s] 10% 1452/14661 [11:31<1:46:59,  2.06it/s] 10% 1453/14661 [11:31<1:44:59,  2.10it/s] 10% 1454/14661 [11:32<1:55:48,  1.90it/s] 10% 1455/14661 [11:32<1:50:39,  1.99it/s] 10% 1456/14661 [11:33<1:47:13,  2.05it/s] 10% 1457/14661 [11:33<1:49:33,  2.01it/s] 10% 1458/14661 [11:34<1:51:22,  1.98it/s] 10% 1459/14661 [11:34<1:50:25,  1.99it/s] 10% 1460/14661 [11:35<1:54:27,  1.92it/s] 10% 1461/14661 [11:35<1:50:39,  1.99it/s] 10% 1462/14661 [11:36<1:47:40,  2.04it/s] 10% 1463/14661 [11:36<1:44:54,  2.10it/s] 10% 1464/14661 [11:37<1:44:40,  2.10it/s] 10% 1465/14661 [11:37<1:44:05,  2.11it/s] 10% 1466/14661 [11:38<1:42:43,  2.14it/s] 10% 1467/14661 [11:38<1:43:29,  2.12it/s] 10% 1468/14661 [11:39<1:43:23,  2.13it/s] 10% 1469/14661 [11:39<1:43:00,  2.13it/s] 10% 1470/14661 [11:39<1:42:04,  2.15it/s] 10% 1471/14661 [11:40<1:42:35,  2.14it/s] 10% 1472/14661 [11:40<1:42:21,  2.15it/s] 10% 1473/14661 [11:41<1:41:55,  2.16it/s] 10% 1474/14661 [11:41<1:41:19,  2.17it/s] 10% 1475/14661 [11:42<1:41:25,  2.17it/s] 10% 1476/14661 [11:42<1:43:24,  2.12it/s] 10% 1477/14661 [11:43<1:43:16,  2.13it/s] 10% 1478/14661 [11:43<1:43:32,  2.12it/s] 10% 1479/14661 [11:44<1:44:37,  2.10it/s] 10% 1480/14661 [11:44<1:42:15,  2.15it/s] 10% 1481/14661 [11:45<1:41:45,  2.16it/s] 10% 1482/14661 [11:45<1:42:07,  2.15it/s] 10% 1483/14661 [11:46<1:42:51,  2.14it/s] 10% 1484/14661 [11:46<1:41:20,  2.17it/s] 10% 1485/14661 [11:46<1:41:07,  2.17it/s] 10% 1486/14661 [11:47<1:43:50,  2.11it/s] 10% 1487/14661 [11:47<1:43:36,  2.12it/s] 10% 1488/14661 [11:48<1:41:44,  2.16it/s] 10% 1489/14661 [11:48<1:40:32,  2.18it/s] 10% 1490/14661 [11:49<1:40:52,  2.18it/s] 10% 1491/14661 [11:49<1:41:04,  2.17it/s] 10% 1492/14661 [11:50<1:40:40,  2.18it/s] 10% 1493/14661 [11:50<1:41:11,  2.17it/s] 10% 1494/14661 [11:51<1:40:52,  2.18it/s] 10% 1495/14661 [11:51<1:41:29,  2.16it/s] 10% 1496/14661 [11:52<1:43:12,  2.13it/s] 10% 1497/14661 [11:52<1:41:34,  2.16it/s] 10% 1498/14661 [11:52<1:41:13,  2.17it/s] 10% 1499/14661 [11:53<1:41:14,  2.17it/s] 10% 1500/14661 [11:53<1:40:57,  2.17it/s] 10% 1501/14661 [11:54<1:41:33,  2.16it/s] 10% 1502/14661 [11:54<1:43:34,  2.12it/s] 10% 1503/14661 [11:55<1:44:48,  2.09it/s] 10% 1504/14661 [11:55<1:42:56,  2.13it/s] 10% 1505/14661 [11:56<1:44:14,  2.10it/s] 10% 1506/14661 [11:56<1:43:09,  2.13it/s] 10% 1507/14661 [11:57<1:42:29,  2.14it/s] 10% 1508/14661 [11:57<1:42:04,  2.15it/s] 10% 1509/14661 [11:58<1:42:35,  2.14it/s] 10% 1510/14661 [11:58<1:42:46,  2.13it/s] 10% 1511/14661 [11:59<1:41:12,  2.17it/s] 10% 1512/14661 [11:59<1:40:09,  2.19it/s] 10% 1513/14661 [11:59<1:40:51,  2.17it/s] 10% 1514/14661 [12:00<1:39:53,  2.19it/s] 10% 1515/14661 [12:00<1:41:26,  2.16it/s] 10% 1516/14661 [12:01<1:41:53,  2.15it/s] 10% 1517/14661 [12:01<1:41:39,  2.15it/s] 10% 1518/14661 [12:02<1:41:28,  2.16it/s] 10% 1519/14661 [12:02<1:42:04,  2.15it/s] 10% 1520/14661 [12:03<1:42:44,  2.13it/s] 10% 1521/14661 [12:03<1:42:55,  2.13it/s] 10% 1522/14661 [12:04<1:42:25,  2.14it/s] 10% 1523/14661 [12:04<1:41:31,  2.16it/s] 10% 1524/14661 [12:05<1:40:23,  2.18it/s] 10% 1525/14661 [12:05<1:41:41,  2.15it/s] 10% 1526/14661 [12:05<1:40:50,  2.17it/s] 10% 1527/14661 [12:06<1:40:36,  2.18it/s] 10% 1528/14661 [12:07<1:48:10,  2.02it/s] 10% 1529/14661 [12:07<1:45:42,  2.07it/s] 10% 1530/14661 [12:07<1:43:02,  2.12it/s] 10% 1531/14661 [12:08<1:45:16,  2.08it/s] 10% 1532/14661 [12:08<1:46:49,  2.05it/s] 10% 1533/14661 [12:09<1:44:39,  2.09it/s] 10% 1534/14661 [12:09<1:43:33,  2.11it/s] 10% 1535/14661 [12:10<1:41:17,  2.16it/s] 10% 1536/14661 [12:10<1:40:13,  2.18it/s] 10% 1537/14661 [12:11<1:39:26,  2.20it/s] 10% 1538/14661 [12:11<1:38:49,  2.21it/s] 10% 1539/14661 [12:12<1:39:07,  2.21it/s] 11% 1540/14661 [12:12<1:38:01,  2.23it/s] 11% 1541/14661 [12:12<1:37:55,  2.23it/s] 11% 1542/14661 [12:13<1:38:50,  2.21it/s] 11% 1543/14661 [12:13<1:41:21,  2.16it/s] 11% 1544/14661 [12:14<1:41:12,  2.16it/s] 11% 1545/14661 [12:14<1:40:27,  2.18it/s] 11% 1546/14661 [12:15<1:40:45,  2.17it/s] 11% 1547/14661 [12:15<1:42:50,  2.13it/s] 11% 1548/14661 [12:16<1:42:55,  2.12it/s] 11% 1549/14661 [12:16<1:41:53,  2.14it/s] 11% 1550/14661 [12:17<1:42:25,  2.13it/s] 11% 1551/14661 [12:17<1:42:04,  2.14it/s] 11% 1552/14661 [12:18<1:44:15,  2.10it/s] 11% 1553/14661 [12:18<1:43:55,  2.10it/s] 11% 1554/14661 [12:19<1:43:40,  2.11it/s] 11% 1555/14661 [12:19<1:43:06,  2.12it/s] 11% 1556/14661 [12:20<1:41:34,  2.15it/s] 11% 1557/14661 [12:20<1:40:08,  2.18it/s] 11% 1558/14661 [12:20<1:39:51,  2.19it/s] 11% 1559/14661 [12:21<1:41:04,  2.16it/s] 11% 1560/14661 [12:21<1:39:50,  2.19it/s] 11% 1561/14661 [12:22<1:38:10,  2.22it/s] 11% 1562/14661 [12:22<1:37:38,  2.24it/s] 11% 1563/14661 [12:23<1:38:31,  2.22it/s] 11% 1564/14661 [12:23<1:40:01,  2.18it/s] 11% 1565/14661 [12:24<1:39:56,  2.18it/s] 11% 1566/14661 [12:24<1:39:57,  2.18it/s] 11% 1567/14661 [12:25<1:40:45,  2.17it/s] 11% 1568/14661 [12:25<1:40:42,  2.17it/s] 11% 1569/14661 [12:25<1:41:11,  2.16it/s] 11% 1570/14661 [12:26<1:42:09,  2.14it/s] 11% 1571/14661 [12:26<1:41:25,  2.15it/s] 11% 1572/14661 [12:27<1:40:01,  2.18it/s] 11% 1573/14661 [12:27<1:39:33,  2.19it/s] 11% 1574/14661 [12:28<1:40:51,  2.16it/s] 11% 1575/14661 [12:28<1:40:28,  2.17it/s] 11% 1576/14661 [12:29<1:39:46,  2.19it/s] 11% 1577/14661 [12:29<1:41:02,  2.16it/s] 11% 1578/14661 [12:30<1:41:41,  2.14it/s] 11% 1579/14661 [12:30<1:41:32,  2.15it/s] 11% 1580/14661 [12:31<1:42:03,  2.14it/s] 11% 1581/14661 [12:31<1:42:00,  2.14it/s] 11% 1582/14661 [12:31<1:41:44,  2.14it/s] 11% 1583/14661 [12:32<1:40:58,  2.16it/s] 11% 1584/14661 [12:32<1:41:09,  2.15it/s] 11% 1585/14661 [12:33<1:40:10,  2.18it/s] 11% 1586/14661 [12:33<1:40:23,  2.17it/s] 11% 1587/14661 [12:34<1:40:47,  2.16it/s] 11% 1588/14661 [12:34<1:39:50,  2.18it/s] 11% 1589/14661 [12:35<1:39:18,  2.19it/s] 11% 1590/14661 [12:35<1:40:31,  2.17it/s] 11% 1591/14661 [12:36<1:40:05,  2.18it/s] 11% 1592/14661 [12:36<1:40:05,  2.18it/s] 11% 1593/14661 [12:37<1:40:12,  2.17it/s] 11% 1594/14661 [12:37<1:40:24,  2.17it/s] 11% 1595/14661 [12:37<1:40:13,  2.17it/s] 11% 1596/14661 [12:38<1:39:59,  2.18it/s] 11% 1597/14661 [12:38<1:39:27,  2.19it/s] 11% 1598/14661 [12:39<1:41:33,  2.14it/s] 11% 1599/14661 [12:39<1:40:30,  2.17it/s] 11% 1600/14661 [12:40<1:39:33,  2.19it/s] 11% 1601/14661 [12:40<1:40:58,  2.16it/s] 11% 1602/14661 [12:41<1:40:23,  2.17it/s] 11% 1603/14661 [12:41<1:39:35,  2.19it/s] 11% 1604/14661 [12:42<1:39:32,  2.19it/s] 11% 1605/14661 [12:42<1:38:44,  2.20it/s] 11% 1606/14661 [12:42<1:38:32,  2.21it/s] 11% 1607/14661 [12:43<1:40:42,  2.16it/s] 11% 1608/14661 [12:43<1:40:01,  2.17it/s] 11% 1609/14661 [12:44<1:38:40,  2.20it/s] 11% 1610/14661 [12:44<1:37:52,  2.22it/s] 11% 1611/14661 [12:45<1:48:46,  2.00it/s] 11% 1612/14661 [12:45<1:46:35,  2.04it/s] 11% 1613/14661 [12:46<1:46:21,  2.04it/s] 11% 1614/14661 [12:46<1:44:22,  2.08it/s] 11% 1615/14661 [12:47<1:42:29,  2.12it/s] 11% 1616/14661 [12:47<1:42:49,  2.11it/s] 11% 1617/14661 [12:48<1:41:13,  2.15it/s] 11% 1618/14661 [12:48<1:39:56,  2.17it/s] 11% 1619/14661 [12:49<1:39:23,  2.19it/s] 11% 1620/14661 [12:49<1:40:07,  2.17it/s] 11% 1621/14661 [12:50<1:39:13,  2.19it/s] 11% 1622/14661 [12:50<1:41:09,  2.15it/s] 11% 1623/14661 [12:50<1:41:41,  2.14it/s] 11% 1624/14661 [12:51<1:41:04,  2.15it/s] 11% 1625/14661 [12:51<1:41:54,  2.13it/s] 11% 1626/14661 [12:52<1:41:03,  2.15it/s] 11% 1627/14661 [12:52<1:42:21,  2.12it/s] 11% 1628/14661 [12:53<1:42:12,  2.13it/s] 11% 1629/14661 [12:53<1:41:08,  2.15it/s] 11% 1630/14661 [12:54<1:39:55,  2.17it/s] 11% 1631/14661 [12:54<1:39:26,  2.18it/s] 11% 1632/14661 [12:55<1:41:21,  2.14it/s] 11% 1633/14661 [12:55<1:41:53,  2.13it/s] 11% 1634/14661 [12:56<1:41:28,  2.14it/s] 11% 1635/14661 [12:56<1:40:18,  2.16it/s] 11% 1636/14661 [12:57<1:39:22,  2.18it/s] 11% 1637/14661 [12:57<1:40:22,  2.16it/s] 11% 1638/14661 [12:57<1:40:59,  2.15it/s] 11% 1639/14661 [12:58<1:41:21,  2.14it/s] 11% 1640/14661 [12:58<1:40:27,  2.16it/s] 11% 1641/14661 [12:59<1:39:17,  2.19it/s] 11% 1642/14661 [12:59<1:38:45,  2.20it/s] 11% 1643/14661 [13:00<1:38:25,  2.20it/s] 11% 1644/14661 [13:00<1:39:38,  2.18it/s] 11% 1645/14661 [13:01<1:39:08,  2.19it/s] 11% 1646/14661 [13:01<1:39:10,  2.19it/s] 11% 1647/14661 [13:02<1:41:13,  2.14it/s] 11% 1648/14661 [13:02<1:43:05,  2.10it/s] 11% 1649/14661 [13:03<1:42:05,  2.12it/s] 11% 1650/14661 [13:03<1:40:56,  2.15it/s] 11% 1651/14661 [13:03<1:39:50,  2.17it/s] 11% 1652/14661 [13:04<1:40:05,  2.17it/s] 11% 1653/14661 [13:04<1:39:58,  2.17it/s] 11% 1654/14661 [13:05<1:40:16,  2.16it/s] 11% 1655/14661 [13:05<1:40:26,  2.16it/s] 11% 1656/14661 [13:06<1:40:39,  2.15it/s] 11% 1657/14661 [13:06<1:40:14,  2.16it/s] 11% 1658/14661 [13:07<1:39:45,  2.17it/s] 11% 1659/14661 [13:07<1:39:19,  2.18it/s] 11% 1660/14661 [13:08<1:38:13,  2.21it/s] 11% 1661/14661 [13:08<1:38:09,  2.21it/s] 11% 1662/14661 [13:08<1:37:49,  2.21it/s] 11% 1663/14661 [13:09<1:37:47,  2.22it/s] 11% 1664/14661 [13:09<1:36:59,  2.23it/s] 11% 1665/14661 [13:10<1:36:54,  2.24it/s] 11% 1666/14661 [13:10<1:37:19,  2.23it/s] 11% 1667/14661 [13:11<1:38:34,  2.20it/s] 11% 1668/14661 [13:11<1:39:13,  2.18it/s] 11% 1669/14661 [13:12<1:40:01,  2.16it/s] 11% 1670/14661 [13:12<1:39:29,  2.18it/s] 11% 1671/14661 [13:13<1:39:05,  2.18it/s] 11% 1672/14661 [13:13<1:39:54,  2.17it/s] 11% 1673/14661 [13:14<1:38:58,  2.19it/s] 11% 1674/14661 [13:14<1:38:02,  2.21it/s] 11% 1675/14661 [13:14<1:38:07,  2.21it/s] 11% 1676/14661 [13:15<1:38:33,  2.20it/s] 11% 1677/14661 [13:15<1:39:55,  2.17it/s] 11% 1678/14661 [13:16<1:42:57,  2.10it/s] 11% 1679/14661 [13:16<1:42:48,  2.10it/s] 11% 1680/14661 [13:17<1:41:53,  2.12it/s] 11% 1681/14661 [13:17<1:39:38,  2.17it/s] 11% 1682/14661 [13:18<1:40:46,  2.15it/s] 11% 1683/14661 [13:18<1:40:30,  2.15it/s] 11% 1684/14661 [13:19<1:38:52,  2.19it/s] 11% 1685/14661 [13:19<1:38:03,  2.21it/s] 11% 1686/14661 [13:19<1:37:45,  2.21it/s] 12% 1687/14661 [13:20<1:38:20,  2.20it/s] 12% 1688/14661 [13:20<1:37:53,  2.21it/s] 12% 1689/14661 [13:21<1:39:40,  2.17it/s] 12% 1690/14661 [13:21<1:38:52,  2.19it/s] 12% 1691/14661 [13:22<1:38:27,  2.20it/s] 12% 1692/14661 [13:22<1:38:52,  2.19it/s] 12% 1693/14661 [13:23<1:38:26,  2.20it/s] 12% 1694/14661 [13:23<1:39:32,  2.17it/s] 12% 1695/14661 [13:24<1:39:01,  2.18it/s] 12% 1696/14661 [13:24<1:37:54,  2.21it/s] 12% 1697/14661 [13:25<1:38:48,  2.19it/s] 12% 1698/14661 [13:25<1:39:14,  2.18it/s] 12% 1699/14661 [13:25<1:40:35,  2.15it/s] 12% 1700/14661 [13:26<1:39:29,  2.17it/s] 12% 1701/14661 [13:26<1:40:25,  2.15it/s] 12% 1702/14661 [13:27<1:40:07,  2.16it/s] 12% 1703/14661 [13:27<1:41:20,  2.13it/s] 12% 1704/14661 [13:28<1:41:38,  2.12it/s] 12% 1705/14661 [13:28<1:41:19,  2.13it/s] 12% 1706/14661 [13:29<1:40:16,  2.15it/s] 12% 1707/14661 [13:29<1:48:39,  1.99it/s] 12% 1708/14661 [13:30<1:44:46,  2.06it/s] 12% 1709/14661 [13:30<1:42:02,  2.12it/s] 12% 1710/14661 [13:31<1:40:31,  2.15it/s] 12% 1711/14661 [13:31<1:39:48,  2.16it/s] 12% 1712/14661 [13:32<1:40:04,  2.16it/s] 12% 1713/14661 [13:32<1:39:42,  2.16it/s] 12% 1714/14661 [13:32<1:39:20,  2.17it/s] 12% 1715/14661 [13:33<1:40:17,  2.15it/s] 12% 1716/14661 [13:33<1:39:06,  2.18it/s] 12% 1717/14661 [13:34<1:38:23,  2.19it/s] 12% 1718/14661 [13:34<1:38:58,  2.18it/s] 12% 1719/14661 [13:35<1:38:55,  2.18it/s] 12% 1720/14661 [13:35<1:38:18,  2.19it/s] 12% 1721/14661 [13:36<1:38:47,  2.18it/s] 12% 1722/14661 [13:36<1:39:12,  2.17it/s] 12% 1723/14661 [13:37<1:38:54,  2.18it/s] 12% 1724/14661 [13:37<1:37:56,  2.20it/s] 12% 1725/14661 [13:38<1:38:17,  2.19it/s] 12% 1726/14661 [13:38<1:38:26,  2.19it/s] 12% 1727/14661 [13:38<1:40:21,  2.15it/s] 12% 1728/14661 [13:39<1:39:19,  2.17it/s] 12% 1729/14661 [13:39<1:39:57,  2.16it/s] 12% 1730/14661 [13:40<1:39:37,  2.16it/s] 12% 1731/14661 [13:40<1:39:26,  2.17it/s] 12% 1732/14661 [13:41<1:40:02,  2.15it/s] 12% 1733/14661 [13:41<1:42:21,  2.11it/s] 12% 1734/14661 [13:42<1:44:26,  2.06it/s] 12% 1735/14661 [13:42<1:42:20,  2.10it/s] 12% 1736/14661 [13:43<1:40:27,  2.14it/s] 12% 1737/14661 [13:43<1:40:22,  2.15it/s] 12% 1738/14661 [13:44<1:41:06,  2.13it/s] 12% 1739/14661 [13:44<1:39:57,  2.15it/s] 12% 1740/14661 [13:45<1:39:21,  2.17it/s] 12% 1741/14661 [13:45<1:38:32,  2.19it/s] 12% 1742/14661 [13:45<1:38:02,  2.20it/s] 12% 1743/14661 [13:46<1:37:25,  2.21it/s] 12% 1744/14661 [13:46<1:38:25,  2.19it/s] 12% 1745/14661 [13:47<1:39:22,  2.17it/s] 12% 1746/14661 [13:47<1:39:14,  2.17it/s] 12% 1747/14661 [13:48<1:40:19,  2.15it/s] 12% 1748/14661 [13:48<1:40:33,  2.14it/s] 12% 1749/14661 [13:49<1:40:06,  2.15it/s] 12% 1750/14661 [13:49<1:39:16,  2.17it/s] 12% 1751/14661 [13:50<1:38:50,  2.18it/s] 12% 1752/14661 [13:50<1:40:52,  2.13it/s] 12% 1753/14661 [13:51<1:40:00,  2.15it/s] 12% 1754/14661 [13:51<1:39:38,  2.16it/s] 12% 1755/14661 [13:51<1:39:49,  2.15it/s] 12% 1756/14661 [13:52<1:40:10,  2.15it/s] 12% 1757/14661 [13:52<1:39:47,  2.15it/s] 12% 1758/14661 [13:53<1:39:47,  2.16it/s] 12% 1759/14661 [13:53<1:40:05,  2.15it/s] 12% 1760/14661 [13:54<1:39:52,  2.15it/s] 12% 1761/14661 [13:54<1:40:02,  2.15it/s] 12% 1762/14661 [13:55<1:39:39,  2.16it/s] 12% 1763/14661 [13:55<1:39:16,  2.17it/s] 12% 1764/14661 [13:56<1:38:39,  2.18it/s] 12% 1765/14661 [13:56<1:38:40,  2.18it/s] 12% 1766/14661 [13:57<1:38:08,  2.19it/s] 12% 1767/14661 [13:57<1:40:30,  2.14it/s] 12% 1768/14661 [13:58<1:43:03,  2.09it/s] 12% 1769/14661 [13:58<1:42:14,  2.10it/s] 12% 1770/14661 [13:58<1:41:46,  2.11it/s] 12% 1771/14661 [13:59<1:41:49,  2.11it/s] 12% 1772/14661 [13:59<1:40:29,  2.14it/s] 12% 1773/14661 [14:00<1:41:40,  2.11it/s] 12% 1774/14661 [14:00<1:41:25,  2.12it/s] 12% 1775/14661 [14:01<1:41:07,  2.12it/s] 12% 1776/14661 [14:01<1:41:06,  2.12it/s] 12% 1777/14661 [14:02<1:40:40,  2.13it/s] 12% 1778/14661 [14:02<1:40:24,  2.14it/s] 12% 1779/14661 [14:03<1:40:31,  2.14it/s] 12% 1780/14661 [14:03<1:40:29,  2.14it/s] 12% 1781/14661 [14:04<1:51:41,  1.92it/s] 12% 1782/14661 [14:04<1:49:11,  1.97it/s] 12% 1783/14661 [14:05<1:45:41,  2.03it/s] 12% 1784/14661 [14:05<1:44:16,  2.06it/s] 12% 1785/14661 [14:06<1:42:02,  2.10it/s] 12% 1786/14661 [14:06<1:40:03,  2.14it/s] 12% 1787/14661 [14:07<1:38:52,  2.17it/s] 12% 1788/14661 [14:07<1:39:14,  2.16it/s] 12% 1789/14661 [14:07<1:39:35,  2.15it/s] 12% 1790/14661 [14:08<1:39:26,  2.16it/s] 12% 1791/14661 [14:08<1:38:10,  2.18it/s] 12% 1792/14661 [14:09<1:37:42,  2.20it/s] 12% 1793/14661 [14:09<1:38:05,  2.19it/s] 12% 1794/14661 [14:10<1:38:03,  2.19it/s] 12% 1795/14661 [14:10<1:37:16,  2.20it/s] 12% 1796/14661 [14:11<1:37:35,  2.20it/s] 12% 1797/14661 [14:11<1:37:19,  2.20it/s] 12% 1798/14661 [14:12<1:37:39,  2.20it/s] 12% 1799/14661 [14:12<1:38:33,  2.17it/s] 12% 1800/14661 [14:13<1:37:52,  2.19it/s] 12% 1801/14661 [14:13<1:37:07,  2.21it/s] 12% 1802/14661 [14:13<1:36:23,  2.22it/s] 12% 1803/14661 [14:14<1:36:05,  2.23it/s] 12% 1804/14661 [14:14<1:37:12,  2.20it/s] 12% 1805/14661 [14:15<1:37:14,  2.20it/s] 12% 1806/14661 [14:15<1:37:09,  2.21it/s] 12% 1807/14661 [14:16<1:40:12,  2.14it/s] 12% 1808/14661 [14:16<1:42:24,  2.09it/s] 12% 1809/14661 [14:17<1:41:25,  2.11it/s] 12% 1810/14661 [14:17<1:42:10,  2.10it/s] 12% 1811/14661 [14:18<1:41:38,  2.11it/s] 12% 1812/14661 [14:18<1:40:28,  2.13it/s] 12% 1813/14661 [14:19<1:39:05,  2.16it/s] 12% 1814/14661 [14:19<1:40:18,  2.13it/s] 12% 1815/14661 [14:19<1:40:54,  2.12it/s] 12% 1816/14661 [14:20<1:39:36,  2.15it/s] 12% 1817/14661 [14:20<1:39:11,  2.16it/s] 12% 1818/14661 [14:21<1:39:01,  2.16it/s] 12% 1819/14661 [14:21<1:39:16,  2.16it/s] 12% 1820/14661 [14:22<1:40:01,  2.14it/s] 12% 1821/14661 [14:22<1:39:42,  2.15it/s] 12% 1822/14661 [14:23<1:39:25,  2.15it/s] 12% 1823/14661 [14:23<1:38:49,  2.16it/s] 12% 1824/14661 [14:24<1:37:53,  2.19it/s] 12% 1825/14661 [14:24<1:38:51,  2.16it/s] 12% 1826/14661 [14:25<1:38:03,  2.18it/s] 12% 1827/14661 [14:25<1:37:42,  2.19it/s] 12% 1828/14661 [14:25<1:37:10,  2.20it/s] 12% 1829/14661 [14:26<1:37:15,  2.20it/s] 12% 1830/14661 [14:26<1:37:37,  2.19it/s] 12% 1831/14661 [14:27<1:37:40,  2.19it/s] 12% 1832/14661 [14:27<1:40:38,  2.12it/s] 13% 1833/14661 [14:28<1:38:37,  2.17it/s] 13% 1834/14661 [14:28<1:38:27,  2.17it/s] 13% 1835/14661 [14:29<1:39:42,  2.14it/s] 13% 1836/14661 [14:29<1:39:06,  2.16it/s] 13% 1837/14661 [14:30<1:40:34,  2.12it/s] 13% 1838/14661 [14:30<1:40:03,  2.14it/s] 13% 1839/14661 [14:31<1:40:35,  2.12it/s] 13% 1840/14661 [14:31<1:39:41,  2.14it/s] 13% 1841/14661 [14:32<1:41:18,  2.11it/s] 13% 1842/14661 [14:32<1:39:32,  2.15it/s] 13% 1843/14661 [14:32<1:39:04,  2.16it/s] 13% 1844/14661 [14:33<1:37:42,  2.19it/s] 13% 1845/14661 [14:33<1:37:04,  2.20it/s] 13% 1846/14661 [14:34<1:37:51,  2.18it/s] 13% 1847/14661 [14:34<1:39:08,  2.15it/s] 13% 1848/14661 [14:35<1:38:02,  2.18it/s] 13% 1849/14661 [14:35<1:38:32,  2.17it/s] 13% 1850/14661 [14:36<1:41:13,  2.11it/s] 13% 1851/14661 [14:36<1:39:30,  2.15it/s] 13% 1852/14661 [14:37<1:38:18,  2.17it/s] 13% 1853/14661 [14:37<1:37:10,  2.20it/s] 13% 1854/14661 [14:37<1:37:03,  2.20it/s] 13% 1855/14661 [14:38<1:36:40,  2.21it/s] 13% 1856/14661 [14:38<1:37:22,  2.19it/s] 13% 1857/14661 [14:39<1:39:02,  2.15it/s] 13% 1858/14661 [14:39<1:38:30,  2.17it/s] 13% 1859/14661 [14:40<1:38:38,  2.16it/s] 13% 1860/14661 [14:40<1:38:50,  2.16it/s] 13% 1861/14661 [14:41<1:37:58,  2.18it/s] 13% 1862/14661 [14:41<1:37:25,  2.19it/s] 13% 1863/14661 [14:42<1:37:11,  2.19it/s] 13% 1864/14661 [14:42<1:48:03,  1.97it/s] 13% 1865/14661 [14:43<1:44:14,  2.05it/s] 13% 1866/14661 [14:43<1:43:01,  2.07it/s] 13% 1867/14661 [14:44<1:42:07,  2.09it/s] 13% 1868/14661 [14:44<1:42:32,  2.08it/s] 13% 1869/14661 [14:45<1:41:45,  2.10it/s] 13% 1870/14661 [14:45<1:39:54,  2.13it/s] 13% 1871/14661 [14:46<1:40:13,  2.13it/s] 13% 1872/14661 [14:46<1:38:40,  2.16it/s] 13% 1873/14661 [14:46<1:38:49,  2.16it/s] 13% 1874/14661 [14:47<1:38:48,  2.16it/s] 13% 1875/14661 [14:47<1:38:35,  2.16it/s] 13% 1876/14661 [14:48<1:37:55,  2.18it/s] 13% 1877/14661 [14:48<1:36:47,  2.20it/s] 13% 1878/14661 [14:49<1:36:05,  2.22it/s] 13% 1879/14661 [14:49<1:37:41,  2.18it/s] 13% 1880/14661 [14:50<1:39:03,  2.15it/s] 13% 1881/14661 [14:50<1:42:14,  2.08it/s] 13% 1882/14661 [14:51<1:41:28,  2.10it/s] 13% 1883/14661 [14:51<1:39:51,  2.13it/s] 13% 1884/14661 [14:52<1:39:42,  2.14it/s] 13% 1885/14661 [14:52<1:38:29,  2.16it/s] 13% 1886/14661 [14:52<1:38:32,  2.16it/s] 13% 1887/14661 [14:53<1:39:04,  2.15it/s] 13% 1888/14661 [14:53<1:38:34,  2.16it/s] 13% 1889/14661 [14:54<1:37:47,  2.18it/s] 13% 1890/14661 [14:54<1:37:44,  2.18it/s] 13% 1891/14661 [14:55<1:38:06,  2.17it/s] 13% 1892/14661 [14:55<1:37:34,  2.18it/s] 13% 1893/14661 [14:56<1:38:24,  2.16it/s] 13% 1894/14661 [14:56<1:39:26,  2.14it/s] 13% 1895/14661 [14:57<1:38:39,  2.16it/s] 13% 1896/14661 [14:57<1:37:24,  2.18it/s] 13% 1897/14661 [14:58<1:36:35,  2.20it/s] 13% 1898/14661 [14:58<1:36:18,  2.21it/s] 13% 1899/14661 [14:58<1:36:15,  2.21it/s] 13% 1900/14661 [14:59<1:35:44,  2.22it/s] 13% 1901/14661 [14:59<1:35:42,  2.22it/s] 13% 1902/14661 [15:00<1:36:59,  2.19it/s] 13% 1903/14661 [15:00<1:39:07,  2.15it/s] 13% 1904/14661 [15:01<1:42:00,  2.08it/s] 13% 1905/14661 [15:01<1:40:15,  2.12it/s] 13% 1906/14661 [15:02<1:39:21,  2.14it/s] 13% 1907/14661 [15:02<1:38:07,  2.17it/s] 13% 1908/14661 [15:03<1:37:16,  2.19it/s] 13% 1909/14661 [15:03<1:36:49,  2.19it/s] 13% 1910/14661 [15:04<1:37:41,  2.18it/s] 13% 1911/14661 [15:04<1:39:13,  2.14it/s] 13% 1912/14661 [15:04<1:39:19,  2.14it/s] 13% 1913/14661 [15:05<1:39:34,  2.13it/s] 13% 1914/14661 [15:05<1:39:00,  2.15it/s] 13% 1915/14661 [15:06<1:37:36,  2.18it/s] 13% 1916/14661 [15:06<1:37:44,  2.17it/s] 13% 1917/14661 [15:07<1:38:03,  2.17it/s] 13% 1918/14661 [15:07<1:38:25,  2.16it/s] 13% 1919/14661 [15:08<1:37:55,  2.17it/s] 13% 1920/14661 [15:08<1:37:43,  2.17it/s] 13% 1921/14661 [15:09<1:39:14,  2.14it/s] 13% 1922/14661 [15:09<1:38:40,  2.15it/s] 13% 1923/14661 [15:10<1:38:35,  2.15it/s] 13% 1924/14661 [15:10<1:38:21,  2.16it/s] 13% 1925/14661 [15:10<1:38:27,  2.16it/s] 13% 1926/14661 [15:11<1:38:04,  2.16it/s] 13% 1927/14661 [15:11<1:38:59,  2.14it/s] 13% 1928/14661 [15:12<1:37:46,  2.17it/s] 13% 1929/14661 [15:12<1:37:53,  2.17it/s] 13% 1930/14661 [15:13<1:37:55,  2.17it/s] 13% 1931/14661 [15:13<1:39:00,  2.14it/s] 13% 1932/14661 [15:14<1:38:54,  2.14it/s] 13% 1933/14661 [15:14<1:38:31,  2.15it/s] 13% 1934/14661 [15:15<1:37:55,  2.17it/s] 13% 1935/14661 [15:15<1:37:05,  2.18it/s] 13% 1936/14661 [15:16<1:37:10,  2.18it/s] 13% 1937/14661 [15:16<1:38:21,  2.16it/s] 13% 1938/14661 [15:16<1:37:56,  2.17it/s] 13% 1939/14661 [15:17<1:37:00,  2.19it/s] 13% 1940/14661 [15:17<1:36:57,  2.19it/s] 13% 1941/14661 [15:18<1:38:02,  2.16it/s] 13% 1942/14661 [15:18<1:37:18,  2.18it/s] 13% 1943/14661 [15:19<1:36:45,  2.19it/s] 13% 1944/14661 [15:19<1:37:32,  2.17it/s] 13% 1945/14661 [15:20<1:38:23,  2.15it/s] 13% 1946/14661 [15:20<1:37:41,  2.17it/s] 13% 1947/14661 [15:21<1:40:19,  2.11it/s] 13% 1948/14661 [15:21<1:40:12,  2.11it/s] 13% 1949/14661 [15:22<1:39:46,  2.12it/s] 13% 1950/14661 [15:22<1:39:07,  2.14it/s] 13% 1951/14661 [15:23<1:39:31,  2.13it/s] 13% 1952/14661 [15:23<1:37:46,  2.17it/s] 13% 1953/14661 [15:23<1:36:59,  2.18it/s] 13% 1954/14661 [15:24<1:36:24,  2.20it/s] 13% 1955/14661 [15:24<1:35:48,  2.21it/s] 13% 1956/14661 [15:25<1:35:56,  2.21it/s] 13% 1957/14661 [15:25<1:37:13,  2.18it/s] 13% 1958/14661 [15:26<1:38:45,  2.14it/s] 13% 1959/14661 [15:26<1:37:48,  2.16it/s] 13% 1960/14661 [15:27<1:47:12,  1.97it/s] 13% 1961/14661 [15:27<1:43:36,  2.04it/s] 13% 1962/14661 [15:28<1:40:12,  2.11it/s] 13% 1963/14661 [15:28<1:39:07,  2.14it/s] 13% 1964/14661 [15:29<1:38:41,  2.14it/s] 13% 1965/14661 [15:29<1:38:46,  2.14it/s] 13% 1966/14661 [15:30<1:39:45,  2.12it/s] 13% 1967/14661 [15:30<1:39:47,  2.12it/s] 13% 1968/14661 [15:30<1:38:59,  2.14it/s] 13% 1969/14661 [15:31<1:40:21,  2.11it/s] 13% 1970/14661 [15:31<1:39:21,  2.13it/s] 13% 1971/14661 [15:32<1:38:43,  2.14it/s] 13% 1972/14661 [15:32<1:37:56,  2.16it/s] 13% 1973/14661 [15:33<1:38:15,  2.15it/s] 13% 1974/14661 [15:33<1:37:19,  2.17it/s] 13% 1975/14661 [15:34<1:36:07,  2.20it/s] 13% 1976/14661 [15:34<1:36:13,  2.20it/s] 13% 1977/14661 [15:35<1:36:42,  2.19it/s] 13% 1978/14661 [15:35<1:38:07,  2.15it/s] 13% 1979/14661 [15:36<1:39:56,  2.11it/s] 14% 1980/14661 [15:36<1:39:40,  2.12it/s] 14% 1981/14661 [15:37<1:43:11,  2.05it/s] 14% 1982/14661 [15:37<1:41:00,  2.09it/s] 14% 1983/14661 [15:37<1:38:57,  2.14it/s] 14% 1984/14661 [15:38<1:38:55,  2.14it/s] 14% 1985/14661 [15:38<1:37:31,  2.17it/s] 14% 1986/14661 [15:39<1:37:52,  2.16it/s] 14% 1987/14661 [15:39<1:37:34,  2.16it/s] 14% 1988/14661 [15:40<1:38:01,  2.15it/s] 14% 1989/14661 [15:40<1:38:04,  2.15it/s] 14% 1990/14661 [15:41<1:38:22,  2.15it/s] 14% 1991/14661 [15:41<1:38:45,  2.14it/s] 14% 1992/14661 [15:42<1:38:07,  2.15it/s] 14% 1993/14661 [15:42<1:37:40,  2.16it/s] 14% 1994/14661 [15:43<1:37:52,  2.16it/s] 14% 1995/14661 [15:43<1:36:41,  2.18it/s] 14% 1996/14661 [15:43<1:37:03,  2.17it/s] 14% 1997/14661 [15:44<1:38:13,  2.15it/s] 14% 1998/14661 [15:44<1:37:38,  2.16it/s] 14% 1999/14661 [15:45<1:37:09,  2.17it/s] 14% 2000/14661 [15:45<1:38:12,  2.15it/s] 14% 2001/14661 [15:46<1:37:26,  2.17it/s] 14% 2002/14661 [15:46<1:36:29,  2.19it/s] 14% 2003/14661 [15:47<1:36:37,  2.18it/s] 14% 2004/14661 [15:47<1:37:13,  2.17it/s] 14% 2005/14661 [15:48<1:36:19,  2.19it/s] 14% 2006/14661 [15:48<1:36:04,  2.20it/s] 14% 2007/14661 [15:49<1:36:40,  2.18it/s] 14% 2008/14661 [15:49<1:38:41,  2.14it/s] 14% 2009/14661 [15:50<1:38:55,  2.13it/s] 14% 2010/14661 [15:50<1:38:28,  2.14it/s] 14% 2011/14661 [15:50<1:37:39,  2.16it/s] 14% 2012/14661 [15:51<1:38:32,  2.14it/s] 14% 2013/14661 [15:51<1:39:24,  2.12it/s] 14% 2014/14661 [15:52<1:40:23,  2.10it/s] 14% 2015/14661 [15:52<1:40:21,  2.10it/s] 14% 2016/14661 [15:53<1:40:10,  2.10it/s] 14% 2017/14661 [15:53<1:40:28,  2.10it/s] 14% 2018/14661 [15:54<1:40:04,  2.11it/s] 14% 2019/14661 [15:54<1:38:42,  2.13it/s] 14% 2020/14661 [15:55<1:37:31,  2.16it/s] 14% 2021/14661 [15:55<1:40:42,  2.09it/s] 14% 2022/14661 [15:56<1:40:39,  2.09it/s] 14% 2023/14661 [15:56<1:40:28,  2.10it/s] 14% 2024/14661 [15:57<1:40:55,  2.09it/s] 14% 2025/14661 [15:57<1:41:09,  2.08it/s] 14% 2026/14661 [15:58<1:39:14,  2.12it/s] 14% 2027/14661 [15:58<1:38:06,  2.15it/s] 14% 2028/14661 [15:58<1:37:04,  2.17it/s] 14% 2029/14661 [15:59<1:36:22,  2.18it/s] 14% 2030/14661 [15:59<1:36:56,  2.17it/s] 14% 2031/14661 [16:00<1:38:35,  2.14it/s] 14% 2032/14661 [16:00<1:37:33,  2.16it/s] 14% 2033/14661 [16:01<1:37:07,  2.17it/s] 14% 2034/14661 [16:01<1:43:03,  2.04it/s] 14% 2035/14661 [16:02<1:39:51,  2.11it/s] 14% 2036/14661 [16:02<1:37:53,  2.15it/s] 14% 2037/14661 [16:03<1:37:35,  2.16it/s] 14% 2038/14661 [16:03<1:37:17,  2.16it/s] 14% 2039/14661 [16:04<1:37:16,  2.16it/s] 14% 2040/14661 [16:04<1:41:30,  2.07it/s] 14% 2041/14661 [16:05<1:40:40,  2.09it/s] 14% 2042/14661 [16:05<1:38:59,  2.12it/s] 14% 2043/14661 [16:05<1:37:21,  2.16it/s] 14% 2044/14661 [16:06<1:37:49,  2.15it/s] 14% 2045/14661 [16:06<1:38:22,  2.14it/s] 14% 2046/14661 [16:07<1:38:42,  2.13it/s] 14% 2047/14661 [16:07<1:38:57,  2.12it/s] 14% 2048/14661 [16:08<1:38:10,  2.14it/s] 14% 2049/14661 [16:08<1:38:07,  2.14it/s] 14% 2050/14661 [16:09<1:37:20,  2.16it/s] 14% 2051/14661 [16:09<1:36:03,  2.19it/s] 14% 2052/14661 [16:10<1:36:06,  2.19it/s] 14% 2053/14661 [16:10<1:37:21,  2.16it/s] 14% 2054/14661 [16:11<1:36:37,  2.17it/s] 14% 2055/14661 [16:11<1:37:17,  2.16it/s] 14% 2056/14661 [16:12<1:36:23,  2.18it/s] 14% 2057/14661 [16:12<1:35:57,  2.19it/s] 14% 2058/14661 [16:12<1:36:17,  2.18it/s] 14% 2059/14661 [16:13<1:36:19,  2.18it/s] 14% 2060/14661 [16:13<1:38:24,  2.13it/s] 14% 2061/14661 [16:14<1:40:37,  2.09it/s] 14% 2062/14661 [16:14<1:39:25,  2.11it/s] 14% 2063/14661 [16:15<1:38:39,  2.13it/s] 14% 2064/14661 [16:15<1:40:07,  2.10it/s] 14% 2065/14661 [16:16<1:37:52,  2.14it/s] 14% 2066/14661 [16:16<1:39:08,  2.12it/s] 14% 2067/14661 [16:17<1:38:46,  2.13it/s] 14% 2068/14661 [16:17<1:37:55,  2.14it/s] 14% 2069/14661 [16:18<1:37:49,  2.15it/s] 14% 2070/14661 [16:18<1:36:48,  2.17it/s] 14% 2071/14661 [16:19<1:36:06,  2.18it/s] 14% 2072/14661 [16:19<1:35:17,  2.20it/s] 14% 2073/14661 [16:19<1:34:59,  2.21it/s] 14% 2074/14661 [16:20<1:35:30,  2.20it/s] 14% 2075/14661 [16:20<1:36:47,  2.17it/s] 14% 2076/14661 [16:21<1:36:44,  2.17it/s] 14% 2077/14661 [16:21<1:36:13,  2.18it/s] 14% 2078/14661 [16:22<1:34:59,  2.21it/s] 14% 2079/14661 [16:22<1:35:13,  2.20it/s] 14% 2080/14661 [16:23<1:35:06,  2.20it/s] 14% 2081/14661 [16:23<1:35:13,  2.20it/s] 14% 2082/14661 [16:24<1:36:10,  2.18it/s] 14% 2083/14661 [16:24<1:38:02,  2.14it/s] 14% 2084/14661 [16:25<1:39:24,  2.11it/s] 14% 2085/14661 [16:25<1:38:55,  2.12it/s] 14% 2086/14661 [16:25<1:39:13,  2.11it/s] 14% 2087/14661 [16:26<1:39:21,  2.11it/s] 14% 2088/14661 [16:26<1:37:53,  2.14it/s] 14% 2089/14661 [16:27<1:36:32,  2.17it/s] 14% 2090/14661 [16:27<1:36:03,  2.18it/s] 14% 2091/14661 [16:28<1:35:06,  2.20it/s] 14% 2092/14661 [16:28<1:35:07,  2.20it/s] 14% 2093/14661 [16:29<1:35:32,  2.19it/s] 14% 2094/14661 [16:29<1:34:36,  2.21it/s] 14% 2095/14661 [16:30<1:34:40,  2.21it/s] 14% 2096/14661 [16:30<1:34:50,  2.21it/s] 14% 2097/14661 [16:30<1:35:27,  2.19it/s] 14% 2098/14661 [16:31<1:35:02,  2.20it/s] 14% 2099/14661 [16:31<1:33:52,  2.23it/s] 14% 2100/14661 [16:32<1:35:17,  2.20it/s] 14% 2101/14661 [16:32<1:36:19,  2.17it/s] 14% 2102/14661 [16:33<1:37:04,  2.16it/s] 14% 2103/14661 [16:33<1:36:54,  2.16it/s] 14% 2104/14661 [16:34<1:36:43,  2.16it/s] 14% 2105/14661 [16:34<1:36:15,  2.17it/s] 14% 2106/14661 [16:35<1:36:03,  2.18it/s] 14% 2107/14661 [16:35<1:38:29,  2.12it/s] 14% 2108/14661 [16:36<1:39:09,  2.11it/s] 14% 2109/14661 [16:36<1:38:07,  2.13it/s] 14% 2110/14661 [16:36<1:37:48,  2.14it/s] 14% 2111/14661 [16:37<1:37:18,  2.15it/s] 14% 2112/14661 [16:37<1:36:41,  2.16it/s] 14% 2113/14661 [16:38<1:38:04,  2.13it/s] 14% 2114/14661 [16:38<1:37:25,  2.15it/s] 14% 2115/14661 [16:39<1:38:05,  2.13it/s] 14% 2116/14661 [16:39<1:38:13,  2.13it/s] 14% 2117/14661 [16:40<1:47:50,  1.94it/s] 14% 2118/14661 [16:40<1:44:54,  1.99it/s] 14% 2119/14661 [16:41<1:42:45,  2.03it/s] 14% 2120/14661 [16:41<1:41:00,  2.07it/s] 14% 2121/14661 [16:42<1:39:49,  2.09it/s] 14% 2122/14661 [16:42<1:41:38,  2.06it/s] 14% 2123/14661 [16:43<1:40:35,  2.08it/s] 14% 2124/14661 [16:43<1:38:10,  2.13it/s] 14% 2125/14661 [16:44<1:38:49,  2.11it/s] 15% 2126/14661 [16:44<1:38:16,  2.13it/s] 15% 2127/14661 [16:45<1:40:04,  2.09it/s] 15% 2128/14661 [16:45<1:39:43,  2.09it/s] 15% 2129/14661 [16:46<1:38:13,  2.13it/s] 15% 2130/14661 [16:46<1:36:50,  2.16it/s] 15% 2131/14661 [16:46<1:37:31,  2.14it/s] 15% 2132/14661 [16:47<1:36:28,  2.16it/s] 15% 2133/14661 [16:47<1:36:27,  2.16it/s] 15% 2134/14661 [16:48<1:36:43,  2.16it/s] 15% 2135/14661 [16:48<1:36:29,  2.16it/s] 15% 2136/14661 [16:49<1:35:54,  2.18it/s] 15% 2137/14661 [16:49<1:35:20,  2.19it/s] 15% 2138/14661 [16:50<1:35:12,  2.19it/s] 15% 2139/14661 [16:50<1:37:09,  2.15it/s] 15% 2140/14661 [16:51<1:37:03,  2.15it/s] 15% 2141/14661 [16:51<1:36:21,  2.17it/s] 15% 2142/14661 [16:52<1:38:31,  2.12it/s] 15% 2143/14661 [16:52<1:37:18,  2.14it/s] 15% 2144/14661 [16:53<1:37:23,  2.14it/s] 15% 2145/14661 [16:53<1:36:48,  2.15it/s] 15% 2146/14661 [16:53<1:36:56,  2.15it/s] 15% 2147/14661 [16:54<1:36:42,  2.16it/s] 15% 2148/14661 [16:54<1:37:40,  2.14it/s] 15% 2149/14661 [16:55<1:36:07,  2.17it/s] 15% 2150/14661 [16:55<1:35:55,  2.17it/s] 15% 2151/14661 [16:56<1:36:09,  2.17it/s] 15% 2152/14661 [16:56<1:37:05,  2.15it/s] 15% 2153/14661 [16:57<1:38:43,  2.11it/s] 15% 2154/14661 [16:57<1:37:45,  2.13it/s] 15% 2155/14661 [16:58<1:37:26,  2.14it/s] 15% 2156/14661 [16:58<1:37:24,  2.14it/s] 15% 2157/14661 [16:59<1:38:09,  2.12it/s] 15% 2158/14661 [16:59<1:38:05,  2.12it/s] 15% 2159/14661 [16:59<1:36:28,  2.16it/s] 15% 2160/14661 [17:00<1:35:34,  2.18it/s] 15% 2161/14661 [17:00<1:35:37,  2.18it/s] 15% 2162/14661 [17:01<1:35:34,  2.18it/s] 15% 2163/14661 [17:01<1:38:04,  2.12it/s] 15% 2164/14661 [17:02<1:37:11,  2.14it/s] 15% 2165/14661 [17:02<1:35:49,  2.17it/s] 15% 2166/14661 [17:03<1:36:23,  2.16it/s] 15% 2167/14661 [17:03<1:35:10,  2.19it/s] 15% 2168/14661 [17:04<1:34:40,  2.20it/s] 15% 2169/14661 [17:04<1:35:03,  2.19it/s] 15% 2170/14661 [17:05<1:35:45,  2.17it/s] 15% 2171/14661 [17:05<1:35:27,  2.18it/s] 15% 2172/14661 [17:05<1:34:09,  2.21it/s] 15% 2173/14661 [17:06<1:36:05,  2.17it/s] 15% 2174/14661 [17:06<1:35:33,  2.18it/s] 15% 2175/14661 [17:07<1:36:33,  2.16it/s] 15% 2176/14661 [17:07<1:36:39,  2.15it/s] 15% 2177/14661 [17:08<1:39:18,  2.10it/s] 15% 2178/14661 [17:08<1:38:43,  2.11it/s] 15% 2179/14661 [17:09<1:38:53,  2.10it/s] 15% 2180/14661 [17:09<1:39:35,  2.09it/s] 15% 2181/14661 [17:10<1:38:22,  2.11it/s] 15% 2182/14661 [17:10<1:39:07,  2.10it/s] 15% 2183/14661 [17:11<1:37:31,  2.13it/s] 15% 2184/14661 [17:11<1:37:23,  2.14it/s] 15% 2185/14661 [17:12<1:36:15,  2.16it/s] 15% 2186/14661 [17:12<1:35:11,  2.18it/s] 15% 2187/14661 [17:12<1:34:29,  2.20it/s] 15% 2188/14661 [17:13<1:34:24,  2.20it/s] 15% 2189/14661 [17:13<1:33:48,  2.22it/s] 15% 2190/14661 [17:14<1:33:09,  2.23it/s] 15% 2191/14661 [17:14<1:34:27,  2.20it/s] 15% 2192/14661 [17:15<1:34:43,  2.19it/s] 15% 2193/14661 [17:15<1:34:19,  2.20it/s] 15% 2194/14661 [17:16<1:34:13,  2.21it/s] 15% 2195/14661 [17:16<1:33:45,  2.22it/s] 15% 2196/14661 [17:17<1:34:01,  2.21it/s] 15% 2197/14661 [17:17<1:33:44,  2.22it/s] 15% 2198/14661 [17:17<1:34:39,  2.19it/s] 15% 2199/14661 [17:18<1:34:11,  2.21it/s] 15% 2200/14661 [17:18<1:34:39,  2.19it/s] 15% 2201/14661 [17:19<1:33:34,  2.22it/s] 15% 2202/14661 [17:19<1:33:21,  2.22it/s] 15% 2203/14661 [17:20<1:34:22,  2.20it/s] 15% 2204/14661 [17:20<1:34:59,  2.19it/s] 15% 2205/14661 [17:21<1:34:48,  2.19it/s] 15% 2206/14661 [17:21<1:35:17,  2.18it/s] 15% 2207/14661 [17:22<1:34:53,  2.19it/s] 15% 2208/14661 [17:22<1:35:55,  2.16it/s] 15% 2209/14661 [17:22<1:36:03,  2.16it/s] 15% 2210/14661 [17:23<1:35:59,  2.16it/s] 15% 2211/14661 [17:23<1:34:58,  2.18it/s] 15% 2212/14661 [17:24<1:34:06,  2.20it/s] 15% 2213/14661 [17:24<1:40:25,  2.07it/s] 15% 2214/14661 [17:25<1:38:28,  2.11it/s] 15% 2215/14661 [17:25<1:37:19,  2.13it/s] 15% 2216/14661 [17:26<1:36:41,  2.15it/s] 15% 2217/14661 [17:26<1:35:26,  2.17it/s] 15% 2218/14661 [17:27<1:35:52,  2.16it/s] 15% 2219/14661 [17:27<1:34:59,  2.18it/s] 15% 2220/14661 [17:28<1:35:31,  2.17it/s] 15% 2221/14661 [17:28<1:35:25,  2.17it/s] 15% 2222/14661 [17:29<1:34:26,  2.20it/s] 15% 2223/14661 [17:29<1:33:59,  2.21it/s] 15% 2224/14661 [17:29<1:35:26,  2.17it/s] 15% 2225/14661 [17:30<1:35:31,  2.17it/s] 15% 2226/14661 [17:30<1:34:42,  2.19it/s] 15% 2227/14661 [17:31<1:33:36,  2.21it/s] 15% 2228/14661 [17:31<1:32:38,  2.24it/s] 15% 2229/14661 [17:32<1:32:42,  2.23it/s] 15% 2230/14661 [17:32<1:33:20,  2.22it/s] 15% 2231/14661 [17:33<1:34:22,  2.20it/s] 15% 2232/14661 [17:33<1:34:34,  2.19it/s] 15% 2233/14661 [17:33<1:33:58,  2.20it/s] 15% 2234/14661 [17:34<1:34:38,  2.19it/s] 15% 2235/14661 [17:34<1:35:02,  2.18it/s] 15% 2236/14661 [17:35<1:35:24,  2.17it/s] 15% 2237/14661 [17:35<1:37:51,  2.12it/s] 15% 2238/14661 [17:36<1:36:06,  2.15it/s] 15% 2239/14661 [17:36<1:36:53,  2.14it/s] 15% 2240/14661 [17:37<1:37:32,  2.12it/s] 15% 2241/14661 [17:37<1:37:08,  2.13it/s] 15% 2242/14661 [17:38<1:37:20,  2.13it/s] 15% 2243/14661 [17:38<1:39:10,  2.09it/s] 15% 2244/14661 [17:39<1:40:42,  2.05it/s] 15% 2245/14661 [17:39<1:44:02,  1.99it/s] 15% 2246/14661 [17:40<1:44:58,  1.97it/s] 15% 2247/14661 [17:40<1:46:06,  1.95it/s] 15% 2248/14661 [17:41<1:47:09,  1.93it/s] 15% 2249/14661 [17:41<1:48:45,  1.90it/s] 15% 2250/14661 [17:42<1:49:54,  1.88it/s] 15% 2251/14661 [17:42<1:45:23,  1.96it/s] 15% 2252/14661 [17:43<1:42:24,  2.02it/s] 15% 2253/14661 [17:43<1:40:46,  2.05it/s] 15% 2254/14661 [17:44<1:43:38,  2.00it/s] 15% 2255/14661 [17:44<1:41:34,  2.04it/s] 15% 2256/14661 [17:45<1:40:04,  2.07it/s] 15% 2257/14661 [17:45<1:39:38,  2.07it/s] 15% 2258/14661 [17:46<1:38:29,  2.10it/s] 15% 2259/14661 [17:46<1:37:17,  2.12it/s] 15% 2260/14661 [17:47<1:35:36,  2.16it/s] 15% 2261/14661 [17:47<1:36:01,  2.15it/s] 15% 2262/14661 [17:48<1:36:04,  2.15it/s] 15% 2263/14661 [17:48<1:36:46,  2.14it/s] 15% 2264/14661 [17:49<1:36:16,  2.15it/s] 15% 2265/14661 [17:49<1:36:02,  2.15it/s] 15% 2266/14661 [17:49<1:36:11,  2.15it/s] 15% 2267/14661 [17:50<1:37:55,  2.11it/s] 15% 2268/14661 [17:50<1:39:39,  2.07it/s] 15% 2269/14661 [17:51<1:38:59,  2.09it/s] 15% 2270/14661 [17:51<1:42:08,  2.02it/s] 15% 2271/14661 [17:52<1:40:14,  2.06it/s] 15% 2272/14661 [17:52<1:39:09,  2.08it/s] 16% 2273/14661 [17:53<1:38:16,  2.10it/s] 16% 2274/14661 [17:53<1:37:18,  2.12it/s] 16% 2275/14661 [17:54<1:35:44,  2.16it/s] 16% 2276/14661 [17:54<1:38:13,  2.10it/s] 16% 2277/14661 [17:55<1:36:41,  2.13it/s] 16% 2278/14661 [17:55<1:36:02,  2.15it/s] 16% 2279/14661 [17:56<1:37:47,  2.11it/s] 16% 2280/14661 [17:56<1:37:16,  2.12it/s] 16% 2281/14661 [17:57<1:36:20,  2.14it/s] 16% 2282/14661 [17:57<1:37:22,  2.12it/s] 16% 2283/14661 [17:58<1:36:32,  2.14it/s] 16% 2284/14661 [17:58<1:39:16,  2.08it/s] 16% 2285/14661 [17:58<1:38:17,  2.10it/s] 16% 2286/14661 [17:59<1:37:25,  2.12it/s] 16% 2287/14661 [18:00<1:46:31,  1.94it/s] 16% 2288/14661 [18:00<1:42:36,  2.01it/s] 16% 2289/14661 [18:00<1:40:42,  2.05it/s] 16% 2290/14661 [18:01<1:38:20,  2.10it/s] 16% 2291/14661 [18:01<1:36:38,  2.13it/s] 16% 2292/14661 [18:02<1:36:46,  2.13it/s] 16% 2293/14661 [18:02<1:35:44,  2.15it/s] 16% 2294/14661 [18:03<1:36:07,  2.14it/s] 16% 2295/14661 [18:03<1:35:10,  2.17it/s] 16% 2296/14661 [18:04<1:34:08,  2.19it/s] 16% 2297/14661 [18:04<1:35:37,  2.16it/s] 16% 2298/14661 [18:05<1:35:40,  2.15it/s] 16% 2299/14661 [18:05<1:35:59,  2.15it/s] 16% 2300/14661 [18:06<1:36:13,  2.14it/s] 16% 2301/14661 [18:06<1:36:58,  2.12it/s] 16% 2302/14661 [18:07<1:37:38,  2.11it/s] 16% 2303/14661 [18:07<1:36:57,  2.12it/s] 16% 2304/14661 [18:07<1:36:07,  2.14it/s] 16% 2305/14661 [18:08<1:35:53,  2.15it/s] 16% 2306/14661 [18:08<1:35:05,  2.17it/s] 16% 2307/14661 [18:09<1:34:46,  2.17it/s] 16% 2308/14661 [18:09<1:36:01,  2.14it/s] 16% 2309/14661 [18:10<1:37:41,  2.11it/s] 16% 2310/14661 [18:10<1:38:05,  2.10it/s] 16% 2311/14661 [18:11<1:37:34,  2.11it/s] 16% 2312/14661 [18:11<1:35:51,  2.15it/s] 16% 2313/14661 [18:12<1:37:25,  2.11it/s] 16% 2314/14661 [18:12<1:36:22,  2.14it/s] 16% 2315/14661 [18:13<1:35:42,  2.15it/s] 16% 2316/14661 [18:13<1:35:55,  2.14it/s] 16% 2317/14661 [18:14<1:36:16,  2.14it/s] 16% 2318/14661 [18:14<1:35:00,  2.17it/s] 16% 2319/14661 [18:14<1:34:23,  2.18it/s] 16% 2320/14661 [18:15<1:33:32,  2.20it/s] 16% 2321/14661 [18:15<1:33:21,  2.20it/s] 16% 2322/14661 [18:16<1:35:24,  2.16it/s] 16% 2323/14661 [18:16<1:34:05,  2.19it/s] 16% 2324/14661 [18:17<1:34:36,  2.17it/s] 16% 2325/14661 [18:17<1:34:36,  2.17it/s] 16% 2326/14661 [18:18<1:33:46,  2.19it/s] 16% 2327/14661 [18:18<1:37:23,  2.11it/s] 16% 2328/14661 [18:19<1:41:26,  2.03it/s] 16% 2329/14661 [18:19<1:44:54,  1.96it/s] 16% 2330/14661 [18:20<1:45:25,  1.95it/s] 16% 2331/14661 [18:20<1:47:33,  1.91it/s] 16% 2332/14661 [18:21<1:49:13,  1.88it/s] 16% 2333/14661 [18:21<1:50:05,  1.87it/s] 16% 2334/14661 [18:22<1:51:23,  1.84it/s] 16% 2335/14661 [18:22<1:46:41,  1.93it/s] 16% 2336/14661 [18:23<1:42:45,  2.00it/s] 16% 2337/14661 [18:23<1:40:52,  2.04it/s] 16% 2338/14661 [18:24<1:39:04,  2.07it/s] 16% 2339/14661 [18:24<1:38:12,  2.09it/s] 16% 2340/14661 [18:25<1:36:53,  2.12it/s] 16% 2341/14661 [18:25<1:40:02,  2.05it/s] 16% 2342/14661 [18:26<1:37:23,  2.11it/s] 16% 2343/14661 [18:26<1:36:12,  2.13it/s] 16% 2344/14661 [18:27<1:35:24,  2.15it/s] 16% 2345/14661 [18:27<1:34:22,  2.18it/s] 16% 2346/14661 [18:28<1:33:38,  2.19it/s] 16% 2347/14661 [18:28<1:33:20,  2.20it/s] 16% 2348/14661 [18:28<1:32:37,  2.22it/s] 16% 2349/14661 [18:29<1:32:44,  2.21it/s] 16% 2350/14661 [18:29<1:32:59,  2.21it/s] 16% 2351/14661 [18:30<1:33:29,  2.19it/s] 16% 2352/14661 [18:30<1:34:41,  2.17it/s] 16% 2353/14661 [18:31<1:34:34,  2.17it/s] 16% 2354/14661 [18:31<1:34:32,  2.17it/s] 16% 2355/14661 [18:32<1:35:17,  2.15it/s] 16% 2356/14661 [18:32<1:34:21,  2.17it/s] 16% 2357/14661 [18:33<1:35:36,  2.15it/s] 16% 2358/14661 [18:33<1:35:44,  2.14it/s] 16% 2359/14661 [18:34<1:35:35,  2.14it/s] 16% 2360/14661 [18:34<1:34:43,  2.16it/s] 16% 2361/14661 [18:34<1:34:01,  2.18it/s] 16% 2362/14661 [18:35<1:33:28,  2.19it/s] 16% 2363/14661 [18:35<1:34:21,  2.17it/s] 16% 2364/14661 [18:36<1:35:48,  2.14it/s] 16% 2365/14661 [18:36<1:35:31,  2.15it/s] 16% 2366/14661 [18:37<1:35:08,  2.15it/s] 16% 2367/14661 [18:37<1:36:25,  2.12it/s] 16% 2368/14661 [18:38<1:37:36,  2.10it/s] 16% 2369/14661 [18:38<1:36:50,  2.12it/s] 16% 2370/14661 [18:39<1:41:42,  2.01it/s] 16% 2371/14661 [18:39<1:41:01,  2.03it/s] 16% 2372/14661 [18:40<1:38:16,  2.08it/s] 16% 2373/14661 [18:40<1:36:05,  2.13it/s] 16% 2374/14661 [18:41<1:36:37,  2.12it/s] 16% 2375/14661 [18:41<1:35:56,  2.13it/s] 16% 2376/14661 [18:42<1:36:35,  2.12it/s] 16% 2377/14661 [18:42<1:37:08,  2.11it/s] 16% 2378/14661 [18:42<1:36:39,  2.12it/s] 16% 2379/14661 [18:43<1:35:49,  2.14it/s] 16% 2380/14661 [18:43<1:36:32,  2.12it/s] 16% 2381/14661 [18:44<1:35:30,  2.14it/s] 16% 2382/14661 [18:44<1:34:46,  2.16it/s] 16% 2383/14661 [18:45<1:34:30,  2.17it/s] 16% 2384/14661 [18:45<1:34:37,  2.16it/s] 16% 2385/14661 [18:46<1:34:26,  2.17it/s] 16% 2386/14661 [18:46<1:34:53,  2.16it/s] 16% 2387/14661 [18:47<1:35:44,  2.14it/s] 16% 2388/14661 [18:47<1:34:52,  2.16it/s] 16% 2389/14661 [18:48<1:35:57,  2.13it/s] 16% 2390/14661 [18:48<1:34:54,  2.15it/s] 16% 2391/14661 [18:48<1:34:16,  2.17it/s] 16% 2392/14661 [18:49<1:33:53,  2.18it/s] 16% 2393/14661 [18:49<1:33:09,  2.19it/s] 16% 2394/14661 [18:50<1:32:56,  2.20it/s] 16% 2395/14661 [18:50<1:34:06,  2.17it/s] 16% 2396/14661 [18:51<1:35:21,  2.14it/s] 16% 2397/14661 [18:51<1:34:22,  2.17it/s] 16% 2398/14661 [18:52<1:33:20,  2.19it/s] 16% 2399/14661 [18:52<1:33:33,  2.18it/s] 16% 2400/14661 [18:53<1:34:24,  2.16it/s] 16% 2401/14661 [18:53<1:35:45,  2.13it/s] 16% 2402/14661 [18:54<1:36:03,  2.13it/s] 16% 2403/14661 [18:54<1:35:27,  2.14it/s] 16% 2404/14661 [18:54<1:34:29,  2.16it/s] 16% 2405/14661 [18:55<1:33:58,  2.17it/s] 16% 2406/14661 [18:55<1:33:35,  2.18it/s] 16% 2407/14661 [18:56<1:33:15,  2.19it/s] 16% 2408/14661 [18:56<1:33:45,  2.18it/s] 16% 2409/14661 [18:57<1:35:26,  2.14it/s] 16% 2410/14661 [18:57<1:36:55,  2.11it/s] 16% 2411/14661 [18:58<1:35:26,  2.14it/s] 16% 2412/14661 [18:58<1:38:07,  2.08it/s] 16% 2413/14661 [18:59<1:37:13,  2.10it/s] 16% 2414/14661 [18:59<1:36:00,  2.13it/s] 16% 2415/14661 [19:00<1:37:34,  2.09it/s] 16% 2416/14661 [19:00<1:35:50,  2.13it/s] 16% 2417/14661 [19:01<1:35:51,  2.13it/s] 16% 2418/14661 [19:01<1:34:55,  2.15it/s] 16% 2419/14661 [19:02<1:34:00,  2.17it/s] 17% 2420/14661 [19:02<1:33:51,  2.17it/s] 17% 2421/14661 [19:02<1:34:26,  2.16it/s] 17% 2422/14661 [19:03<1:35:44,  2.13it/s] 17% 2423/14661 [19:03<1:34:26,  2.16it/s] 17% 2424/14661 [19:04<1:36:54,  2.10it/s] 17% 2425/14661 [19:04<1:35:42,  2.13it/s] 17% 2426/14661 [19:05<1:34:56,  2.15it/s] 17% 2427/14661 [19:05<1:36:31,  2.11it/s] 17% 2428/14661 [19:06<1:35:29,  2.14it/s] 17% 2429/14661 [19:06<1:36:18,  2.12it/s] 17% 2430/14661 [19:07<1:36:53,  2.10it/s] 17% 2431/14661 [19:07<1:36:29,  2.11it/s] 17% 2432/14661 [19:08<1:34:54,  2.15it/s] 17% 2433/14661 [19:08<1:34:17,  2.16it/s] 17% 2434/14661 [19:09<1:34:56,  2.15it/s] 17% 2435/14661 [19:09<1:34:22,  2.16it/s] 17% 2436/14661 [19:09<1:35:40,  2.13it/s] 17% 2437/14661 [19:10<1:35:25,  2.13it/s] 17% 2438/14661 [19:10<1:34:41,  2.15it/s] 17% 2439/14661 [19:11<1:33:56,  2.17it/s] 17% 2440/14661 [19:11<1:33:18,  2.18it/s] 17% 2441/14661 [19:12<1:34:18,  2.16it/s] 17% 2442/14661 [19:12<1:35:45,  2.13it/s] 17% 2443/14661 [19:13<1:38:27,  2.07it/s] 17% 2444/14661 [19:13<1:35:56,  2.12it/s] 17% 2445/14661 [19:14<1:34:03,  2.16it/s] 17% 2446/14661 [19:14<1:33:07,  2.19it/s] 17% 2447/14661 [19:15<1:33:47,  2.17it/s] 17% 2448/14661 [19:15<1:33:43,  2.17it/s] 17% 2449/14661 [19:16<1:33:33,  2.18it/s] 17% 2450/14661 [19:16<1:33:31,  2.18it/s] 17% 2451/14661 [19:16<1:33:23,  2.18it/s] 17% 2452/14661 [19:17<1:33:12,  2.18it/s] 17% 2453/14661 [19:17<1:32:36,  2.20it/s] 17% 2454/14661 [19:18<1:33:18,  2.18it/s] 17% 2455/14661 [19:18<1:32:38,  2.20it/s] 17% 2456/14661 [19:19<1:33:38,  2.17it/s] 17% 2457/14661 [19:19<1:33:18,  2.18it/s] 17% 2458/14661 [19:20<1:34:29,  2.15it/s] 17% 2459/14661 [19:20<1:34:40,  2.15it/s] 17% 2460/14661 [19:21<1:34:38,  2.15it/s] 17% 2461/14661 [19:21<1:34:59,  2.14it/s] 17% 2462/14661 [19:22<1:35:24,  2.13it/s] 17% 2463/14661 [19:22<1:34:51,  2.14it/s] 17% 2464/14661 [19:22<1:34:30,  2.15it/s] 17% 2465/14661 [19:23<1:34:59,  2.14it/s] 17% 2466/14661 [19:24<1:42:52,  1.98it/s] 17% 2467/14661 [19:24<1:40:19,  2.03it/s] 17% 2468/14661 [19:24<1:38:50,  2.06it/s] 17% 2469/14661 [19:25<1:36:32,  2.10it/s] 17% 2470/14661 [19:25<1:36:42,  2.10it/s] 17% 2471/14661 [19:26<1:36:31,  2.10it/s] 17% 2472/14661 [19:26<1:34:38,  2.15it/s] 17% 2473/14661 [19:27<1:33:52,  2.16it/s] 17% 2474/14661 [19:27<1:33:08,  2.18it/s] 17% 2475/14661 [19:28<1:32:59,  2.18it/s] 17% 2476/14661 [19:28<1:33:08,  2.18it/s] 17% 2477/14661 [19:29<1:33:17,  2.18it/s] 17% 2478/14661 [19:29<1:34:08,  2.16it/s] 17% 2479/14661 [19:30<1:35:14,  2.13it/s] 17% 2480/14661 [19:30<1:35:29,  2.13it/s] 17% 2481/14661 [19:30<1:34:28,  2.15it/s] 17% 2482/14661 [19:31<1:33:56,  2.16it/s] 17% 2483/14661 [19:31<1:33:36,  2.17it/s] 17% 2484/14661 [19:32<1:33:28,  2.17it/s] 17% 2485/14661 [19:32<1:33:19,  2.17it/s] 17% 2486/14661 [19:33<1:32:55,  2.18it/s] 17% 2487/14661 [19:33<1:33:08,  2.18it/s] 17% 2488/14661 [19:34<1:32:41,  2.19it/s] 17% 2489/14661 [19:34<1:34:06,  2.16it/s] 17% 2490/14661 [19:35<1:34:46,  2.14it/s] 17% 2491/14661 [19:35<1:34:24,  2.15it/s] 17% 2492/14661 [19:36<1:33:08,  2.18it/s] 17% 2493/14661 [19:36<1:32:43,  2.19it/s] 17% 2494/14661 [19:36<1:34:05,  2.16it/s] 17% 2495/14661 [19:37<1:33:58,  2.16it/s] 17% 2496/14661 [19:37<1:34:14,  2.15it/s] 17% 2497/14661 [19:38<1:35:25,  2.12it/s] 17% 2498/14661 [19:38<1:37:16,  2.08it/s] 17% 2499/14661 [19:39<1:39:42,  2.03it/s] 17% 2500/14661 [19:39<1:42:39,  1.97it/s] 17% 2501/14661 [19:40<1:45:52,  1.91it/s] 17% 2502/14661 [19:41<1:46:06,  1.91it/s] 17% 2503/14661 [19:41<1:43:35,  1.96it/s] 17% 2504/14661 [19:42<1:44:07,  1.95it/s] 17% 2505/14661 [19:42<1:42:24,  1.98it/s] 17% 2506/14661 [19:42<1:39:19,  2.04it/s] 17% 2507/14661 [19:43<1:39:30,  2.04it/s] 17% 2508/14661 [19:43<1:38:14,  2.06it/s] 17% 2509/14661 [19:44<1:37:40,  2.07it/s] 17% 2510/14661 [19:44<1:35:00,  2.13it/s] 17% 2511/14661 [19:45<1:33:54,  2.16it/s] 17% 2512/14661 [19:45<1:34:21,  2.15it/s] 17% 2513/14661 [19:46<1:33:02,  2.18it/s] 17% 2514/14661 [19:46<1:32:43,  2.18it/s] 17% 2515/14661 [19:47<1:33:31,  2.16it/s] 17% 2516/14661 [19:47<1:33:58,  2.15it/s] 17% 2517/14661 [19:48<1:32:29,  2.19it/s] 17% 2518/14661 [19:48<1:32:56,  2.18it/s] 17% 2519/14661 [19:48<1:32:12,  2.19it/s] 17% 2520/14661 [19:49<1:32:51,  2.18it/s] 17% 2521/14661 [19:49<1:33:51,  2.16it/s] 17% 2522/14661 [19:50<1:35:11,  2.13it/s] 17% 2523/14661 [19:50<1:34:54,  2.13it/s] 17% 2524/14661 [19:51<1:34:10,  2.15it/s] 17% 2525/14661 [19:51<1:34:13,  2.15it/s] 17% 2526/14661 [19:52<1:33:27,  2.16it/s] 17% 2527/14661 [19:52<1:33:47,  2.16it/s] 17% 2528/14661 [19:53<1:34:33,  2.14it/s] 17% 2529/14661 [19:53<1:33:40,  2.16it/s] 17% 2530/14661 [19:54<1:32:16,  2.19it/s] 17% 2531/14661 [19:54<1:32:41,  2.18it/s] 17% 2532/14661 [19:54<1:33:48,  2.16it/s] 17% 2533/14661 [19:55<1:32:45,  2.18it/s] 17% 2534/14661 [19:55<1:32:33,  2.18it/s] 17% 2535/14661 [19:56<1:36:53,  2.09it/s] 17% 2536/14661 [19:56<1:35:56,  2.11it/s] 17% 2537/14661 [19:57<1:35:14,  2.12it/s] 17% 2538/14661 [19:57<1:36:04,  2.10it/s] 17% 2539/14661 [19:58<1:36:07,  2.10it/s] 17% 2540/14661 [19:58<1:45:08,  1.92it/s] 17% 2541/14661 [19:59<1:41:45,  1.99it/s] 17% 2542/14661 [19:59<1:39:41,  2.03it/s] 17% 2543/14661 [20:00<1:39:24,  2.03it/s] 17% 2544/14661 [20:00<1:40:27,  2.01it/s] 17% 2545/14661 [20:01<1:39:23,  2.03it/s] 17% 2546/14661 [20:01<1:37:15,  2.08it/s] 17% 2547/14661 [20:02<1:34:32,  2.14it/s] 17% 2548/14661 [20:02<1:33:27,  2.16it/s] 17% 2549/14661 [20:03<1:35:33,  2.11it/s] 17% 2550/14661 [20:03<1:34:39,  2.13it/s] 17% 2551/14661 [20:04<1:36:28,  2.09it/s] 17% 2552/14661 [20:04<1:37:10,  2.08it/s] 17% 2553/14661 [20:05<1:36:58,  2.08it/s] 17% 2554/14661 [20:05<1:35:08,  2.12it/s] 17% 2555/14661 [20:06<1:35:42,  2.11it/s] 17% 2556/14661 [20:06<1:35:02,  2.12it/s] 17% 2557/14661 [20:07<1:36:57,  2.08it/s] 17% 2558/14661 [20:07<1:36:26,  2.09it/s] 17% 2559/14661 [20:07<1:35:31,  2.11it/s] 17% 2560/14661 [20:08<1:34:12,  2.14it/s] 17% 2561/14661 [20:08<1:34:49,  2.13it/s] 17% 2562/14661 [20:09<1:33:00,  2.17it/s] 17% 2563/14661 [20:09<1:33:38,  2.15it/s] 17% 2564/14661 [20:10<1:36:00,  2.10it/s] 17% 2565/14661 [20:10<1:38:45,  2.04it/s] 18% 2566/14661 [20:11<1:40:49,  2.00it/s] 18% 2567/14661 [20:11<1:42:55,  1.96it/s] 18% 2568/14661 [20:12<1:43:59,  1.94it/s] 18% 2569/14661 [20:12<1:43:29,  1.95it/s] 18% 2570/14661 [20:13<1:45:14,  1.91it/s] 18% 2571/14661 [20:13<1:45:13,  1.92it/s] 18% 2572/14661 [20:14<1:43:52,  1.94it/s] 18% 2573/14661 [20:14<1:42:50,  1.96it/s] 18% 2574/14661 [20:15<1:43:10,  1.95it/s] 18% 2575/14661 [20:15<1:41:59,  1.97it/s] 18% 2576/14661 [20:16<1:40:08,  2.01it/s] 18% 2577/14661 [20:16<1:38:09,  2.05it/s] 18% 2578/14661 [20:17<1:36:39,  2.08it/s] 18% 2579/14661 [20:17<1:37:00,  2.08it/s] 18% 2580/14661 [20:18<1:35:27,  2.11it/s] 18% 2581/14661 [20:18<1:36:37,  2.08it/s] 18% 2582/14661 [20:19<1:38:39,  2.04it/s] 18% 2583/14661 [20:19<1:37:44,  2.06it/s] 18% 2584/14661 [20:20<1:36:18,  2.09it/s] 18% 2585/14661 [20:20<1:34:59,  2.12it/s] 18% 2586/14661 [20:21<1:33:51,  2.14it/s] 18% 2587/14661 [20:21<1:34:44,  2.12it/s] 18% 2588/14661 [20:22<1:34:12,  2.14it/s] 18% 2589/14661 [20:22<1:33:43,  2.15it/s] 18% 2590/14661 [20:23<1:34:11,  2.14it/s] 18% 2591/14661 [20:23<1:33:16,  2.16it/s] 18% 2592/14661 [20:23<1:34:13,  2.13it/s] 18% 2593/14661 [20:24<1:36:30,  2.08it/s] 18% 2594/14661 [20:24<1:35:15,  2.11it/s] 18% 2595/14661 [20:25<1:34:16,  2.13it/s] 18% 2596/14661 [20:25<1:33:26,  2.15it/s] 18% 2597/14661 [20:26<1:33:04,  2.16it/s] 18% 2598/14661 [20:26<1:33:30,  2.15it/s] 18% 2599/14661 [20:27<1:32:51,  2.16it/s] 18% 2600/14661 [20:27<1:33:36,  2.15it/s] 18% 2601/14661 [20:28<1:33:12,  2.16it/s] 18% 2602/14661 [20:28<1:32:08,  2.18it/s] 18% 2603/14661 [20:29<1:32:36,  2.17it/s] 18% 2604/14661 [20:29<1:32:07,  2.18it/s] 18% 2605/14661 [20:30<1:33:09,  2.16it/s] 18% 2606/14661 [20:30<1:38:37,  2.04it/s] 18% 2607/14661 [20:31<1:36:56,  2.07it/s] 18% 2608/14661 [20:31<1:37:04,  2.07it/s] 18% 2609/14661 [20:32<1:38:30,  2.04it/s] 18% 2610/14661 [20:32<1:38:36,  2.04it/s] 18% 2611/14661 [20:33<1:37:19,  2.06it/s] 18% 2612/14661 [20:33<1:37:57,  2.05it/s] 18% 2613/14661 [20:33<1:35:02,  2.11it/s] 18% 2614/14661 [20:34<1:36:13,  2.09it/s] 18% 2615/14661 [20:34<1:35:26,  2.10it/s] 18% 2616/14661 [20:35<1:34:41,  2.12it/s] 18% 2617/14661 [20:35<1:34:47,  2.12it/s] 18% 2618/14661 [20:36<1:34:36,  2.12it/s] 18% 2619/14661 [20:36<1:34:02,  2.13it/s] 18% 2620/14661 [20:37<1:35:51,  2.09it/s] 18% 2621/14661 [20:37<1:35:09,  2.11it/s] 18% 2622/14661 [20:38<1:33:59,  2.13it/s] 18% 2623/14661 [20:38<1:40:35,  1.99it/s] 18% 2624/14661 [20:39<1:37:44,  2.05it/s] 18% 2625/14661 [20:39<1:35:47,  2.09it/s] 18% 2626/14661 [20:40<1:34:18,  2.13it/s] 18% 2627/14661 [20:40<1:33:42,  2.14it/s] 18% 2628/14661 [20:41<1:32:29,  2.17it/s] 18% 2629/14661 [20:41<1:33:20,  2.15it/s] 18% 2630/14661 [20:41<1:33:18,  2.15it/s] 18% 2631/14661 [20:42<1:32:12,  2.17it/s] 18% 2632/14661 [20:42<1:32:33,  2.17it/s] 18% 2633/14661 [20:43<1:32:06,  2.18it/s] 18% 2634/14661 [20:43<1:32:12,  2.17it/s] 18% 2635/14661 [20:44<1:32:43,  2.16it/s] 18% 2636/14661 [20:44<1:33:27,  2.14it/s] 18% 2637/14661 [20:45<1:33:33,  2.14it/s] 18% 2638/14661 [20:45<1:33:10,  2.15it/s] 18% 2639/14661 [20:46<1:32:17,  2.17it/s] 18% 2640/14661 [20:46<1:32:59,  2.15it/s] 18% 2641/14661 [20:47<1:33:48,  2.14it/s] 18% 2642/14661 [20:47<1:33:43,  2.14it/s] 18% 2643/14661 [20:47<1:32:17,  2.17it/s] 18% 2644/14661 [20:48<1:31:47,  2.18it/s] 18% 2645/14661 [20:48<1:33:11,  2.15it/s] 18% 2646/14661 [20:49<1:32:43,  2.16it/s] 18% 2647/14661 [20:49<1:31:36,  2.19it/s] 18% 2648/14661 [20:50<1:33:26,  2.14it/s] 18% 2649/14661 [20:50<1:35:59,  2.09it/s] 18% 2650/14661 [20:51<1:37:32,  2.05it/s] 18% 2651/14661 [20:51<1:35:51,  2.09it/s] 18% 2652/14661 [20:52<1:34:40,  2.11it/s] 18% 2653/14661 [20:52<1:33:20,  2.14it/s] 18% 2654/14661 [20:53<1:35:22,  2.10it/s] 18% 2655/14661 [20:53<1:34:23,  2.12it/s] 18% 2656/14661 [20:54<1:35:17,  2.10it/s] 18% 2657/14661 [20:54<1:34:33,  2.12it/s] 18% 2658/14661 [20:55<1:35:00,  2.11it/s] 18% 2659/14661 [20:55<1:37:02,  2.06it/s] 18% 2660/14661 [20:56<1:37:16,  2.06it/s] 18% 2661/14661 [20:56<1:35:28,  2.09it/s] 18% 2662/14661 [20:56<1:33:35,  2.14it/s] 18% 2663/14661 [20:57<1:32:41,  2.16it/s] 18% 2664/14661 [20:57<1:32:02,  2.17it/s] 18% 2665/14661 [20:58<1:31:16,  2.19it/s] 18% 2666/14661 [20:58<1:31:47,  2.18it/s] 18% 2667/14661 [20:59<1:31:53,  2.18it/s] 18% 2668/14661 [20:59<1:32:10,  2.17it/s] 18% 2669/14661 [21:00<1:31:53,  2.18it/s] 18% 2670/14661 [21:00<1:31:59,  2.17it/s] 18% 2671/14661 [21:01<1:31:09,  2.19it/s] 18% 2672/14661 [21:01<1:31:19,  2.19it/s] 18% 2673/14661 [21:02<1:30:36,  2.21it/s] 18% 2674/14661 [21:02<1:32:00,  2.17it/s] 18% 2675/14661 [21:02<1:32:20,  2.16it/s] 18% 2676/14661 [21:03<1:33:35,  2.13it/s] 18% 2677/14661 [21:03<1:34:49,  2.11it/s] 18% 2678/14661 [21:04<1:33:28,  2.14it/s] 18% 2679/14661 [21:04<1:31:47,  2.18it/s] 18% 2680/14661 [21:05<1:31:09,  2.19it/s] 18% 2681/14661 [21:05<1:31:18,  2.19it/s] 18% 2682/14661 [21:06<1:30:32,  2.21it/s] 18% 2683/14661 [21:06<1:30:57,  2.19it/s] 18% 2684/14661 [21:07<1:31:34,  2.18it/s] 18% 2685/14661 [21:07<1:31:17,  2.19it/s] 18% 2686/14661 [21:08<1:32:25,  2.16it/s] 18% 2687/14661 [21:08<1:32:24,  2.16it/s] 18% 2688/14661 [21:08<1:32:26,  2.16it/s] 18% 2689/14661 [21:09<1:33:29,  2.13it/s] 18% 2690/14661 [21:09<1:32:33,  2.16it/s] 18% 2691/14661 [21:10<1:32:42,  2.15it/s] 18% 2692/14661 [21:10<1:33:11,  2.14it/s] 18% 2693/14661 [21:11<1:32:50,  2.15it/s] 18% 2694/14661 [21:11<1:34:01,  2.12it/s] 18% 2695/14661 [21:12<1:33:30,  2.13it/s] 18% 2696/14661 [21:12<1:32:51,  2.15it/s] 18% 2697/14661 [21:13<1:32:49,  2.15it/s] 18% 2698/14661 [21:13<1:32:10,  2.16it/s] 18% 2699/14661 [21:14<1:30:52,  2.19it/s] 18% 2700/14661 [21:14<1:32:47,  2.15it/s] 18% 2701/14661 [21:15<1:32:37,  2.15it/s] 18% 2702/14661 [21:15<1:31:47,  2.17it/s] 18% 2703/14661 [21:15<1:32:16,  2.16it/s] 18% 2704/14661 [21:16<1:32:41,  2.15it/s] 18% 2705/14661 [21:16<1:32:10,  2.16it/s] 18% 2706/14661 [21:17<1:32:03,  2.16it/s] 18% 2707/14661 [21:17<1:32:42,  2.15it/s] 18% 2708/14661 [21:18<1:31:53,  2.17it/s] 18% 2709/14661 [21:18<1:31:40,  2.17it/s] 18% 2710/14661 [21:19<1:30:57,  2.19it/s] 18% 2711/14661 [21:19<1:31:05,  2.19it/s] 18% 2712/14661 [21:20<1:31:46,  2.17it/s] 19% 2713/14661 [21:20<1:32:03,  2.16it/s] 19% 2714/14661 [21:20<1:31:06,  2.19it/s] 19% 2715/14661 [21:21<1:31:02,  2.19it/s] 19% 2716/14661 [21:21<1:30:20,  2.20it/s] 19% 2717/14661 [21:22<1:30:44,  2.19it/s] 19% 2718/14661 [21:22<1:30:52,  2.19it/s] 19% 2719/14661 [21:23<1:43:49,  1.92it/s] 19% 2720/14661 [21:23<1:40:02,  1.99it/s] 19% 2721/14661 [21:24<1:37:28,  2.04it/s] 19% 2722/14661 [21:24<1:35:09,  2.09it/s] 19% 2723/14661 [21:25<1:33:22,  2.13it/s] 19% 2724/14661 [21:25<1:31:50,  2.17it/s] 19% 2725/14661 [21:26<1:32:55,  2.14it/s] 19% 2726/14661 [21:26<1:32:25,  2.15it/s] 19% 2727/14661 [21:27<1:32:21,  2.15it/s] 19% 2728/14661 [21:27<1:32:58,  2.14it/s] 19% 2729/14661 [21:28<1:32:55,  2.14it/s] 19% 2730/14661 [21:28<1:31:26,  2.17it/s] 19% 2731/14661 [21:28<1:31:38,  2.17it/s] 19% 2732/14661 [21:29<1:31:11,  2.18it/s] 19% 2733/14661 [21:29<1:30:59,  2.18it/s] 19% 2734/14661 [21:30<1:33:08,  2.13it/s] 19% 2735/14661 [21:30<1:32:57,  2.14it/s] 19% 2736/14661 [21:31<1:32:02,  2.16it/s] 19% 2737/14661 [21:31<1:32:42,  2.14it/s] 19% 2738/14661 [21:32<1:30:51,  2.19it/s] 19% 2739/14661 [21:32<1:30:50,  2.19it/s] 19% 2740/14661 [21:33<1:31:01,  2.18it/s] 19% 2741/14661 [21:33<1:32:11,  2.15it/s] 19% 2742/14661 [21:34<1:31:36,  2.17it/s] 19% 2743/14661 [21:34<1:32:31,  2.15it/s] 19% 2744/14661 [21:35<1:35:08,  2.09it/s] 19% 2745/14661 [21:35<1:33:06,  2.13it/s] 19% 2746/14661 [21:35<1:32:20,  2.15it/s] 19% 2747/14661 [21:36<1:31:43,  2.16it/s] 19% 2748/14661 [21:36<1:30:55,  2.18it/s] 19% 2749/14661 [21:37<1:31:03,  2.18it/s] 19% 2750/14661 [21:37<1:31:33,  2.17it/s] 19% 2751/14661 [21:38<1:31:07,  2.18it/s] 19% 2752/14661 [21:38<1:30:50,  2.18it/s] 19% 2753/14661 [21:39<1:31:06,  2.18it/s] 19% 2754/14661 [21:39<1:31:05,  2.18it/s] 19% 2755/14661 [21:40<1:31:23,  2.17it/s] 19% 2756/14661 [21:40<1:30:49,  2.18it/s] 19% 2757/14661 [21:40<1:31:04,  2.18it/s] 19% 2758/14661 [21:41<1:31:32,  2.17it/s] 19% 2759/14661 [21:41<1:32:13,  2.15it/s] 19% 2760/14661 [21:42<1:31:30,  2.17it/s] 19% 2761/14661 [21:42<1:31:14,  2.17it/s] 19% 2762/14661 [21:43<1:31:04,  2.18it/s] 19% 2763/14661 [21:43<1:30:51,  2.18it/s] 19% 2764/14661 [21:44<1:31:42,  2.16it/s] 19% 2765/14661 [21:44<1:31:01,  2.18it/s] 19% 2766/14661 [21:45<1:29:58,  2.20it/s] 19% 2767/14661 [21:45<1:29:57,  2.20it/s] 19% 2768/14661 [21:46<1:30:12,  2.20it/s] 19% 2769/14661 [21:46<1:30:48,  2.18it/s] 19% 2770/14661 [21:46<1:30:54,  2.18it/s] 19% 2771/14661 [21:47<1:30:26,  2.19it/s] 19% 2772/14661 [21:47<1:29:31,  2.21it/s] 19% 2773/14661 [21:48<1:30:58,  2.18it/s] 19% 2774/14661 [21:48<1:30:49,  2.18it/s] 19% 2775/14661 [21:49<1:30:13,  2.20it/s] 19% 2776/14661 [21:49<1:30:15,  2.19it/s] 19% 2777/14661 [21:50<1:30:28,  2.19it/s] 19% 2778/14661 [21:50<1:29:18,  2.22it/s] 19% 2779/14661 [21:51<1:29:01,  2.22it/s] 19% 2780/14661 [21:51<1:29:43,  2.21it/s] 19% 2781/14661 [21:51<1:30:54,  2.18it/s] 19% 2782/14661 [21:52<1:29:54,  2.20it/s] 19% 2783/14661 [21:52<1:32:04,  2.15it/s] 19% 2784/14661 [21:53<1:31:01,  2.17it/s] 19% 2785/14661 [21:53<1:30:54,  2.18it/s] 19% 2786/14661 [21:54<1:30:08,  2.20it/s] 19% 2787/14661 [21:54<1:30:53,  2.18it/s] 19% 2788/14661 [21:55<1:30:29,  2.19it/s] 19% 2789/14661 [21:55<1:30:06,  2.20it/s] 19% 2790/14661 [21:56<1:30:08,  2.19it/s] 19% 2791/14661 [21:56<1:30:34,  2.18it/s] 19% 2792/14661 [21:57<1:30:44,  2.18it/s] 19% 2793/14661 [21:57<1:38:16,  2.01it/s] 19% 2794/14661 [21:58<1:36:33,  2.05it/s] 19% 2795/14661 [21:58<1:34:47,  2.09it/s] 19% 2796/14661 [21:58<1:32:53,  2.13it/s] 19% 2797/14661 [21:59<1:31:16,  2.17it/s] 19% 2798/14661 [21:59<1:30:00,  2.20it/s] 19% 2799/14661 [22:00<1:30:37,  2.18it/s] 19% 2800/14661 [22:00<1:30:44,  2.18it/s] 19% 2801/14661 [22:01<1:30:39,  2.18it/s] 19% 2802/14661 [22:01<1:29:35,  2.21it/s] 19% 2803/14661 [22:02<1:30:12,  2.19it/s] 19% 2804/14661 [22:02<1:31:36,  2.16it/s] 19% 2805/14661 [22:03<1:31:35,  2.16it/s] 19% 2806/14661 [22:03<1:30:07,  2.19it/s] 19% 2807/14661 [22:03<1:29:17,  2.21it/s] 19% 2808/14661 [22:04<1:28:54,  2.22it/s] 19% 2809/14661 [22:04<1:30:09,  2.19it/s] 19% 2810/14661 [22:05<1:29:39,  2.20it/s] 19% 2811/14661 [22:05<1:29:56,  2.20it/s] 19% 2812/14661 [22:06<1:31:42,  2.15it/s] 19% 2813/14661 [22:06<1:32:34,  2.13it/s] 19% 2814/14661 [22:07<1:33:56,  2.10it/s] 19% 2815/14661 [22:07<1:32:43,  2.13it/s] 19% 2816/14661 [22:08<1:31:23,  2.16it/s] 19% 2817/14661 [22:08<1:31:03,  2.17it/s] 19% 2818/14661 [22:09<1:30:24,  2.18it/s] 19% 2819/14661 [22:09<1:29:50,  2.20it/s] 19% 2820/14661 [22:09<1:29:16,  2.21it/s] 19% 2821/14661 [22:10<1:29:44,  2.20it/s] 19% 2822/14661 [22:10<1:29:25,  2.21it/s] 19% 2823/14661 [22:11<1:28:38,  2.23it/s] 19% 2824/14661 [22:11<1:29:15,  2.21it/s] 19% 2825/14661 [22:12<1:29:37,  2.20it/s] 19% 2826/14661 [22:12<1:30:24,  2.18it/s] 19% 2827/14661 [22:13<1:31:26,  2.16it/s] 19% 2828/14661 [22:13<1:30:10,  2.19it/s] 19% 2829/14661 [22:14<1:30:17,  2.18it/s] 19% 2830/14661 [22:14<1:31:00,  2.17it/s] 19% 2831/14661 [22:15<1:31:38,  2.15it/s] 19% 2832/14661 [22:15<1:31:09,  2.16it/s] 19% 2833/14661 [22:15<1:30:37,  2.18it/s] 19% 2834/14661 [22:16<1:30:02,  2.19it/s] 19% 2835/14661 [22:16<1:30:39,  2.17it/s] 19% 2836/14661 [22:17<1:31:43,  2.15it/s] 19% 2837/14661 [22:17<1:31:51,  2.15it/s] 19% 2838/14661 [22:18<1:31:23,  2.16it/s] 19% 2839/14661 [22:18<1:32:40,  2.13it/s] 19% 2840/14661 [22:19<1:31:20,  2.16it/s] 19% 2841/14661 [22:19<1:29:48,  2.19it/s] 19% 2842/14661 [22:20<1:29:02,  2.21it/s] 19% 2843/14661 [22:20<1:29:49,  2.19it/s] 19% 2844/14661 [22:20<1:30:12,  2.18it/s] 19% 2845/14661 [22:21<1:29:34,  2.20it/s] 19% 2846/14661 [22:21<1:30:22,  2.18it/s] 19% 2847/14661 [22:22<1:30:15,  2.18it/s] 19% 2848/14661 [22:22<1:30:14,  2.18it/s] 19% 2849/14661 [22:23<1:30:45,  2.17it/s] 19% 2850/14661 [22:23<1:30:06,  2.18it/s] 19% 2851/14661 [22:24<1:29:33,  2.20it/s] 19% 2852/14661 [22:24<1:31:19,  2.15it/s] 19% 2853/14661 [22:25<1:31:20,  2.15it/s] 19% 2854/14661 [22:25<1:29:58,  2.19it/s] 19% 2855/14661 [22:26<1:29:40,  2.19it/s] 19% 2856/14661 [22:26<1:30:40,  2.17it/s] 19% 2857/14661 [22:26<1:29:36,  2.20it/s] 19% 2858/14661 [22:27<1:29:05,  2.21it/s] 20% 2859/14661 [22:27<1:29:05,  2.21it/s] 20% 2860/14661 [22:28<1:28:20,  2.23it/s] 20% 2861/14661 [22:28<1:28:59,  2.21it/s] 20% 2862/14661 [22:29<1:28:18,  2.23it/s] 20% 2863/14661 [22:29<1:29:24,  2.20it/s] 20% 2864/14661 [22:30<1:32:21,  2.13it/s] 20% 2865/14661 [22:30<1:33:09,  2.11it/s] 20% 2866/14661 [22:31<1:33:12,  2.11it/s] 20% 2867/14661 [22:31<1:31:45,  2.14it/s] 20% 2868/14661 [22:32<1:31:18,  2.15it/s] 20% 2869/14661 [22:32<1:30:04,  2.18it/s] 20% 2870/14661 [22:32<1:28:54,  2.21it/s] 20% 2871/14661 [22:33<1:32:27,  2.13it/s] 20% 2872/14661 [22:33<1:32:31,  2.12it/s] 20% 2873/14661 [22:34<1:31:28,  2.15it/s] 20% 2874/14661 [22:34<1:30:54,  2.16it/s] 20% 2875/14661 [22:35<1:29:56,  2.18it/s] 20% 2876/14661 [22:35<1:37:28,  2.02it/s] 20% 2877/14661 [22:36<1:35:24,  2.06it/s] 20% 2878/14661 [22:36<1:33:10,  2.11it/s] 20% 2879/14661 [22:37<1:31:23,  2.15it/s] 20% 2880/14661 [22:37<1:30:26,  2.17it/s] 20% 2881/14661 [22:38<1:32:48,  2.12it/s] 20% 2882/14661 [22:38<1:31:10,  2.15it/s] 20% 2883/14661 [22:39<1:35:09,  2.06it/s] 20% 2884/14661 [22:39<1:40:12,  1.96it/s] 20% 2885/14661 [22:40<1:43:47,  1.89it/s] 20% 2886/14661 [22:40<1:45:36,  1.86it/s] 20% 2887/14661 [22:41<1:41:46,  1.93it/s] 20% 2888/14661 [22:41<1:40:12,  1.96it/s] 20% 2889/14661 [22:42<1:38:02,  2.00it/s] 20% 2890/14661 [22:42<1:36:42,  2.03it/s] 20% 2891/14661 [22:43<1:34:52,  2.07it/s] 20% 2892/14661 [22:43<1:33:34,  2.10it/s] 20% 2893/14661 [22:44<1:31:55,  2.13it/s] 20% 2894/14661 [22:44<1:32:04,  2.13it/s] 20% 2895/14661 [22:45<1:32:16,  2.13it/s] 20% 2896/14661 [22:45<1:32:43,  2.11it/s] 20% 2897/14661 [22:45<1:30:59,  2.15it/s] 20% 2898/14661 [22:46<1:31:36,  2.14it/s] 20% 2899/14661 [22:46<1:32:14,  2.13it/s] 20% 2900/14661 [22:47<1:30:42,  2.16it/s] 20% 2901/14661 [22:47<1:29:41,  2.19it/s] 20% 2902/14661 [22:48<1:29:42,  2.18it/s] 20% 2903/14661 [22:48<1:30:03,  2.18it/s] 20% 2904/14661 [22:49<1:29:54,  2.18it/s] 20% 2905/14661 [22:49<1:30:39,  2.16it/s] 20% 2906/14661 [22:50<1:30:57,  2.15it/s] 20% 2907/14661 [22:50<1:32:08,  2.13it/s] 20% 2908/14661 [22:51<1:33:06,  2.10it/s] 20% 2909/14661 [22:51<1:31:36,  2.14it/s] 20% 2910/14661 [22:52<1:31:27,  2.14it/s] 20% 2911/14661 [22:52<1:30:10,  2.17it/s] 20% 2912/14661 [22:52<1:28:42,  2.21it/s] 20% 2913/14661 [22:53<1:28:32,  2.21it/s] 20% 2914/14661 [22:53<1:32:35,  2.11it/s] 20% 2915/14661 [22:54<1:32:17,  2.12it/s] 20% 2916/14661 [22:54<1:31:14,  2.15it/s] 20% 2917/14661 [22:55<1:31:30,  2.14it/s] 20% 2918/14661 [22:55<1:30:17,  2.17it/s] 20% 2919/14661 [22:56<1:30:31,  2.16it/s] 20% 2920/14661 [22:56<1:30:05,  2.17it/s] 20% 2921/14661 [22:57<1:30:34,  2.16it/s] 20% 2922/14661 [22:57<1:30:37,  2.16it/s] 20% 2923/14661 [22:58<1:30:25,  2.16it/s] 20% 2924/14661 [22:58<1:31:42,  2.13it/s] 20% 2925/14661 [22:58<1:30:53,  2.15it/s] 20% 2926/14661 [22:59<1:31:01,  2.15it/s] 20% 2927/14661 [22:59<1:31:02,  2.15it/s] 20% 2928/14661 [23:00<1:31:08,  2.15it/s] 20% 2929/14661 [23:00<1:31:04,  2.15it/s] 20% 2930/14661 [23:01<1:30:20,  2.16it/s] 20% 2931/14661 [23:01<1:30:27,  2.16it/s] 20% 2932/14661 [23:02<1:30:16,  2.17it/s] 20% 2933/14661 [23:02<1:30:53,  2.15it/s] 20% 2934/14661 [23:03<1:32:03,  2.12it/s] 20% 2935/14661 [23:03<1:30:45,  2.15it/s] 20% 2936/14661 [23:04<1:30:44,  2.15it/s] 20% 2937/14661 [23:04<1:30:51,  2.15it/s] 20% 2938/14661 [23:05<1:30:58,  2.15it/s] 20% 2939/14661 [23:05<1:32:22,  2.11it/s] 20% 2940/14661 [23:05<1:31:13,  2.14it/s] 20% 2941/14661 [23:06<1:30:23,  2.16it/s] 20% 2942/14661 [23:06<1:29:31,  2.18it/s] 20% 2943/14661 [23:07<1:30:48,  2.15it/s] 20% 2944/14661 [23:07<1:30:26,  2.16it/s] 20% 2945/14661 [23:08<1:30:13,  2.16it/s] 20% 2946/14661 [23:08<1:30:11,  2.16it/s] 20% 2947/14661 [23:09<1:32:01,  2.12it/s] 20% 2948/14661 [23:09<1:31:28,  2.13it/s] 20% 2949/14661 [23:10<1:30:44,  2.15it/s] 20% 2950/14661 [23:10<1:30:21,  2.16it/s] 20% 2951/14661 [23:11<1:30:48,  2.15it/s] 20% 2952/14661 [23:11<1:31:06,  2.14it/s] 20% 2953/14661 [23:11<1:30:20,  2.16it/s] 20% 2954/14661 [23:12<1:29:58,  2.17it/s] 20% 2955/14661 [23:12<1:29:09,  2.19it/s] 20% 2956/14661 [23:13<1:30:11,  2.16it/s] 20% 2957/14661 [23:13<1:30:39,  2.15it/s] 20% 2958/14661 [23:14<1:30:06,  2.16it/s] 20% 2959/14661 [23:14<1:32:10,  2.12it/s] 20% 2960/14661 [23:15<1:30:44,  2.15it/s] 20% 2961/14661 [23:15<1:29:14,  2.18it/s] 20% 2962/14661 [23:16<1:29:06,  2.19it/s] 20% 2963/14661 [23:16<1:29:32,  2.18it/s] 20% 2964/14661 [23:17<1:30:59,  2.14it/s] 20% 2965/14661 [23:17<1:29:52,  2.17it/s] 20% 2966/14661 [23:17<1:29:36,  2.18it/s] 20% 2967/14661 [23:18<1:29:16,  2.18it/s] 20% 2968/14661 [23:18<1:30:07,  2.16it/s] 20% 2969/14661 [23:19<1:30:06,  2.16it/s] 20% 2970/14661 [23:19<1:30:21,  2.16it/s] 20% 2971/14661 [23:20<1:30:48,  2.15it/s] 20% 2972/14661 [23:20<1:41:05,  1.93it/s] 20% 2973/14661 [23:21<1:38:20,  1.98it/s] 20% 2974/14661 [23:21<1:36:17,  2.02it/s] 20% 2975/14661 [23:22<1:34:17,  2.07it/s] 20% 2976/14661 [23:22<1:33:14,  2.09it/s] 20% 2977/14661 [23:23<1:33:34,  2.08it/s] 20% 2978/14661 [23:23<1:32:32,  2.10it/s] 20% 2979/14661 [23:24<1:32:32,  2.10it/s] 20% 2980/14661 [23:24<1:31:14,  2.13it/s] 20% 2981/14661 [23:25<1:29:50,  2.17it/s] 20% 2982/14661 [23:25<1:29:20,  2.18it/s] 20% 2983/14661 [23:26<1:30:55,  2.14it/s] 20% 2984/14661 [23:26<1:33:33,  2.08it/s] 20% 2985/14661 [23:27<1:33:38,  2.08it/s] 20% 2986/14661 [23:27<1:32:19,  2.11it/s] 20% 2987/14661 [23:27<1:31:41,  2.12it/s] 20% 2988/14661 [23:28<1:31:45,  2.12it/s] 20% 2989/14661 [23:28<1:30:17,  2.15it/s] 20% 2990/14661 [23:29<1:30:15,  2.16it/s] 20% 2991/14661 [23:29<1:29:35,  2.17it/s] 20% 2992/14661 [23:30<1:28:45,  2.19it/s] 20% 2993/14661 [23:30<1:30:17,  2.15it/s] 20% 2994/14661 [23:31<1:29:17,  2.18it/s] 20% 2995/14661 [23:31<1:29:23,  2.17it/s] 20% 2996/14661 [23:32<1:30:26,  2.15it/s] 20% 2997/14661 [23:32<1:29:14,  2.18it/s] 20% 2998/14661 [23:33<1:30:25,  2.15it/s] 20% 2999/14661 [23:33<1:29:26,  2.17it/s] 20% 3000/14661 [23:33<1:29:20,  2.18it/s] 20% 3001/14661 [23:34<1:29:36,  2.17it/s] 20% 3002/14661 [23:34<1:30:10,  2.15it/s] 20% 3003/14661 [23:35<1:29:43,  2.17it/s] 20% 3004/14661 [23:35<1:28:48,  2.19it/s] 20% 3005/14661 [23:36<1:28:46,  2.19it/s] 21% 3006/14661 [23:36<1:29:43,  2.16it/s] 21% 3007/14661 [23:37<1:29:53,  2.16it/s] 21% 3008/14661 [23:37<1:28:53,  2.18it/s] 21% 3009/14661 [23:38<1:28:37,  2.19it/s] 21% 3010/14661 [23:38<1:28:16,  2.20it/s] 21% 3011/14661 [23:39<1:29:03,  2.18it/s] 21% 3012/14661 [23:39<1:29:11,  2.18it/s] 21% 3013/14661 [23:39<1:29:18,  2.17it/s] 21% 3014/14661 [23:40<1:28:50,  2.18it/s] 21% 3015/14661 [23:40<1:28:00,  2.21it/s] 21% 3016/14661 [23:41<1:28:31,  2.19it/s] 21% 3017/14661 [23:41<1:29:42,  2.16it/s] 21% 3018/14661 [23:42<1:29:24,  2.17it/s] 21% 3019/14661 [23:42<1:29:12,  2.18it/s] 21% 3020/14661 [23:43<1:30:22,  2.15it/s] 21% 3021/14661 [23:43<1:30:22,  2.15it/s] 21% 3022/14661 [23:44<1:29:42,  2.16it/s] 21% 3023/14661 [23:44<1:30:51,  2.13it/s] 21% 3024/14661 [23:45<1:30:18,  2.15it/s] 21% 3025/14661 [23:45<1:30:53,  2.13it/s] 21% 3026/14661 [23:45<1:30:54,  2.13it/s] 21% 3027/14661 [23:46<1:31:21,  2.12it/s] 21% 3028/14661 [23:46<1:30:11,  2.15it/s] 21% 3029/14661 [23:47<1:31:14,  2.12it/s] 21% 3030/14661 [23:47<1:30:01,  2.15it/s] 21% 3031/14661 [23:48<1:28:54,  2.18it/s] 21% 3032/14661 [23:48<1:29:04,  2.18it/s] 21% 3033/14661 [23:49<1:28:47,  2.18it/s] 21% 3034/14661 [23:49<1:28:30,  2.19it/s] 21% 3035/14661 [23:50<1:28:06,  2.20it/s] 21% 3036/14661 [23:50<1:28:09,  2.20it/s] 21% 3037/14661 [23:51<1:29:26,  2.17it/s] 21% 3038/14661 [23:51<1:29:10,  2.17it/s] 21% 3039/14661 [23:51<1:29:40,  2.16it/s] 21% 3040/14661 [23:52<1:31:02,  2.13it/s] 21% 3041/14661 [23:52<1:31:28,  2.12it/s] 21% 3042/14661 [23:53<1:30:59,  2.13it/s] 21% 3043/14661 [23:53<1:30:39,  2.14it/s] 21% 3044/14661 [23:54<1:30:09,  2.15it/s] 21% 3045/14661 [23:54<1:29:35,  2.16it/s] 21% 3046/14661 [23:55<1:34:42,  2.04it/s] 21% 3047/14661 [23:55<1:33:24,  2.07it/s] 21% 3048/14661 [23:56<1:32:01,  2.10it/s] 21% 3049/14661 [23:56<1:30:11,  2.15it/s] 21% 3050/14661 [23:57<1:29:06,  2.17it/s] 21% 3051/14661 [23:57<1:29:38,  2.16it/s] 21% 3052/14661 [23:58<1:28:52,  2.18it/s] 21% 3053/14661 [23:58<1:28:33,  2.18it/s] 21% 3054/14661 [23:58<1:29:00,  2.17it/s] 21% 3055/14661 [23:59<1:28:08,  2.19it/s] 21% 3056/14661 [23:59<1:28:40,  2.18it/s] 21% 3057/14661 [24:00<1:29:33,  2.16it/s] 21% 3058/14661 [24:00<1:29:04,  2.17it/s] 21% 3059/14661 [24:01<1:28:41,  2.18it/s] 21% 3060/14661 [24:01<1:28:44,  2.18it/s] 21% 3061/14661 [24:02<1:29:48,  2.15it/s] 21% 3062/14661 [24:02<1:29:14,  2.17it/s] 21% 3063/14661 [24:03<1:30:56,  2.13it/s] 21% 3064/14661 [24:03<1:29:52,  2.15it/s] 21% 3065/14661 [24:04<1:28:40,  2.18it/s] 21% 3066/14661 [24:04<1:28:48,  2.18it/s] 21% 3067/14661 [24:04<1:28:33,  2.18it/s] 21% 3068/14661 [24:05<1:28:42,  2.18it/s] 21% 3069/14661 [24:05<1:28:16,  2.19it/s] 21% 3070/14661 [24:06<1:28:56,  2.17it/s] 21% 3071/14661 [24:06<1:30:03,  2.14it/s] 21% 3072/14661 [24:07<1:30:23,  2.14it/s] 21% 3073/14661 [24:07<1:29:54,  2.15it/s] 21% 3074/14661 [24:08<1:30:16,  2.14it/s] 21% 3075/14661 [24:08<1:30:14,  2.14it/s] 21% 3076/14661 [24:09<1:30:33,  2.13it/s] 21% 3077/14661 [24:09<1:31:48,  2.10it/s] 21% 3078/14661 [24:10<1:30:34,  2.13it/s] 21% 3079/14661 [24:10<1:29:46,  2.15it/s] 21% 3080/14661 [24:11<1:29:02,  2.17it/s]slurmstepd: error: *** JOB 72844 ON node005 CANCELLED AT 2021-10-30T12:04:36 ***

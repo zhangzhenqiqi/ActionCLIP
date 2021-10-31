@@ -194,7 +194,12 @@ class Bottleneck(nn.Module):
         out = self.relu(self.bn1(self.conv1(x)))
         out = self.relu(self.bn2(self.conv2(out)))
         out = self.avgpool(out)
-        out = self.bn3(self.conv3(out))
+
+        print('conv3=', self.conv3)
+        print('device=', out.device)
+        out = self.conv3(out)
+        out = self.bn3(out)
+        # out = self.bn3(self.conv3(out))
 
         if self.downsample is not None:
             identity = self.downsample(x)
@@ -320,6 +325,8 @@ class CLIP(nn.Module):
                  ):
         super().__init__()
 
+        modifiedRN = True
+
         self.context_length = context_length
         if dropout > 0.:
             dpr = [x.item() for x in torch.linspace(0, dropout, vision_layers)]  # stochastic depth decay rule
@@ -426,7 +433,7 @@ class CLIP(nn.Module):
         ret = self.visual(image.type(self.dtype))
         # 128*512 （batch=16）
         # print('encoded iamge: ', ret)
-        # print('encoded image size: ', ret.size())
+        print('encoded image size: ', ret.size())
         return ret
 
     def encode_text(self, text):
@@ -565,5 +572,5 @@ def build_model(state_dict: dict, tsm=False, T=8, dropout=0., joint=False, emb_d
         from ActionNet.action import make_temporal_shift
         # 用于添加ACTION模块
         make_temporal_shift(model.visual, T, n_div=8, place='blockres', temporal_pool=False)
-
+    # convert_weights(model)
     return model.eval()

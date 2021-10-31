@@ -4,4 +4,6 @@
 72081   resnet50(True)
 72101  与72081相比batchsize=32  84%
 72119  modifiedResnet 不使用参数 33
+72845  使用resnet原始的，可以2gpu跑，加上action就报错，++
+72846 k400 1gpu
 

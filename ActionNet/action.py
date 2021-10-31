@@ -76,7 +76,8 @@ class Action(nn.Module):
     def forward(self, x):
         nt, c, h, w = x.size()
         n_batch = nt // self.n_segment
-
+        print('action debug 0:', x.size())
+        print(x.device)
         x_shift = x.view(n_batch, self.n_segment, c, h, w)
         x_shift = x_shift.permute([0, 3, 4, 2, 1])  # (n_batch, h, w, c, n_segment)
         x_shift = x_shift.contiguous().view(n_batch * h * w, c, self.n_segment)
@@ -84,7 +85,7 @@ class Action(nn.Module):
         x_shift = x_shift.view(n_batch, h, w, c, self.n_segment)
         x_shift = x_shift.permute([0, 4, 3, 1, 2])  # (n_batch, n_segment, c, h, w)
         x_shift = x_shift.contiguous().view(nt, c, h, w)
-
+        print('action debug 1: ', x_shift.size())
         # 3D convolution: c*T*h*w, spatial temporal excitation
         nt, c, h, w = x_shift.size()
         x_p1 = x_shift.view(n_batch, self.n_segment, c, h, w).transpose(2, 1).contiguous()
@@ -93,7 +94,7 @@ class Action(nn.Module):
         x_p1 = x_p1.transpose(2, 1).contiguous().view(nt, 1, h, w)
         x_p1 = self.sigmoid(x_p1)
         x_p1 = x_shift * x_p1 + x_shift
-
+        print('action debug: 2', x_p1.size())
         # 2D convolution: c*T*1*1, channel excitation
         x_p2 = self.avg_pool(x_shift)
         x_p2 = self.action_p2_squeeze(x_p2)
@@ -105,6 +106,7 @@ class Action(nn.Module):
         x_p2 = self.action_p2_expand(x_p2)
         x_p2 = self.sigmoid(x_p2)
         x_p2 = x_shift * x_p2 + x_shift
+        print('action debug: 3', x_p2.size())
 
         # # 2D convolution: motion excitation
         x3 = self.action_p3_squeeze(x_shift)
@@ -121,8 +123,13 @@ class Action(nn.Module):
         x_p3 = self.sigmoid(x_p3)
         x_p3 = x_shift * x_p3 + x_shift
 
+        print('action debug: 4', x_p3.size())
+
         out = self.net(x_p1 + x_p2 + x_p3)
+        print('action debug: 5', out.size())
+
         return out
+
 
 class TemporalPool(nn.Module):
     def __init__(self, net, n_segment):
@@ -188,6 +195,7 @@ def make_temporal_shift(net, n_segment, n_div=8, place='blockres', temporal_pool
 
     # elif 'blockres' in place:
     n_round = 1
+
     # if len(list(net.layer3.children())) >= 23:
     #     n_round = 2
     #     print('=> Using n_round {} to insert temporal shift'.format(n_round))
@@ -206,6 +214,7 @@ def make_temporal_shift(net, n_segment, n_div=8, place='blockres', temporal_pool
     net.layer2 = make_block_temporal(net.layer2, n_segment_list[1])
     net.layer3 = make_block_temporal(net.layer3, n_segment_list[2])
     net.layer4 = make_block_temporal(net.layer4, n_segment_list[3])
+
 
 # else:
 # raise NotImplementedError(place)

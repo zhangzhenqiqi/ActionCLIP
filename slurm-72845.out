@@ -1,1187 +1,0 @@
-Loading cudnn7.6-cuda10.2/7.6.5.32
-  Loading requirement: cuda10.2/toolkit/10.2.89
-Loading nccl2-cuda10.2-gcc/2.6.4
-  Loading requirement: gcc5/5.5.0
-ActionClip boot~
-<string>:1: YAMLLoadWarning: calling yaml.load() without Loader=... is deprecated, as the default Loader is unsafe. Please read https://msg.pyyaml.org/load for full details.
-<string>:1: YAMLLoadWarning: calling yaml.load() without Loader=... is deprecated, as the default Loader is unsafe. Please read https://msg.pyyaml.org/load for full details.
-<string>:1: YAMLLoadWarning: calling yaml.load() without Loader=... is deprecated, as the default Loader is unsafe. Please read https://msg.pyyaml.org/load for full details.
-/home/10501001/anaconda3/envs/ACTION-CLIP/lib/python3.9/site-packages/torch/nn/_reduction.py:42: UserWarning: size_average and reduce args will be deprecated, please use reduction='mean' instead.
-  warnings.warn(warning.format(ret))
-/home/10501001/projects/ActionCLIP/train.py:53: YAMLLoadWarning: calling yaml.load() without Loader=... is deprecated, as the default Loader is unsafe. Please read https://msg.pyyaml.org/load for full details.
-  config = yaml.load(f)
-wandb: Currently logged in as: wozzq (use `wandb login --relogin` to force relogin)
-wandb: Tracking run with wandb version 0.12.4
-wandb: Syncing run 20211030_120442_clip_k400_RN50_kinetics400
-wandb:  View project at https://wandb.ai/wozzq/clip_k400
-wandb:  View run at https://wandb.ai/wozzq/clip_k400/runs/2bjaf9er
-wandb: Run data is saved locally in /home/10501001/projects/ActionCLIP/wandb/run-20211030_120446-2bjaf9er
-wandb: Run `wandb offline` to turn off syncing.
-
---------------------------------------------------------------------------------
-                     working dir: ./exp/clip_k400/RN50/kinetics400/20211030_120442
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
-                               Config
-{   'data': {   'batch_size': 16,
-                'dataset': 'kinetics400',
-                'image_tmpl': 'img_{:05d}.jpg',
-                'index_bias': 1,
-                'input_size': 224,
-                'label_list': 'lists/kinetics_400_labels.csv',
-                'modality': 'RGB',
-                'num_classes': 400,
-                'num_segments': 8,
-                'randaug': {'M': 9, 'N': 2},
-                'random_shift': True,
-                'seg_length': 1,
-                'train_list': 'lists/k4001/train_frames.txt',
-                'val_list': 'lists/k4001/val_frames.txt',
-                'workers': 16},
-    'logging': {'eval_freq': 1, 'print_freq': 10},
-    'network': {   'arch': 'RN50',
-                   'describe': None,
-                   'drop_out': 0.0,
-                   'emb_dropout': 0.0,
-                   'init': False,
-                   'is_action': False,
-                   'joint': False,
-                   'sim_header': 'Transf',
-                   'tsm': False,
-                   'type': 'clip_k400'},
-    'pretrain': None,
-    'resume': None,
-    'seed': 1024,
-    'solver': {   'clip_gradient': 20,
-                  'epoch_offset': 0,
-                  'epochs': 50,
-                  'evaluate': False,
-                  'f_ratio': 10,
-                  'loss_type': 'nll',
-                  'lr': 5e-06,
-                  'lr_decay_factor': 0.1,
-                  'lr_decay_step': 15,
-                  'lr_warmup_step': 5,
-                  'momentum': 0.9,
-                  'optim': 'adamw',
-                  'ratio': 1,
-                  'start_epoch': 0,
-                  'type': 'cosine',
-                  'weight_decay': 0.2}}
---------------------------------------------------------------------------------
-dropout used:[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-not using full clip pretrained model, only visual!
-Using RandAugment!
-train transforms: [<utils.Augmentation.GroupTransform object at 0x2aab4a17e550>, Compose(
-    <datasets.transforms_ss.GroupMultiScaleCrop object at 0x2aab4a17ea30>
-    <datasets.transforms_ss.GroupRandomHorizontalFlip object at 0x2aab4a17eeb0>
-    <datasets.transforms_ss.GroupRandomColorJitter object at 0x2aab4a17efd0>
-    <datasets.transforms_ss.GroupRandomGrayscale object at 0x2aab4a17eee0>
-    <datasets.transforms_ss.GroupGaussianBlur object at 0x2aab4a17edf0>
-    <datasets.transforms_ss.GroupSolarization object at 0x2aab4a17ed90>
-), Compose(
-    <datasets.transforms_ss.Stack object at 0x2aab4a17eca0>
-    <datasets.transforms_ss.ToTorchFormatTensor object at 0x2aab4a17ec40>
-    <datasets.transforms_ss.GroupNormalize object at 0x2aab4a17ea90>
-)]
-val transforms: [Compose(
-    <datasets.transforms_ss.GroupScale object at 0x2aab4a17eaf0>
-    <datasets.transforms_ss.GroupCenterCrop object at 0x2aab4a17e400>
-), Compose(
-    <datasets.transforms_ss.Stack object at 0x2aab4a17e790>
-    <datasets.transforms_ss.ToTorchFormatTensor object at 0x2aab4a17e730>
-    <datasets.transforms_ss.GroupNormalize object at 0x2aab4a17e5b0>
-)]
-layer=6
-visual.conv1  :  Conv2d(3, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
-- torch.float16
-visual.bn1  :  BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer1.0.conv1  :  Conv2d(64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
-- torch.float16
-visual.layer1.0.bn1  :  BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer1.0.conv2  :  Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-- torch.float16
-visual.layer1.0.bn2  :  BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer1.0.conv3  :  Conv2d(64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
-- torch.float16
-visual.layer1.0.bn3  :  BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer1.0.downsample.0  :  Conv2d(64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
-- torch.float16
-visual.layer1.0.downsample.1  :  BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer1.1.conv1  :  Conv2d(256, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
-- torch.float16
-visual.layer1.1.bn1  :  BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer1.1.conv2  :  Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-- torch.float16
-visual.layer1.1.bn2  :  BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer1.1.conv3  :  Conv2d(64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
-- torch.float16
-visual.layer1.1.bn3  :  BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer1.2.conv1  :  Conv2d(256, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
-- torch.float16
-visual.layer1.2.bn1  :  BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer1.2.conv2  :  Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-- torch.float16
-visual.layer1.2.bn2  :  BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer1.2.conv3  :  Conv2d(64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
-- torch.float16
-visual.layer1.2.bn3  :  BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer2.0.conv1  :  Conv2d(256, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
-- torch.float16
-visual.layer2.0.bn1  :  BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer2.0.conv2  :  Conv2d(128, 128, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
-- torch.float16
-visual.layer2.0.bn2  :  BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer2.0.conv3  :  Conv2d(128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
-- torch.float16
-visual.layer2.0.bn3  :  BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer2.0.downsample.0  :  Conv2d(256, 512, kernel_size=(1, 1), stride=(2, 2), bias=False)
-- torch.float16
-visual.layer2.0.downsample.1  :  BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer2.1.conv1  :  Conv2d(512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
-- torch.float16
-visual.layer2.1.bn1  :  BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer2.1.conv2  :  Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-- torch.float16
-visual.layer2.1.bn2  :  BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer2.1.conv3  :  Conv2d(128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
-- torch.float16
-visual.layer2.1.bn3  :  BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer2.2.conv1  :  Conv2d(512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
-- torch.float16
-visual.layer2.2.bn1  :  BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer2.2.conv2  :  Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-- torch.float16
-visual.layer2.2.bn2  :  BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer2.2.conv3  :  Conv2d(128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
-- torch.float16
-visual.layer2.2.bn3  :  BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer2.3.conv1  :  Conv2d(512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
-- torch.float16
-visual.layer2.3.bn1  :  BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer2.3.conv2  :  Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-- torch.float16
-visual.layer2.3.bn2  :  BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer2.3.conv3  :  Conv2d(128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
-- torch.float16
-visual.layer2.3.bn3  :  BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer3.0.conv1  :  Conv2d(512, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
-- torch.float16
-visual.layer3.0.bn1  :  BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer3.0.conv2  :  Conv2d(256, 256, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
-- torch.float16
-visual.layer3.0.bn2  :  BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer3.0.conv3  :  Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
-- torch.float16
-visual.layer3.0.bn3  :  BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer3.0.downsample.0  :  Conv2d(512, 1024, kernel_size=(1, 1), stride=(2, 2), bias=False)
-- torch.float16
-visual.layer3.0.downsample.1  :  BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer3.1.conv1  :  Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
-- torch.float16
-visual.layer3.1.bn1  :  BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer3.1.conv2  :  Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-- torch.float16
-visual.layer3.1.bn2  :  BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer3.1.conv3  :  Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
-- torch.float16
-visual.layer3.1.bn3  :  BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer3.2.conv1  :  Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
-- torch.float16
-visual.layer3.2.bn1  :  BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer3.2.conv2  :  Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-- torch.float16
-visual.layer3.2.bn2  :  BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer3.2.conv3  :  Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
-- torch.float16
-visual.layer3.2.bn3  :  BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer3.3.conv1  :  Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
-- torch.float16
-visual.layer3.3.bn1  :  BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer3.3.conv2  :  Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-- torch.float16
-visual.layer3.3.bn2  :  BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer3.3.conv3  :  Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
-- torch.float16
-visual.layer3.3.bn3  :  BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer3.4.conv1  :  Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
-- torch.float16
-visual.layer3.4.bn1  :  BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer3.4.conv2  :  Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-- torch.float16
-visual.layer3.4.bn2  :  BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer3.4.conv3  :  Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
-- torch.float16
-visual.layer3.4.bn3  :  BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer3.5.conv1  :  Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
-- torch.float16
-visual.layer3.5.bn1  :  BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer3.5.conv2  :  Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-- torch.float16
-visual.layer3.5.bn2  :  BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer3.5.conv3  :  Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
-- torch.float16
-visual.layer3.5.bn3  :  BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer4.0.conv1  :  Conv2d(1024, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
-- torch.float16
-visual.layer4.0.bn1  :  BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer4.0.conv2  :  Conv2d(512, 512, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
-- torch.float16
-visual.layer4.0.bn2  :  BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer4.0.conv3  :  Conv2d(512, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False)
-- torch.float16
-visual.layer4.0.bn3  :  BatchNorm2d(2048, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer4.0.downsample.0  :  Conv2d(1024, 2048, kernel_size=(1, 1), stride=(2, 2), bias=False)
-- torch.float16
-visual.layer4.0.downsample.1  :  BatchNorm2d(2048, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer4.1.conv1  :  Conv2d(2048, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
-- torch.float16
-visual.layer4.1.bn1  :  BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer4.1.conv2  :  Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-- torch.float16
-visual.layer4.1.bn2  :  BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer4.1.conv3  :  Conv2d(512, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False)
-- torch.float16
-visual.layer4.1.bn3  :  BatchNorm2d(2048, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer4.2.conv1  :  Conv2d(2048, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
-- torch.float16
-visual.layer4.2.bn1  :  BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer4.2.conv2  :  Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-- torch.float16
-visual.layer4.2.bn2  :  BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.layer4.2.conv3  :  Conv2d(512, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False)
-- torch.float16
-visual.layer4.2.bn3  :  BatchNorm2d(2048, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-- torch.float32
-visual.fc  :  Linear(in_features=2048, out_features=1024, bias=True)
-- torch.float16
-transformer.resblocks.0.attn.out_proj  :  NonDynamicallyQuantizableLinear(in_features=512, out_features=512, bias=True)
-- torch.float16
-transformer.resblocks.0.ln_1  :  LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-- torch.float32
-transformer.resblocks.0.mlp.c_fc  :  Linear(in_features=512, out_features=2048, bias=True)
-- torch.float16
-transformer.resblocks.0.mlp.c_proj  :  Linear(in_features=2048, out_features=512, bias=True)
-- torch.float16
-transformer.resblocks.0.ln_2  :  LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-- torch.float32
-transformer.resblocks.1.attn.out_proj  :  NonDynamicallyQuantizableLinear(in_features=512, out_features=512, bias=True)
-- torch.float16
-transformer.resblocks.1.ln_1  :  LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-- torch.float32
-transformer.resblocks.1.mlp.c_fc  :  Linear(in_features=512, out_features=2048, bias=True)
-- torch.float16
-transformer.resblocks.1.mlp.c_proj  :  Linear(in_features=2048, out_features=512, bias=True)
-- torch.float16
-transformer.resblocks.1.ln_2  :  LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-- torch.float32
-transformer.resblocks.2.attn.out_proj  :  NonDynamicallyQuantizableLinear(in_features=512, out_features=512, bias=True)
-- torch.float16
-transformer.resblocks.2.ln_1  :  LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-- torch.float32
-transformer.resblocks.2.mlp.c_fc  :  Linear(in_features=512, out_features=2048, bias=True)
-- torch.float16
-transformer.resblocks.2.mlp.c_proj  :  Linear(in_features=2048, out_features=512, bias=True)
-- torch.float16
-transformer.resblocks.2.ln_2  :  LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-- torch.float32
-transformer.resblocks.3.attn.out_proj  :  NonDynamicallyQuantizableLinear(in_features=512, out_features=512, bias=True)
-- torch.float16
-transformer.resblocks.3.ln_1  :  LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-- torch.float32
-transformer.resblocks.3.mlp.c_fc  :  Linear(in_features=512, out_features=2048, bias=True)
-- torch.float16
-transformer.resblocks.3.mlp.c_proj  :  Linear(in_features=2048, out_features=512, bias=True)
-- torch.float16
-transformer.resblocks.3.ln_2  :  LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-- torch.float32
-transformer.resblocks.4.attn.out_proj  :  NonDynamicallyQuantizableLinear(in_features=512, out_features=512, bias=True)
-- torch.float16
-transformer.resblocks.4.ln_1  :  LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-- torch.float32
-transformer.resblocks.4.mlp.c_fc  :  Linear(in_features=512, out_features=2048, bias=True)
-- torch.float16
-transformer.resblocks.4.mlp.c_proj  :  Linear(in_features=2048, out_features=512, bias=True)
-- torch.float16
-transformer.resblocks.4.ln_2  :  LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-- torch.float32
-transformer.resblocks.5.attn.out_proj  :  NonDynamicallyQuantizableLinear(in_features=512, out_features=512, bias=True)
-- torch.float16
-transformer.resblocks.5.ln_1  :  LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-- torch.float32
-transformer.resblocks.5.mlp.c_fc  :  Linear(in_features=512, out_features=2048, bias=True)
-- torch.float16
-transformer.resblocks.5.mlp.c_proj  :  Linear(in_features=2048, out_features=512, bias=True)
-- torch.float16
-transformer.resblocks.5.ln_2  :  LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-- torch.float32
-transformer.resblocks.6.attn.out_proj  :  NonDynamicallyQuantizableLinear(in_features=512, out_features=512, bias=True)
-- torch.float16
-transformer.resblocks.6.ln_1  :  LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-- torch.float32
-transformer.resblocks.6.mlp.c_fc  :  Linear(in_features=512, out_features=2048, bias=True)
-- torch.float16
-transformer.resblocks.6.mlp.c_proj  :  Linear(in_features=2048, out_features=512, bias=True)
-- torch.float16
-transformer.resblocks.6.ln_2  :  LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-- torch.float32
-transformer.resblocks.7.attn.out_proj  :  NonDynamicallyQuantizableLinear(in_features=512, out_features=512, bias=True)
-- torch.float16
-transformer.resblocks.7.ln_1  :  LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-- torch.float32
-transformer.resblocks.7.mlp.c_fc  :  Linear(in_features=512, out_features=2048, bias=True)
-- torch.float16
-transformer.resblocks.7.mlp.c_proj  :  Linear(in_features=2048, out_features=512, bias=True)
-- torch.float16
-transformer.resblocks.7.ln_2  :  LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-- torch.float32
-transformer.resblocks.8.attn.out_proj  :  NonDynamicallyQuantizableLinear(in_features=512, out_features=512, bias=True)
-- torch.float16
-transformer.resblocks.8.ln_1  :  LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-- torch.float32
-transformer.resblocks.8.mlp.c_fc  :  Linear(in_features=512, out_features=2048, bias=True)
-- torch.float16
-transformer.resblocks.8.mlp.c_proj  :  Linear(in_features=2048, out_features=512, bias=True)
-- torch.float16
-transformer.resblocks.8.ln_2  :  LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-- torch.float32
-transformer.resblocks.9.attn.out_proj  :  NonDynamicallyQuantizableLinear(in_features=512, out_features=512, bias=True)
-- torch.float16
-transformer.resblocks.9.ln_1  :  LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-- torch.float32
-transformer.resblocks.9.mlp.c_fc  :  Linear(in_features=512, out_features=2048, bias=True)
-- torch.float16
-transformer.resblocks.9.mlp.c_proj  :  Linear(in_features=2048, out_features=512, bias=True)
-- torch.float16
-transformer.resblocks.9.ln_2  :  LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-- torch.float32
-transformer.resblocks.10.attn.out_proj  :  NonDynamicallyQuantizableLinear(in_features=512, out_features=512, bias=True)
-- torch.float16
-transformer.resblocks.10.ln_1  :  LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-- torch.float32
-transformer.resblocks.10.mlp.c_fc  :  Linear(in_features=512, out_features=2048, bias=True)
-- torch.float16
-transformer.resblocks.10.mlp.c_proj  :  Linear(in_features=2048, out_features=512, bias=True)
-- torch.float16
-transformer.resblocks.10.ln_2  :  LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-- torch.float32
-transformer.resblocks.11.attn.out_proj  :  NonDynamicallyQuantizableLinear(in_features=512, out_features=512, bias=True)
-- torch.float16
-transformer.resblocks.11.ln_1  :  LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-- torch.float32
-transformer.resblocks.11.mlp.c_fc  :  Linear(in_features=512, out_features=2048, bias=True)
-- torch.float16
-transformer.resblocks.11.mlp.c_proj  :  Linear(in_features=2048, out_features=512, bias=True)
-- torch.float16
-transformer.resblocks.11.ln_2  :  LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-- torch.float32
-token_embedding  :  Embedding(49408, 512)
-- torch.float32
-ln_final  :  LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-- torch.float32
-model=model=model=model=model=model=model=model=model=model=model=model=model=model=model=model=model=model=model=model=
-CLIP(
-  (visual): ResNet(
-    (conv1): Conv2d(3, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
-    (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-    (relu): ReLU(inplace=True)
-    (maxpool): MaxPool2d(kernel_size=3, stride=2, padding=1, dilation=1, ceil_mode=False)
-    (layer1): Sequential(
-      (0): Bottleneck(
-        (conv1): Conv2d(64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
-        (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-        (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (conv3): Conv2d(64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
-        (bn3): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (relu): ReLU(inplace=True)
-        (downsample): Sequential(
-          (0): Conv2d(64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
-          (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        )
-      )
-      (1): Bottleneck(
-        (conv1): Conv2d(256, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
-        (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-        (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (conv3): Conv2d(64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
-        (bn3): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (relu): ReLU(inplace=True)
-      )
-      (2): Bottleneck(
-        (conv1): Conv2d(256, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
-        (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-        (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (conv3): Conv2d(64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
-        (bn3): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (relu): ReLU(inplace=True)
-      )
-    )
-    (layer2): Sequential(
-      (0): Bottleneck(
-        (conv1): Conv2d(256, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
-        (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
-        (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (conv3): Conv2d(128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
-        (bn3): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (relu): ReLU(inplace=True)
-        (downsample): Sequential(
-          (0): Conv2d(256, 512, kernel_size=(1, 1), stride=(2, 2), bias=False)
-          (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        )
-      )
-      (1): Bottleneck(
-        (conv1): Conv2d(512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
-        (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-        (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (conv3): Conv2d(128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
-        (bn3): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (relu): ReLU(inplace=True)
-      )
-      (2): Bottleneck(
-        (conv1): Conv2d(512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
-        (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-        (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (conv3): Conv2d(128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
-        (bn3): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (relu): ReLU(inplace=True)
-      )
-      (3): Bottleneck(
-        (conv1): Conv2d(512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
-        (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-        (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (conv3): Conv2d(128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
-        (bn3): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (relu): ReLU(inplace=True)
-      )
-    )
-    (layer3): Sequential(
-      (0): Bottleneck(
-        (conv1): Conv2d(512, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
-        (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
-        (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
-        (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (relu): ReLU(inplace=True)
-        (downsample): Sequential(
-          (0): Conv2d(512, 1024, kernel_size=(1, 1), stride=(2, 2), bias=False)
-          (1): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        )
-      )
-      (1): Bottleneck(
-        (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
-        (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-        (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
-        (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (relu): ReLU(inplace=True)
-      )
-      (2): Bottleneck(
-        (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
-        (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-        (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
-        (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (relu): ReLU(inplace=True)
-      )
-      (3): Bottleneck(
-        (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
-        (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-        (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
-        (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (relu): ReLU(inplace=True)
-      )
-      (4): Bottleneck(
-        (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
-        (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-        (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
-        (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (relu): ReLU(inplace=True)
-      )
-      (5): Bottleneck(
-        (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
-        (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-        (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
-        (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (relu): ReLU(inplace=True)
-      )
-    )
-    (layer4): Sequential(
-      (0): Bottleneck(
-        (conv1): Conv2d(1024, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
-        (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
-        (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (conv3): Conv2d(512, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False)
-        (bn3): BatchNorm2d(2048, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (relu): ReLU(inplace=True)
-        (downsample): Sequential(
-          (0): Conv2d(1024, 2048, kernel_size=(1, 1), stride=(2, 2), bias=False)
-          (1): BatchNorm2d(2048, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        )
-      )
-      (1): Bottleneck(
-        (conv1): Conv2d(2048, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
-        (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-        (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (conv3): Conv2d(512, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False)
-        (bn3): BatchNorm2d(2048, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (relu): ReLU(inplace=True)
-      )
-      (2): Bottleneck(
-        (conv1): Conv2d(2048, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
-        (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-        (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (conv3): Conv2d(512, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False)
-        (bn3): BatchNorm2d(2048, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-        (relu): ReLU(inplace=True)
-      )
-    )
-    (avgpool): AdaptiveAvgPool2d(output_size=(1, 1))
-    (fc): Linear(in_features=2048, out_features=1024, bias=True)
-  )
-  (transformer): Transformer(
-    (resblocks): Sequential(
-      (0): ResidualAttentionBlock(
-        (attn): MultiheadAttention(
-          (out_proj): NonDynamicallyQuantizableLinear(in_features=512, out_features=512, bias=True)
-        )
-        (ln_1): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-        (drop_path): Identity()
-        (mlp): Sequential(
-          (c_fc): Linear(in_features=512, out_features=2048, bias=True)
-          (gelu): QuickGELU()
-          (c_proj): Linear(in_features=2048, out_features=512, bias=True)
-        )
-        (ln_2): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-      )
-      (1): ResidualAttentionBlock(
-        (attn): MultiheadAttention(
-          (out_proj): NonDynamicallyQuantizableLinear(in_features=512, out_features=512, bias=True)
-        )
-        (ln_1): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-        (drop_path): Identity()
-        (mlp): Sequential(
-          (c_fc): Linear(in_features=512, out_features=2048, bias=True)
-          (gelu): QuickGELU()
-          (c_proj): Linear(in_features=2048, out_features=512, bias=True)
-        )
-        (ln_2): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-      )
-      (2): ResidualAttentionBlock(
-        (attn): MultiheadAttention(
-          (out_proj): NonDynamicallyQuantizableLinear(in_features=512, out_features=512, bias=True)
-        )
-        (ln_1): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-        (drop_path): Identity()
-        (mlp): Sequential(
-          (c_fc): Linear(in_features=512, out_features=2048, bias=True)
-          (gelu): QuickGELU()
-          (c_proj): Linear(in_features=2048, out_features=512, bias=True)
-        )
-        (ln_2): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-      )
-      (3): ResidualAttentionBlock(
-        (attn): MultiheadAttention(
-          (out_proj): NonDynamicallyQuantizableLinear(in_features=512, out_features=512, bias=True)
-        )
-        (ln_1): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-        (drop_path): Identity()
-        (mlp): Sequential(
-          (c_fc): Linear(in_features=512, out_features=2048, bias=True)
-          (gelu): QuickGELU()
-          (c_proj): Linear(in_features=2048, out_features=512, bias=True)
-        )
-        (ln_2): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-      )
-      (4): ResidualAttentionBlock(
-        (attn): MultiheadAttention(
-          (out_proj): NonDynamicallyQuantizableLinear(in_features=512, out_features=512, bias=True)
-        )
-        (ln_1): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-        (drop_path): Identity()
-        (mlp): Sequential(
-          (c_fc): Linear(in_features=512, out_features=2048, bias=True)
-          (gelu): QuickGELU()
-          (c_proj): Linear(in_features=2048, out_features=512, bias=True)
-        )
-        (ln_2): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-      )
-      (5): ResidualAttentionBlock(
-        (attn): MultiheadAttention(
-          (out_proj): NonDynamicallyQuantizableLinear(in_features=512, out_features=512, bias=True)
-        )
-        (ln_1): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-        (drop_path): Identity()
-        (mlp): Sequential(
-          (c_fc): Linear(in_features=512, out_features=2048, bias=True)
-          (gelu): QuickGELU()
-          (c_proj): Linear(in_features=2048, out_features=512, bias=True)
-        )
-        (ln_2): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-      )
-      (6): ResidualAttentionBlock(
-        (attn): MultiheadAttention(
-          (out_proj): NonDynamicallyQuantizableLinear(in_features=512, out_features=512, bias=True)
-        )
-        (ln_1): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-        (drop_path): Identity()
-        (mlp): Sequential(
-          (c_fc): Linear(in_features=512, out_features=2048, bias=True)
-          (gelu): QuickGELU()
-          (c_proj): Linear(in_features=2048, out_features=512, bias=True)
-        )
-        (ln_2): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-      )
-      (7): ResidualAttentionBlock(
-        (attn): MultiheadAttention(
-          (out_proj): NonDynamicallyQuantizableLinear(in_features=512, out_features=512, bias=True)
-        )
-        (ln_1): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-        (drop_path): Identity()
-        (mlp): Sequential(
-          (c_fc): Linear(in_features=512, out_features=2048, bias=True)
-          (gelu): QuickGELU()
-          (c_proj): Linear(in_features=2048, out_features=512, bias=True)
-        )
-        (ln_2): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-      )
-      (8): ResidualAttentionBlock(
-        (attn): MultiheadAttention(
-          (out_proj): NonDynamicallyQuantizableLinear(in_features=512, out_features=512, bias=True)
-        )
-        (ln_1): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-        (drop_path): Identity()
-        (mlp): Sequential(
-          (c_fc): Linear(in_features=512, out_features=2048, bias=True)
-          (gelu): QuickGELU()
-          (c_proj): Linear(in_features=2048, out_features=512, bias=True)
-        )
-        (ln_2): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-      )
-      (9): ResidualAttentionBlock(
-        (attn): MultiheadAttention(
-          (out_proj): NonDynamicallyQuantizableLinear(in_features=512, out_features=512, bias=True)
-        )
-        (ln_1): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-        (drop_path): Identity()
-        (mlp): Sequential(
-          (c_fc): Linear(in_features=512, out_features=2048, bias=True)
-          (gelu): QuickGELU()
-          (c_proj): Linear(in_features=2048, out_features=512, bias=True)
-        )
-        (ln_2): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-      )
-      (10): ResidualAttentionBlock(
-        (attn): MultiheadAttention(
-          (out_proj): NonDynamicallyQuantizableLinear(in_features=512, out_features=512, bias=True)
-        )
-        (ln_1): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-        (drop_path): Identity()
-        (mlp): Sequential(
-          (c_fc): Linear(in_features=512, out_features=2048, bias=True)
-          (gelu): QuickGELU()
-          (c_proj): Linear(in_features=2048, out_features=512, bias=True)
-        )
-        (ln_2): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-      )
-      (11): ResidualAttentionBlock(
-        (attn): MultiheadAttention(
-          (out_proj): NonDynamicallyQuantizableLinear(in_features=512, out_features=512, bias=True)
-        )
-        (ln_1): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-        (drop_path): Identity()
-        (mlp): Sequential(
-          (c_fc): Linear(in_features=512, out_features=2048, bias=True)
-          (gelu): QuickGELU()
-          (c_proj): Linear(in_features=2048, out_features=512, bias=True)
-        )
-        (ln_2): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-      )
-    )
-  )
-  (token_embedding): Embedding(49408, 512)
-  (ln_final): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-  (dropout): Dropout(p=0.0, inplace=False)
-)
-fusion_model=fusion_model=fusion_model=fusion_model=fusion_model=fusion_model=fusion_model=fusion_model=fusion_model=fusion_model=fusion_model=fusion_model=fusion_model=fusion_model=fusion_model=fusion_model=fusion_model=fusion_model=fusion_model=fusion_model=
-DataParallel(
-  (module): visual_prompt(
-    (frame_position_embeddings): Embedding(77, 1024)
-    (transformer): TemporalTransformer(
-      (resblocks): Sequential(
-        (0): ResidualAttentionBlock(
-          (attn): MultiheadAttention(
-            (out_proj): NonDynamicallyQuantizableLinear(in_features=1024, out_features=1024, bias=True)
-          )
-          (ln_1): LayerNorm()
-          (mlp): Sequential(
-            (c_fc): Linear(in_features=1024, out_features=4096, bias=True)
-            (gelu): QuickGELU()
-            (c_proj): Linear(in_features=4096, out_features=1024, bias=True)
-          )
-          (ln_2): LayerNorm()
-        )
-        (1): ResidualAttentionBlock(
-          (attn): MultiheadAttention(
-            (out_proj): NonDynamicallyQuantizableLinear(in_features=1024, out_features=1024, bias=True)
-          )
-          (ln_1): LayerNorm()
-          (mlp): Sequential(
-            (c_fc): Linear(in_features=1024, out_features=4096, bias=True)
-            (gelu): QuickGELU()
-            (c_proj): Linear(in_features=4096, out_features=1024, bias=True)
-          )
-          (ln_2): LayerNorm()
-        )
-        (2): ResidualAttentionBlock(
-          (attn): MultiheadAttention(
-            (out_proj): NonDynamicallyQuantizableLinear(in_features=1024, out_features=1024, bias=True)
-          )
-          (ln_1): LayerNorm()
-          (mlp): Sequential(
-            (c_fc): Linear(in_features=1024, out_features=4096, bias=True)
-            (gelu): QuickGELU()
-            (c_proj): Linear(in_features=4096, out_features=1024, bias=True)
-          )
-          (ln_2): LayerNorm()
-        )
-        (3): ResidualAttentionBlock(
-          (attn): MultiheadAttention(
-            (out_proj): NonDynamicallyQuantizableLinear(in_features=1024, out_features=1024, bias=True)
-          )
-          (ln_1): LayerNorm()
-          (mlp): Sequential(
-            (c_fc): Linear(in_features=1024, out_features=4096, bias=True)
-            (gelu): QuickGELU()
-            (c_proj): Linear(in_features=4096, out_features=1024, bias=True)
-          )
-          (ln_2): LayerNorm()
-        )
-        (4): ResidualAttentionBlock(
-          (attn): MultiheadAttention(
-            (out_proj): NonDynamicallyQuantizableLinear(in_features=1024, out_features=1024, bias=True)
-          )
-          (ln_1): LayerNorm()
-          (mlp): Sequential(
-            (c_fc): Linear(in_features=1024, out_features=4096, bias=True)
-            (gelu): QuickGELU()
-            (c_proj): Linear(in_features=4096, out_features=1024, bias=True)
-          )
-          (ln_2): LayerNorm()
-        )
-        (5): ResidualAttentionBlock(
-          (attn): MultiheadAttention(
-            (out_proj): NonDynamicallyQuantizableLinear(in_features=1024, out_features=1024, bias=True)
-          )
-          (ln_1): LayerNorm()
-          (mlp): Sequential(
-            (c_fc): Linear(in_features=1024, out_features=4096, bias=True)
-            (gelu): QuickGELU()
-            (c_proj): Linear(in_features=4096, out_features=1024, bias=True)
-          )
-          (ln_2): LayerNorm()
-        )
-      )
-    )
-  )
-)
-random_shift:DotMap()
-/home/10501001/anaconda3/envs/ACTION-CLIP/lib/python3.9/site-packages/torch/utils/data/dataloader.py:478: UserWarning: This DataLoader will create 16 worker processes in total. Our suggested max number of worker in current system is 8, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
-  warnings.warn(_create_warning_msg(
-random_shift:DotMap()
-=========using KL Loss=and has temperature and * bz==========
-=========using KL Loss=and has temperature and * bz==========
-5e-06
-5e-06
-5e-05
-AdamW
-positional_embedding: True
-text_projection: True
-logit_scale: True
-visual.conv1.weight: True
-visual.bn1.weight: True
-visual.bn1.bias: True
-visual.layer1.0.conv1.weight: True
-visual.layer1.0.bn1.weight: True
-visual.layer1.0.bn1.bias: True
-visual.layer1.0.conv2.weight: True
-visual.layer1.0.bn2.weight: True
-visual.layer1.0.bn2.bias: True
-visual.layer1.0.conv3.weight: True
-visual.layer1.0.bn3.weight: True
-visual.layer1.0.bn3.bias: True
-visual.layer1.0.downsample.0.weight: True
-visual.layer1.0.downsample.1.weight: True
-visual.layer1.0.downsample.1.bias: True
-visual.layer1.1.conv1.weight: True
-visual.layer1.1.bn1.weight: True
-visual.layer1.1.bn1.bias: True
-visual.layer1.1.conv2.weight: True
-visual.layer1.1.bn2.weight: True
-visual.layer1.1.bn2.bias: True
-visual.layer1.1.conv3.weight: True
-visual.layer1.1.bn3.weight: True
-visual.layer1.1.bn3.bias: True
-visual.layer1.2.conv1.weight: True
-visual.layer1.2.bn1.weight: True
-visual.layer1.2.bn1.bias: True
-visual.layer1.2.conv2.weight: True
-visual.layer1.2.bn2.weight: True
-visual.layer1.2.bn2.bias: True
-visual.layer1.2.conv3.weight: True
-visual.layer1.2.bn3.weight: True
-visual.layer1.2.bn3.bias: True
-visual.layer2.0.conv1.weight: True
-visual.layer2.0.bn1.weight: True
-visual.layer2.0.bn1.bias: True
-visual.layer2.0.conv2.weight: True
-visual.layer2.0.bn2.weight: True
-visual.layer2.0.bn2.bias: True
-visual.layer2.0.conv3.weight: True
-visual.layer2.0.bn3.weight: True
-visual.layer2.0.bn3.bias: True
-visual.layer2.0.downsample.0.weight: True
-visual.layer2.0.downsample.1.weight: True
-visual.layer2.0.downsample.1.bias: True
-visual.layer2.1.conv1.weight: True
-visual.layer2.1.bn1.weight: True
-visual.layer2.1.bn1.bias: True
-visual.layer2.1.conv2.weight: True
-visual.layer2.1.bn2.weight: True
-visual.layer2.1.bn2.bias: True
-visual.layer2.1.conv3.weight: True
-visual.layer2.1.bn3.weight: True
-visual.layer2.1.bn3.bias: True
-visual.layer2.2.conv1.weight: True
-visual.layer2.2.bn1.weight: True
-visual.layer2.2.bn1.bias: True
-visual.layer2.2.conv2.weight: True
-visual.layer2.2.bn2.weight: True
-visual.layer2.2.bn2.bias: True
-visual.layer2.2.conv3.weight: True
-visual.layer2.2.bn3.weight: True
-visual.layer2.2.bn3.bias: True
-visual.layer2.3.conv1.weight: True
-visual.layer2.3.bn1.weight: True
-visual.layer2.3.bn1.bias: True
-visual.layer2.3.conv2.weight: True
-visual.layer2.3.bn2.weight: True
-visual.layer2.3.bn2.bias: True
-visual.layer2.3.conv3.weight: True
-visual.layer2.3.bn3.weight: True
-visual.layer2.3.bn3.bias: True
-visual.layer3.0.conv1.weight: True
-visual.layer3.0.bn1.weight: True
-visual.layer3.0.bn1.bias: True
-visual.layer3.0.conv2.weight: True
-visual.layer3.0.bn2.weight: True
-visual.layer3.0.bn2.bias: True
-visual.layer3.0.conv3.weight: True
-visual.layer3.0.bn3.weight: True
-visual.layer3.0.bn3.bias: True
-visual.layer3.0.downsample.0.weight: True
-visual.layer3.0.downsample.1.weight: True
-visual.layer3.0.downsample.1.bias: True
-visual.layer3.1.conv1.weight: True
-visual.layer3.1.bn1.weight: True
-visual.layer3.1.bn1.bias: True
-visual.layer3.1.conv2.weight: True
-visual.layer3.1.bn2.weight: True
-visual.layer3.1.bn2.bias: True
-visual.layer3.1.conv3.weight: True
-visual.layer3.1.bn3.weight: True
-visual.layer3.1.bn3.bias: True
-visual.layer3.2.conv1.weight: True
-visual.layer3.2.bn1.weight: True
-visual.layer3.2.bn1.bias: True
-visual.layer3.2.conv2.weight: True
-visual.layer3.2.bn2.weight: True
-visual.layer3.2.bn2.bias: True
-visual.layer3.2.conv3.weight: True
-visual.layer3.2.bn3.weight: True
-visual.layer3.2.bn3.bias: True
-visual.layer3.3.conv1.weight: True
-visual.layer3.3.bn1.weight: True
-visual.layer3.3.bn1.bias: True
-visual.layer3.3.conv2.weight: True
-visual.layer3.3.bn2.weight: True
-visual.layer3.3.bn2.bias: True
-visual.layer3.3.conv3.weight: True
-visual.layer3.3.bn3.weight: True
-visual.layer3.3.bn3.bias: True
-visual.layer3.4.conv1.weight: True
-visual.layer3.4.bn1.weight: True
-visual.layer3.4.bn1.bias: True
-visual.layer3.4.conv2.weight: True
-visual.layer3.4.bn2.weight: True
-visual.layer3.4.bn2.bias: True
-visual.layer3.4.conv3.weight: True
-visual.layer3.4.bn3.weight: True
-visual.layer3.4.bn3.bias: True
-visual.layer3.5.conv1.weight: True
-visual.layer3.5.bn1.weight: True
-visual.layer3.5.bn1.bias: True
-visual.layer3.5.conv2.weight: True
-visual.layer3.5.bn2.weight: True
-visual.layer3.5.bn2.bias: True
-visual.layer3.5.conv3.weight: True
-visual.layer3.5.bn3.weight: True
-visual.layer3.5.bn3.bias: True
-visual.layer4.0.conv1.weight: True
-visual.layer4.0.bn1.weight: True
-visual.layer4.0.bn1.bias: True
-visual.layer4.0.conv2.weight: True
-visual.layer4.0.bn2.weight: True
-visual.layer4.0.bn2.bias: True
-visual.layer4.0.conv3.weight: True
-visual.layer4.0.bn3.weight: True
-visual.layer4.0.bn3.bias: True
-visual.layer4.0.downsample.0.weight: True
-visual.layer4.0.downsample.1.weight: True
-visual.layer4.0.downsample.1.bias: True
-visual.layer4.1.conv1.weight: True
-visual.layer4.1.bn1.weight: True
-visual.layer4.1.bn1.bias: True
-visual.layer4.1.conv2.weight: True
-visual.layer4.1.bn2.weight: True
-visual.layer4.1.bn2.bias: True
-visual.layer4.1.conv3.weight: True
-visual.layer4.1.bn3.weight: True
-visual.layer4.1.bn3.bias: True
-visual.layer4.2.conv1.weight: True
-visual.layer4.2.bn1.weight: True
-visual.layer4.2.bn1.bias: True
-visual.layer4.2.conv2.weight: True
-visual.layer4.2.bn2.weight: True
-visual.layer4.2.bn2.bias: True
-visual.layer4.2.conv3.weight: True
-visual.layer4.2.bn3.weight: True
-visual.layer4.2.bn3.bias: True
-visual.fc.weight: True
-visual.fc.bias: True
-transformer.resblocks.0.attn.in_proj_weight: True
-transformer.resblocks.0.attn.in_proj_bias: True
-transformer.resblocks.0.attn.out_proj.weight: True
-transformer.resblocks.0.attn.out_proj.bias: True
-transformer.resblocks.0.ln_1.weight: True
-transformer.resblocks.0.ln_1.bias: True
-transformer.resblocks.0.mlp.c_fc.weight: True
-transformer.resblocks.0.mlp.c_fc.bias: True
-transformer.resblocks.0.mlp.c_proj.weight: True
-transformer.resblocks.0.mlp.c_proj.bias: True
-transformer.resblocks.0.ln_2.weight: True
-transformer.resblocks.0.ln_2.bias: True
-transformer.resblocks.1.attn.in_proj_weight: True
-transformer.resblocks.1.attn.in_proj_bias: True
-transformer.resblocks.1.attn.out_proj.weight: True
-transformer.resblocks.1.attn.out_proj.bias: True
-transformer.resblocks.1.ln_1.weight: True
-transformer.resblocks.1.ln_1.bias: True
-transformer.resblocks.1.mlp.c_fc.weight: True
-transformer.resblocks.1.mlp.c_fc.bias: True
-transformer.resblocks.1.mlp.c_proj.weight: True
-transformer.resblocks.1.mlp.c_proj.bias: True
-transformer.resblocks.1.ln_2.weight: True
-transformer.resblocks.1.ln_2.bias: True
-transformer.resblocks.2.attn.in_proj_weight: True
-transformer.resblocks.2.attn.in_proj_bias: True
-transformer.resblocks.2.attn.out_proj.weight: True
-transformer.resblocks.2.attn.out_proj.bias: True
-transformer.resblocks.2.ln_1.weight: True
-transformer.resblocks.2.ln_1.bias: True
-transformer.resblocks.2.mlp.c_fc.weight: True
-transformer.resblocks.2.mlp.c_fc.bias: True
-transformer.resblocks.2.mlp.c_proj.weight: True
-transformer.resblocks.2.mlp.c_proj.bias: True
-transformer.resblocks.2.ln_2.weight: True
-transformer.resblocks.2.ln_2.bias: True
-transformer.resblocks.3.attn.in_proj_weight: True
-transformer.resblocks.3.attn.in_proj_bias: True
-transformer.resblocks.3.attn.out_proj.weight: True
-transformer.resblocks.3.attn.out_proj.bias: True
-transformer.resblocks.3.ln_1.weight: True
-transformer.resblocks.3.ln_1.bias: True
-transformer.resblocks.3.mlp.c_fc.weight: True
-transformer.resblocks.3.mlp.c_fc.bias: True
-transformer.resblocks.3.mlp.c_proj.weight: True
-transformer.resblocks.3.mlp.c_proj.bias: True
-transformer.resblocks.3.ln_2.weight: True
-transformer.resblocks.3.ln_2.bias: True
-transformer.resblocks.4.attn.in_proj_weight: True
-transformer.resblocks.4.attn.in_proj_bias: True
-transformer.resblocks.4.attn.out_proj.weight: True
-transformer.resblocks.4.attn.out_proj.bias: True
-transformer.resblocks.4.ln_1.weight: True
-transformer.resblocks.4.ln_1.bias: True
-transformer.resblocks.4.mlp.c_fc.weight: True
-transformer.resblocks.4.mlp.c_fc.bias: True
-transformer.resblocks.4.mlp.c_proj.weight: True
-transformer.resblocks.4.mlp.c_proj.bias: True
-transformer.resblocks.4.ln_2.weight: True
-transformer.resblocks.4.ln_2.bias: True
-transformer.resblocks.5.attn.in_proj_weight: True
-transformer.resblocks.5.attn.in_proj_bias: True
-transformer.resblocks.5.attn.out_proj.weight: True
-transformer.resblocks.5.attn.out_proj.bias: True
-transformer.resblocks.5.ln_1.weight: True
-transformer.resblocks.5.ln_1.bias: True
-transformer.resblocks.5.mlp.c_fc.weight: True
-transformer.resblocks.5.mlp.c_fc.bias: True
-transformer.resblocks.5.mlp.c_proj.weight: True
-transformer.resblocks.5.mlp.c_proj.bias: True
-transformer.resblocks.5.ln_2.weight: True
-transformer.resblocks.5.ln_2.bias: True
-transformer.resblocks.6.attn.in_proj_weight: True
-transformer.resblocks.6.attn.in_proj_bias: True
-transformer.resblocks.6.attn.out_proj.weight: True
-transformer.resblocks.6.attn.out_proj.bias: True
-transformer.resblocks.6.ln_1.weight: True
-transformer.resblocks.6.ln_1.bias: True
-transformer.resblocks.6.mlp.c_fc.weight: True
-transformer.resblocks.6.mlp.c_fc.bias: True
-transformer.resblocks.6.mlp.c_proj.weight: True
-transformer.resblocks.6.mlp.c_proj.bias: True
-transformer.resblocks.6.ln_2.weight: True
-transformer.resblocks.6.ln_2.bias: True
-transformer.resblocks.7.attn.in_proj_weight: True
-transformer.resblocks.7.attn.in_proj_bias: True
-transformer.resblocks.7.attn.out_proj.weight: True
-transformer.resblocks.7.attn.out_proj.bias: True
-transformer.resblocks.7.ln_1.weight: True
-transformer.resblocks.7.ln_1.bias: True
-transformer.resblocks.7.mlp.c_fc.weight: True
-transformer.resblocks.7.mlp.c_fc.bias: True
-transformer.resblocks.7.mlp.c_proj.weight: True
-transformer.resblocks.7.mlp.c_proj.bias: True
-transformer.resblocks.7.ln_2.weight: True
-transformer.resblocks.7.ln_2.bias: True
-transformer.resblocks.8.attn.in_proj_weight: True
-transformer.resblocks.8.attn.in_proj_bias: True
-transformer.resblocks.8.attn.out_proj.weight: True
-transformer.resblocks.8.attn.out_proj.bias: True
-transformer.resblocks.8.ln_1.weight: True
-transformer.resblocks.8.ln_1.bias: True
-transformer.resblocks.8.mlp.c_fc.weight: True
-transformer.resblocks.8.mlp.c_fc.bias: True
-transformer.resblocks.8.mlp.c_proj.weight: True
-transformer.resblocks.8.mlp.c_proj.bias: True
-transformer.resblocks.8.ln_2.weight: True
-transformer.resblocks.8.ln_2.bias: True
-transformer.resblocks.9.attn.in_proj_weight: True
-transformer.resblocks.9.attn.in_proj_bias: True
-transformer.resblocks.9.attn.out_proj.weight: True
-transformer.resblocks.9.attn.out_proj.bias: True
-transformer.resblocks.9.ln_1.weight: True
-transformer.resblocks.9.ln_1.bias: True
-transformer.resblocks.9.mlp.c_fc.weight: True
-transformer.resblocks.9.mlp.c_fc.bias: True
-transformer.resblocks.9.mlp.c_proj.weight: True
-transformer.resblocks.9.mlp.c_proj.bias: True
-transformer.resblocks.9.ln_2.weight: True
-transformer.resblocks.9.ln_2.bias: True
-transformer.resblocks.10.attn.in_proj_weight: True
-transformer.resblocks.10.attn.in_proj_bias: True
-transformer.resblocks.10.attn.out_proj.weight: True
-transformer.resblocks.10.attn.out_proj.bias: True
-transformer.resblocks.10.ln_1.weight: True
-transformer.resblocks.10.ln_1.bias: True
-transformer.resblocks.10.mlp.c_fc.weight: True
-transformer.resblocks.10.mlp.c_fc.bias: True
-transformer.resblocks.10.mlp.c_proj.weight: True
-transformer.resblocks.10.mlp.c_proj.bias: True
-transformer.resblocks.10.ln_2.weight: True
-transformer.resblocks.10.ln_2.bias: True
-transformer.resblocks.11.attn.in_proj_weight: True
-transformer.resblocks.11.attn.in_proj_bias: True
-transformer.resblocks.11.attn.out_proj.weight: True
-transformer.resblocks.11.attn.out_proj.bias: True
-transformer.resblocks.11.ln_1.weight: True
-transformer.resblocks.11.ln_1.bias: True
-transformer.resblocks.11.mlp.c_fc.weight: True
-transformer.resblocks.11.mlp.c_fc.bias: True
-transformer.resblocks.11.mlp.c_proj.weight: True
-transformer.resblocks.11.mlp.c_proj.bias: True
-transformer.resblocks.11.ln_2.weight: True
-transformer.resblocks.11.ln_2.bias: True
-token_embedding.weight: True
-ln_final.weight: True
-ln_final.bias: True
-  0% 0/14661 [00:00<?, ?it/s]/home/10501001/anaconda3/envs/ACTION-CLIP/lib/python3.9/site-packages/torch/optim/lr_scheduler.py:129: UserWarning: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
-  warnings.warn("Detected call of `lr_scheduler.step()` before `optimizer.step()`. "
-/home/10501001/anaconda3/envs/ACTION-CLIP/lib/python3.9/site-packages/torch/optim/lr_scheduler.py:154: UserWarning: The epoch parameter in `scheduler.step()` was not necessary and is being deprecated where possible. Please use `scheduler.step()` to step the scheduler. During the deprecation, if epoch is different from None, the closed form is used instead of the new chainable form, where available. Please open an issue if you are unable to replicate your use case: https://github.com/pytorch/pytorch/issues/new/choose.
-  warnings.warn(EPOCH_DEPRECATION_WARNING, UserWarning)
-image_embedding size:  torch.Size([16, 1024])
-text_embedding size:  torch.Size([16, 1024])
-/home/10501001/anaconda3/envs/ACTION-CLIP/lib/python3.9/site-packages/torch/nn/functional.py:2741: UserWarning: reduction: 'mean' divides the total loss by both the batch size and the support size.'batchmean' divides only by the batch size, and aligns with the KL div math definition.'mean' will be changed to behave the same as 'batchmean' in the next major release.
-  warnings.warn(
-  0% 1/14661 [00:12<49:39:46, 12.20s/it]  0% 2/14661 [00:12<21:29:31,  5.28s/it]  0% 3/14661 [00:13<12:24:55,  3.05s/it]  0% 4/14661 [00:13<8:31:12,  2.09s/it]   0% 5/14661 [00:14<6:04:42,  1.49s/it]  0% 6/14661 [00:14<4:37:44,  1.14s/it]  0% 7/14661 [00:14<3:39:44,  1.11it/s]  0% 8/14661 [00:15<3:02:32,  1.34it/s]  0% 9/14661 [00:15<2:38:00,  1.55it/s]  0% 10/14661 [00:16<2:20:50,  1.73it/s]  0% 11/14661 [00:16<2:08:04,  1.91it/s]  0% 12/14661 [00:17<1:59:03,  2.05it/s]  0% 13/14661 [00:17<1:54:31,  2.13it/s]  0% 14/14661 [00:17<1:50:53,  2.20it/s]  0% 15/14661 [00:18<1:47:22,  2.27it/s]  0% 16/14661 [00:18<1:45:01,  2.32it/s]  0% 17/14661 [00:19<1:42:34,  2.38it/s]  0% 18/14661 [00:19<1:42:02,  2.39it/s]  0% 19/14661 [00:19<1:41:39,  2.40it/s]  0% 20/14661 [00:20<1:41:03,  2.41it/s]  0% 21/14661 [00:20<1:41:00,  2.42it/s]  0% 22/14661 [00:21<1:41:25,  2.41it/s]  0% 23/14661 [00:21<1:42:09,  2.39it/s]  0% 24/14661 [00:21<1:41:00,  2.42it/s]  0% 25/14661 [00:22<1:40:26,  2.43it/s]  0% 26/14661 [00:22<1:40:07,  2.44it/s]  0% 27/14661 [00:23<1:38:43,  2.47it/s]  0% 28/14661 [00:23<1:41:15,  2.41it/s]  0% 29/14661 [00:24<1:42:52,  2.37it/s]  0% 30/14661 [00:24<1:45:40,  2.31it/s]  0% 31/14661 [00:24<1:45:52,  2.30it/s]  0% 32/14661 [00:25<1:44:19,  2.34it/s]  0% 33/14661 [00:25<1:45:23,  2.31it/s]  0% 34/14661 [00:26<1:44:08,  2.34it/s]  0% 35/14661 [00:26<1:42:42,  2.37it/s]  0% 36/14661 [00:27<1:41:59,  2.39it/s]  0% 37/14661 [00:27<1:45:05,  2.32it/s]  0% 38/14661 [00:27<1:44:19,  2.34it/s]  0% 39/14661 [00:28<1:45:04,  2.32it/s]  0% 40/14661 [00:28<1:45:51,  2.30it/s]  0% 41/14661 [00:29<1:44:38,  2.33it/s]  0% 42/14661 [00:29<1:43:03,  2.36it/s]  0% 43/14661 [00:30<1:41:36,  2.40it/s]  0% 44/14661 [00:30<1:42:14,  2.38it/s]  0% 45/14661 [00:30<1:44:10,  2.34it/s]  0% 46/14661 [00:31<1:43:05,  2.36it/s]  0% 47/14661 [00:31<1:42:00,  2.39it/s]  0% 48/14661 [00:32<1:40:23,  2.43it/s]  0% 49/14661 [00:32<1:43:49,  2.35it/s]  0% 50/14661 [00:33<1:49:27,  2.22it/s]  0% 51/14661 [00:33<1:45:34,  2.31it/s]  0% 52/14661 [00:33<1:44:12,  2.34it/s]  0% 53/14661 [00:34<1:42:35,  2.37it/s]  0% 54/14661 [00:34<1:41:38,  2.40it/s]  0% 55/14661 [00:35<1:43:25,  2.35it/s]  0% 56/14661 [00:35<1:44:29,  2.33it/s]  0% 57/14661 [00:35<1:42:00,  2.39it/s]  0% 58/14661 [00:36<1:41:22,  2.40it/s]  0% 59/14661 [00:36<1:41:45,  2.39it/s]  0% 60/14661 [00:37<1:43:28,  2.35it/s]  0% 61/14661 [00:37<1:43:58,  2.34it/s]  0% 62/14661 [00:38<1:47:23,  2.27it/s]  0% 63/14661 [00:38<1:45:12,  2.31it/s]  0% 64/14661 [00:38<1:42:55,  2.36it/s]  0% 65/14661 [00:39<1:43:06,  2.36it/s]  0% 66/14661 [00:39<1:47:07,  2.27it/s]  0% 67/14661 [00:40<1:44:32,  2.33it/s]  0% 68/14661 [00:40<1:43:26,  2.35it/s]  0% 69/14661 [00:41<1:43:53,  2.34it/s]  0% 70/14661 [00:41<1:42:58,  2.36it/s]  0% 71/14661 [00:41<1:43:30,  2.35it/s]  0% 72/14661 [00:42<1:41:02,  2.41it/s]  0% 73/14661 [00:42<1:40:47,  2.41it/s]  1% 74/14661 [00:43<1:40:00,  2.43it/s]  1% 75/14661 [00:43<1:42:30,  2.37it/s]  1% 76/14661 [00:44<1:43:05,  2.36it/s]  1% 77/14661 [00:44<1:41:36,  2.39it/s]  1% 78/14661 [00:44<1:42:08,  2.38it/s]  1% 79/14661 [00:45<1:40:48,  2.41it/s]  1% 80/14661 [00:45<1:43:09,  2.36it/s]  1% 81/14661 [00:46<1:44:22,  2.33it/s]  1% 82/14661 [00:46<1:43:41,  2.34it/s]  1% 83/14661 [00:47<1:44:02,  2.34it/s]  1% 84/14661 [00:47<1:44:18,  2.33it/s]  1% 85/14661 [00:47<1:42:28,  2.37it/s]  1% 86/14661 [00:48<1:56:25,  2.09it/s]  1% 87/14661 [00:48<1:51:47,  2.17it/s]  1% 88/14661 [00:49<1:50:27,  2.20it/s]  1% 89/14661 [00:49<1:46:44,  2.28it/s]  1% 90/14661 [00:50<1:45:01,  2.31it/s]  1% 91/14661 [00:50<1:42:46,  2.36it/s]  1% 92/14661 [00:50<1:40:57,  2.41it/s]  1% 93/14661 [00:51<1:40:11,  2.42it/s]  1% 94/14661 [00:51<1:39:52,  2.43it/s]  1% 95/14661 [00:52<1:38:52,  2.46it/s]  1% 96/14661 [00:52<1:37:43,  2.48it/s]  1% 97/14661 [00:52<1:37:58,  2.48it/s]  1% 98/14661 [00:53<1:39:52,  2.43it/s]  1% 99/14661 [00:53<1:39:44,  2.43it/s]  1% 100/14661 [00:54<1:40:43,  2.41it/s]  1% 101/14661 [00:54<1:41:45,  2.38it/s]  1% 102/14661 [00:55<1:43:32,  2.34it/s]  1% 103/14661 [00:55<1:43:08,  2.35it/s]  1% 104/14661 [00:55<1:43:21,  2.35it/s]  1% 105/14661 [00:56<1:42:21,  2.37it/s]  1% 106/14661 [00:56<1:40:53,  2.40it/s]  1% 107/14661 [00:57<1:40:52,  2.40it/s]  1% 108/14661 [00:57<1:41:29,  2.39it/s]  1% 109/14661 [00:58<1:42:35,  2.36it/s]  1% 110/14661 [00:58<1:42:31,  2.37it/s]  1% 111/14661 [00:58<1:42:18,  2.37it/s]  1% 112/14661 [00:59<1:43:17,  2.35it/s]  1% 113/14661 [00:59<1:44:10,  2.33it/s]  1% 114/14661 [01:00<1:43:15,  2.35it/s]  1% 115/14661 [01:00<1:44:07,  2.33it/s]  1% 116/14661 [01:01<1:46:32,  2.28it/s]  1% 117/14661 [01:01<1:43:49,  2.33it/s]  1% 118/14661 [01:01<1:41:36,  2.39it/s]  1% 119/14661 [01:02<1:42:13,  2.37it/s]  1% 120/14661 [01:02<1:43:03,  2.35it/s]  1% 121/14661 [01:03<1:43:40,  2.34it/s]  1% 122/14661 [01:03<1:43:54,  2.33it/s]  1% 123/14661 [01:04<1:42:36,  2.36it/s]  1% 124/14661 [01:04<1:42:59,  2.35it/s]  1% 125/14661 [01:04<1:42:23,  2.37it/s]  1% 126/14661 [01:05<1:43:12,  2.35it/s]  1% 127/14661 [01:05<1:41:33,  2.39it/s]  1% 128/14661 [01:06<1:40:49,  2.40it/s]  1% 129/14661 [01:06<1:40:13,  2.42it/s]  1% 130/14661 [01:06<1:41:01,  2.40it/s]  1% 131/14661 [01:07<1:41:30,  2.39it/s]  1% 132/14661 [01:07<1:42:07,  2.37it/s]  1% 133/14661 [01:08<1:40:57,  2.40it/s]  1% 134/14661 [01:08<1:41:38,  2.38it/s]  1% 135/14661 [01:09<1:41:35,  2.38it/s]  1% 136/14661 [01:09<1:41:15,  2.39it/s]  1% 137/14661 [01:09<1:41:16,  2.39it/s]  1% 138/14661 [01:10<1:41:59,  2.37it/s]  1% 139/14661 [01:10<1:41:51,  2.38it/s]  1% 140/14661 [01:11<1:41:48,  2.38it/s]  1% 141/14661 [01:11<1:40:53,  2.40it/s]  1% 142/14661 [01:11<1:40:08,  2.42it/s]  1% 143/14661 [01:12<1:41:10,  2.39it/s]  1% 144/14661 [01:12<1:40:30,  2.41it/s]  1% 145/14661 [01:13<1:41:42,  2.38it/s]  1% 146/14661 [01:13<1:39:23,  2.43it/s]  1% 147/14661 [01:14<1:41:35,  2.38it/s]  1% 148/14661 [01:14<1:39:52,  2.42it/s]  1% 149/14661 [01:14<1:38:13,  2.46it/s]  1% 150/14661 [01:15<1:40:45,  2.40it/s]  1% 151/14661 [01:15<1:41:28,  2.38it/s]  1% 152/14661 [01:16<1:40:06,  2.42it/s]  1% 153/14661 [01:16<1:39:29,  2.43it/s]  1% 154/14661 [01:16<1:42:04,  2.37it/s]  1% 155/14661 [01:17<1:44:18,  2.32it/s]  1% 156/14661 [01:17<1:42:56,  2.35it/s]  1% 157/14661 [01:18<1:40:39,  2.40it/s]  1% 158/14661 [01:18<1:40:13,  2.41it/s]  1% 159/14661 [01:19<1:39:02,  2.44it/s]  1% 160/14661 [01:19<1:38:49,  2.45it/s]  1% 161/14661 [01:19<1:37:59,  2.47it/s]  1% 162/14661 [01:20<1:39:20,  2.43it/s]  1% 163/14661 [01:20<1:40:47,  2.40it/s]  1% 164/14661 [01:21<1:38:59,  2.44it/s]  1% 165/14661 [01:21<1:39:39,  2.42it/s]  1% 166/14661 [01:21<1:41:01,  2.39it/s]  1% 167/14661 [01:22<1:41:29,  2.38it/s]  1% 168/14661 [01:22<1:40:53,  2.39it/s]  1% 169/14661 [01:23<1:41:24,  2.38it/s]  1% 170/14661 [01:23<1:42:29,  2.36it/s]  1% 171/14661 [01:24<1:42:00,  2.37it/s]  1% 172/14661 [01:24<1:43:40,  2.33it/s]  1% 173/14661 [01:25<1:58:37,  2.04it/s]  1% 174/14661 [01:25<1:53:11,  2.13it/s]  1% 175/14661 [01:25<1:48:53,  2.22it/s]  1% 176/14661 [01:26<1:45:28,  2.29it/s]  1% 177/14661 [01:26<1:43:08,  2.34it/s]  1% 178/14661 [01:27<1:41:58,  2.37it/s]  1% 179/14661 [01:27<1:40:49,  2.39it/s]  1% 180/14661 [01:28<1:41:58,  2.37it/s]  1% 181/14661 [01:28<1:40:39,  2.40it/s]  1% 182/14661 [01:28<1:42:16,  2.36it/s]  1% 183/14661 [01:29<1:40:05,  2.41it/s]  1% 184/14661 [01:29<1:38:35,  2.45it/s]  1% 185/14661 [01:30<1:39:18,  2.43it/s]  1% 186/14661 [01:30<1:39:34,  2.42it/s]  1% 187/14661 [01:30<1:40:22,  2.40it/s]  1% 188/14661 [01:31<1:42:38,  2.35it/s]  1% 189/14661 [01:31<1:44:24,  2.31it/s]  1% 190/14661 [01:32<1:42:18,  2.36it/s]  1% 191/14661 [01:32<1:41:21,  2.38it/s]  1% 192/14661 [01:33<1:40:04,  2.41it/s]  1% 193/14661 [01:33<1:39:07,  2.43it/s]  1% 194/14661 [01:33<1:39:46,  2.42it/s]  1% 195/14661 [01:34<1:38:52,  2.44it/s]  1% 196/14661 [01:34<1:37:43,  2.47it/s]  1% 197/14661 [01:35<1:38:22,  2.45it/s]  1% 198/14661 [01:35<1:37:53,  2.46it/s]  1% 199/14661 [01:35<1:37:34,  2.47it/s]  1% 200/14661 [01:36<1:38:15,  2.45it/s]  1% 201/14661 [01:36<1:39:27,  2.42it/s]  1% 202/14661 [01:37<1:39:16,  2.43it/s]  1% 203/14661 [01:37<1:38:04,  2.46it/s]  1% 204/14661 [01:37<1:38:26,  2.45it/s]  1% 205/14661 [01:38<1:38:44,  2.44it/s]  1% 206/14661 [01:38<1:39:30,  2.42it/s]  1% 207/14661 [01:39<1:38:51,  2.44it/s]  1% 208/14661 [01:39<1:39:20,  2.42it/s]  1% 209/14661 [01:39<1:39:37,  2.42it/s]  1% 210/14661 [01:40<1:40:14,  2.40it/s]  1% 211/14661 [01:40<1:41:52,  2.36it/s]  1% 212/14661 [01:41<1:39:30,  2.42it/s]  1% 213/14661 [01:41<1:39:09,  2.43it/s]  1% 214/14661 [01:42<1:39:17,  2.43it/s]  1% 215/14661 [01:42<1:39:09,  2.43it/s]  1% 216/14661 [01:42<1:38:26,  2.45it/s]  1% 217/14661 [01:43<1:38:00,  2.46it/s]  1% 218/14661 [01:43<1:38:13,  2.45it/s]  1% 219/14661 [01:44<1:37:44,  2.46it/s]  2% 220/14661 [01:44<1:37:53,  2.46it/s]  2% 221/14661 [01:44<1:39:15,  2.42it/s]  2% 222/14661 [01:45<1:39:04,  2.43it/s]  2% 223/14661 [01:45<1:39:40,  2.41it/s]  2% 224/14661 [01:46<1:38:20,  2.45it/s]  2% 225/14661 [01:46<1:38:37,  2.44it/s]  2% 226/14661 [01:46<1:38:35,  2.44it/s]  2% 227/14661 [01:47<1:39:35,  2.42it/s]  2% 228/14661 [01:47<1:40:47,  2.39it/s]  2% 229/14661 [01:48<1:42:08,  2.35it/s]  2% 230/14661 [01:48<1:40:47,  2.39it/s]  2% 231/14661 [01:49<1:39:01,  2.43it/s]  2% 232/14661 [01:49<1:40:23,  2.40it/s]  2% 233/14661 [01:49<1:40:43,  2.39it/s]  2% 234/14661 [01:50<1:40:59,  2.38it/s]  2% 235/14661 [01:50<1:41:21,  2.37it/s]  2% 236/14661 [01:51<1:44:56,  2.29it/s]  2% 237/14661 [01:51<1:42:34,  2.34it/s]  2% 238/14661 [01:52<1:41:40,  2.36it/s]  2% 239/14661 [01:52<1:45:15,  2.28it/s]  2% 240/14661 [01:52<1:44:42,  2.30it/s]  2% 241/14661 [01:53<1:43:12,  2.33it/s]  2% 242/14661 [01:53<1:41:14,  2.37it/s]  2% 243/14661 [01:54<1:39:49,  2.41it/s]  2% 244/14661 [01:54<1:40:04,  2.40it/s]  2% 245/14661 [01:55<1:39:55,  2.40it/s]  2% 246/14661 [01:55<1:39:53,  2.41it/s]  2% 247/14661 [01:55<1:38:50,  2.43it/s]  2% 248/14661 [01:56<1:40:31,  2.39it/s]  2% 249/14661 [01:56<1:39:49,  2.41it/s]  2% 250/14661 [01:57<1:39:54,  2.40it/s]  2% 251/14661 [01:57<1:39:52,  2.40it/s]  2% 252/14661 [01:57<1:39:32,  2.41it/s]  2% 253/14661 [01:58<1:39:50,  2.41it/s]  2% 254/14661 [01:58<1:39:10,  2.42it/s]  2% 255/14661 [01:59<1:38:38,  2.43it/s]  2% 256/14661 [01:59<1:36:40,  2.48it/s]  2% 257/14661 [01:59<1:36:46,  2.48it/s]  2% 258/14661 [02:00<1:38:18,  2.44it/s]  2% 259/14661 [02:00<1:37:55,  2.45it/s]  2% 260/14661 [02:01<1:40:25,  2.39it/s]  2% 261/14661 [02:01<1:40:10,  2.40it/s]  2% 262/14661 [02:02<1:57:24,  2.04it/s]  2% 263/14661 [02:02<1:51:13,  2.16it/s]  2% 264/14661 [02:03<1:49:02,  2.20it/s]  2% 265/14661 [02:03<1:45:43,  2.27it/s]  2% 266/14661 [02:03<1:44:28,  2.30it/s]  2% 267/14661 [02:04<1:41:56,  2.35it/s]  2% 268/14661 [02:04<1:41:45,  2.36it/s]  2% 269/14661 [02:05<1:41:45,  2.36it/s]  2% 270/14661 [02:05<1:42:58,  2.33it/s]  2% 271/14661 [02:06<1:43:20,  2.32it/s]  2% 272/14661 [02:06<1:42:17,  2.34it/s]  2% 273/14661 [02:06<1:40:15,  2.39it/s]  2% 274/14661 [02:07<1:39:40,  2.41it/s]  2% 275/14661 [02:07<1:39:40,  2.41it/s]  2% 276/14661 [02:08<1:38:55,  2.42it/s]  2% 277/14661 [02:08<1:37:49,  2.45it/s]  2% 278/14661 [02:08<1:37:42,  2.45it/s]  2% 279/14661 [02:09<1:38:52,  2.42it/s]  2% 280/14661 [02:09<1:39:16,  2.41it/s]  2% 281/14661 [02:10<1:38:30,  2.43it/s]  2% 282/14661 [02:10<1:39:51,  2.40it/s]  2% 283/14661 [02:11<1:39:35,  2.41it/s]  2% 284/14661 [02:11<1:40:15,  2.39it/s]  2% 285/14661 [02:11<1:39:11,  2.42it/s]  2% 286/14661 [02:12<1:37:53,  2.45it/s]  2% 287/14661 [02:12<1:40:04,  2.39it/s]  2% 288/14661 [02:13<1:40:53,  2.37it/s]  2% 289/14661 [02:13<1:39:53,  2.40it/s]  2% 290/14661 [02:13<1:39:50,  2.40it/s]  2% 291/14661 [02:14<1:40:14,  2.39it/s]  2% 292/14661 [02:14<1:39:18,  2.41it/s]  2% 293/14661 [02:15<1:41:26,  2.36it/s]  2% 294/14661 [02:15<1:40:28,  2.38it/s]  2% 295/14661 [02:16<1:42:25,  2.34it/s]  2% 296/14661 [02:16<1:40:19,  2.39it/s]  2% 297/14661 [02:16<1:39:54,  2.40it/s]  2% 298/14661 [02:17<1:39:51,  2.40it/s]  2% 299/14661 [02:17<1:39:50,  2.40it/s]  2% 300/14661 [02:18<1:38:22,  2.43it/s]  2% 301/14661 [02:18<1:39:50,  2.40it/s]  2% 302/14661 [02:18<1:39:28,  2.41it/s]  2% 303/14661 [02:19<1:38:55,  2.42it/s]  2% 304/14661 [02:19<1:38:40,  2.42it/s]  2% 305/14661 [02:20<1:38:01,  2.44it/s]  2% 306/14661 [02:20<1:37:37,  2.45it/s]  2% 307/14661 [02:20<1:37:33,  2.45it/s]  2% 308/14661 [02:21<1:36:37,  2.48it/s]  2% 309/14661 [02:21<1:37:37,  2.45it/s]  2% 310/14661 [02:22<1:38:19,  2.43it/s]  2% 311/14661 [02:22<1:38:33,  2.43it/s]  2% 312/14661 [02:23<1:38:18,  2.43it/s]  2% 313/14661 [02:23<1:38:27,  2.43it/s]  2% 314/14661 [02:23<1:40:19,  2.38it/s]  2% 315/14661 [02:24<1:42:42,  2.33it/s]  2% 316/14661 [02:24<1:43:43,  2.30it/s]  2% 317/14661 [02:25<1:41:15,  2.36it/s]  2% 318/14661 [02:25<1:40:50,  2.37it/s]  2% 319/14661 [02:26<1:39:51,  2.39it/s]  2% 320/14661 [02:26<1:39:52,  2.39it/s]  2% 321/14661 [02:26<1:39:56,  2.39it/s]  2% 322/14661 [02:27<1:40:51,  2.37it/s]  2% 323/14661 [02:27<1:39:15,  2.41it/s]  2% 324/14661 [02:28<1:37:58,  2.44it/s]  2% 325/14661 [02:28<1:38:19,  2.43it/s]  2% 326/14661 [02:28<1:38:11,  2.43it/s]  2% 327/14661 [02:29<1:40:57,  2.37it/s]  2% 328/14661 [02:29<1:40:40,  2.37it/s]  2% 329/14661 [02:30<1:39:44,  2.39it/s]  2% 330/14661 [02:30<1:39:11,  2.41it/s]  2% 331/14661 [02:31<1:39:35,  2.40it/s]  2% 332/14661 [02:31<1:39:24,  2.40it/s]  2% 333/14661 [02:31<1:39:04,  2.41it/s]  2% 334/14661 [02:32<1:37:30,  2.45it/s]  2% 335/14661 [02:32<1:36:46,  2.47it/s]  2% 336/14661 [02:33<1:38:29,  2.42it/s]  2% 337/14661 [02:33<1:40:21,  2.38it/s]  2% 338/14661 [02:33<1:40:25,  2.38it/s]  2% 339/14661 [02:34<1:38:30,  2.42it/s]  2% 340/14661 [02:34<1:36:51,  2.46it/s]  2% 341/14661 [02:35<1:36:39,  2.47it/s]  2% 342/14661 [02:35<1:38:40,  2.42it/s]  2% 343/14661 [02:35<1:39:33,  2.40it/s]  2% 344/14661 [02:36<1:53:15,  2.11it/s]  2% 345/14661 [02:36<1:48:18,  2.20it/s]  2% 346/14661 [02:37<1:46:13,  2.25it/s]  2% 347/14661 [02:37<1:44:26,  2.28it/s]  2% 348/14661 [02:38<1:43:26,  2.31it/s]  2% 349/14661 [02:38<1:41:05,  2.36it/s]  2% 350/14661 [02:39<1:40:17,  2.38it/s]  2% 351/14661 [02:39<1:40:01,  2.38it/s]  2% 352/14661 [02:39<1:38:43,  2.42it/s]  2% 353/14661 [02:40<1:39:35,  2.39it/s]  2% 354/14661 [02:40<1:39:42,  2.39it/s]  2% 355/14661 [02:41<1:38:31,  2.42it/s]  2% 356/14661 [02:41<1:38:57,  2.41it/s]  2% 357/14661 [02:41<1:37:10,  2.45it/s]  2% 358/14661 [02:42<1:36:14,  2.48it/s]  2% 359/14661 [02:42<1:37:12,  2.45it/s]  2% 360/14661 [02:43<1:37:28,  2.45it/s]  2% 361/14661 [02:43<1:37:05,  2.45it/s]  2% 362/14661 [02:43<1:36:16,  2.48it/s]  2% 363/14661 [02:44<1:36:27,  2.47it/s]  2% 364/14661 [02:44<1:40:14,  2.38it/s]  2% 365/14661 [02:45<1:39:02,  2.41it/s]  2% 366/14661 [02:45<1:40:24,  2.37it/s]  3% 367/14661 [02:46<1:38:52,  2.41it/s]  3% 368/14661 [02:46<1:37:21,  2.45it/s]  3% 369/14661 [02:46<1:37:17,  2.45it/s]  3% 370/14661 [02:47<1:36:03,  2.48it/s]  3% 371/14661 [02:47<1:36:41,  2.46it/s]  3% 372/14661 [02:48<1:36:56,  2.46it/s]  3% 373/14661 [02:48<1:37:08,  2.45it/s]  3% 374/14661 [02:48<1:36:40,  2.46it/s]  3% 375/14661 [02:49<1:36:29,  2.47it/s]  3% 376/14661 [02:49<1:40:10,  2.38it/s]  3% 377/14661 [02:50<1:39:01,  2.40it/s]  3% 378/14661 [02:50<1:39:42,  2.39it/s]  3% 379/14661 [02:51<1:40:44,  2.36it/s]  3% 380/14661 [02:51<1:39:17,  2.40it/s]  3% 381/14661 [02:51<1:38:15,  2.42it/s]  3% 382/14661 [02:52<1:39:13,  2.40it/s]  3% 383/14661 [02:52<1:37:19,  2.45it/s]  3% 384/14661 [02:53<1:36:40,  2.46it/s]  3% 385/14661 [02:53<1:37:32,  2.44it/s]  3% 386/14661 [02:53<1:36:55,  2.45it/s]  3% 387/14661 [02:54<1:36:26,  2.47it/s]  3% 388/14661 [02:54<1:38:28,  2.42it/s]  3% 389/14661 [02:55<1:38:49,  2.41it/s]  3% 390/14661 [02:55<1:38:31,  2.41it/s]  3% 391/14661 [02:55<1:38:10,  2.42it/s]  3% 392/14661 [02:56<1:40:34,  2.36it/s]  3% 393/14661 [02:56<1:40:28,  2.37it/s]  3% 394/14661 [02:57<1:38:20,  2.42it/s]  3% 395/14661 [02:57<1:38:17,  2.42it/s]  3% 396/14661 [02:58<1:37:37,  2.44it/s]  3% 397/14661 [02:58<1:38:07,  2.42it/s]  3% 398/14661 [02:58<1:37:49,  2.43it/s]  3% 399/14661 [02:59<1:38:50,  2.41it/s]  3% 400/14661 [02:59<1:39:48,  2.38it/s]  3% 401/14661 [03:00<1:38:15,  2.42it/s]  3% 402/14661 [03:00<1:37:02,  2.45it/s]  3% 403/14661 [03:00<1:36:17,  2.47it/s]  3% 404/14661 [03:01<1:35:54,  2.48it/s]  3% 405/14661 [03:01<1:36:39,  2.46it/s]  3% 406/14661 [03:02<1:35:53,  2.48it/s]  3% 407/14661 [03:02<1:36:25,  2.46it/s]  3% 408/14661 [03:02<1:41:07,  2.35it/s]  3% 409/14661 [03:03<1:39:52,  2.38it/s]  3% 410/14661 [03:03<1:40:30,  2.36it/s]  3% 411/14661 [03:04<1:40:41,  2.36it/s]  3% 412/14661 [03:04<1:41:10,  2.35it/s]  3% 413/14661 [03:05<1:39:30,  2.39it/s]  3% 414/14661 [03:05<1:38:04,  2.42it/s]  3% 415/14661 [03:05<1:39:22,  2.39it/s]  3% 416/14661 [03:06<1:39:36,  2.38it/s]  3% 417/14661 [03:06<1:38:25,  2.41it/s]  3% 418/14661 [03:07<1:41:09,  2.35it/s]  3% 419/14661 [03:07<1:40:30,  2.36it/s]  3% 420/14661 [03:08<1:40:14,  2.37it/s]  3% 421/14661 [03:08<1:40:23,  2.36it/s]  3% 422/14661 [03:08<1:40:44,  2.36it/s]  3% 423/14661 [03:09<1:40:37,  2.36it/s]  3% 424/14661 [03:09<1:40:02,  2.37it/s]  3% 425/14661 [03:10<1:39:41,  2.38it/s]  3% 426/14661 [03:10<1:39:24,  2.39it/s]  3% 427/14661 [03:10<1:38:07,  2.42it/s]  3% 428/14661 [03:11<1:39:28,  2.38it/s]  3% 429/14661 [03:11<1:38:53,  2.40it/s]  3% 430/14661 [03:12<1:39:33,  2.38it/s]  3% 431/14661 [03:12<1:39:02,  2.39it/s]  3% 432/14661 [03:13<1:53:32,  2.09it/s]  3% 433/14661 [03:13<1:54:06,  2.08it/s]  3% 434/14661 [03:14<1:49:27,  2.17it/s]  3% 435/14661 [03:14<1:46:33,  2.23it/s]  3% 436/14661 [03:15<1:46:28,  2.23it/s]  3% 437/14661 [03:15<1:43:43,  2.29it/s]  3% 438/14661 [03:15<1:40:43,  2.35it/s]  3% 439/14661 [03:16<1:40:52,  2.35it/s]  3% 440/14661 [03:16<1:40:39,  2.35it/s]  3% 441/14661 [03:17<1:38:51,  2.40it/s]  3% 442/14661 [03:17<1:38:58,  2.39it/s]  3% 443/14661 [03:17<1:38:43,  2.40it/s]  3% 444/14661 [03:18<1:38:37,  2.40it/s]  3% 445/14661 [03:18<1:38:15,  2.41it/s]  3% 446/14661 [03:19<1:37:34,  2.43it/s]  3% 447/14661 [03:19<1:39:08,  2.39it/s]  3% 448/14661 [03:20<1:39:59,  2.37it/s]  3% 449/14661 [03:20<1:43:31,  2.29it/s]  3% 450/14661 [03:20<1:41:06,  2.34it/s]  3% 451/14661 [03:21<1:39:30,  2.38it/s]  3% 452/14661 [03:21<1:39:46,  2.37it/s]  3% 453/14661 [03:22<1:39:29,  2.38it/s]  3% 454/14661 [03:22<1:39:12,  2.39it/s]  3% 455/14661 [03:22<1:37:28,  2.43it/s]  3% 456/14661 [03:23<1:36:54,  2.44it/s]  3% 457/14661 [03:23<1:37:59,  2.42it/s]  3% 458/14661 [03:24<1:36:36,  2.45it/s]  3% 459/14661 [03:24<1:36:57,  2.44it/s]  3% 460/14661 [03:24<1:36:46,  2.45it/s]  3% 461/14661 [03:25<1:36:59,  2.44it/s]  3% 462/14661 [03:25<1:36:36,  2.45it/s]  3% 463/14661 [03:26<1:36:59,  2.44it/s]  3% 464/14661 [03:26<1:36:57,  2.44it/s]  3% 465/14661 [03:27<1:40:57,  2.34it/s]  3% 466/14661 [03:27<1:42:15,  2.31it/s]  3% 467/14661 [03:27<1:40:29,  2.35it/s]  3% 468/14661 [03:28<1:40:08,  2.36it/s]  3% 469/14661 [03:28<1:40:15,  2.36it/s]  3% 470/14661 [03:29<1:40:15,  2.36it/s]  3% 471/14661 [03:29<1:39:11,  2.38it/s]  3% 472/14661 [03:30<1:37:57,  2.41it/s]  3% 473/14661 [03:30<1:36:41,  2.45it/s]  3% 474/14661 [03:30<1:39:47,  2.37it/s]  3% 475/14661 [03:31<1:38:11,  2.41it/s]  3% 476/14661 [03:31<1:36:56,  2.44it/s]  3% 477/14661 [03:32<1:35:56,  2.46it/s]  3% 478/14661 [03:32<1:35:05,  2.49it/s]  3% 479/14661 [03:32<1:33:43,  2.52it/s]  3% 480/14661 [03:33<1:34:03,  2.51it/s]  3% 481/14661 [03:33<1:35:00,  2.49it/s]  3% 482/14661 [03:34<1:38:58,  2.39it/s]  3% 483/14661 [03:34<1:42:19,  2.31it/s]  3% 484/14661 [03:35<1:47:28,  2.20it/s]  3% 485/14661 [03:35<1:49:00,  2.17it/s]  3% 486/14661 [03:36<1:53:06,  2.09it/s]  3% 487/14661 [03:36<1:51:25,  2.12it/s]  3% 488/14661 [03:36<1:47:58,  2.19it/s]  3% 489/14661 [03:37<1:45:29,  2.24it/s]  3% 490/14661 [03:37<1:44:31,  2.26it/s]  3% 491/14661 [03:38<1:43:13,  2.29it/s]  3% 492/14661 [03:38<1:42:07,  2.31it/s]  3% 493/14661 [03:39<1:43:18,  2.29it/s]  3% 494/14661 [03:39<1:40:39,  2.35it/s]  3% 495/14661 [03:39<1:39:42,  2.37it/s]  3% 496/14661 [03:40<1:39:32,  2.37it/s]  3% 497/14661 [03:40<1:39:50,  2.36it/s]  3% 498/14661 [03:41<1:39:27,  2.37it/s]  3% 499/14661 [03:41<1:39:06,  2.38it/s]  3% 500/14661 [03:41<1:37:37,  2.42it/s]  3% 501/14661 [03:42<1:37:00,  2.43it/s]  3% 502/14661 [03:42<1:38:39,  2.39it/s]  3% 503/14661 [03:43<1:38:23,  2.40it/s]  3% 504/14661 [03:43<1:39:43,  2.37it/s]  3% 505/14661 [03:44<1:37:58,  2.41it/s]  3% 506/14661 [03:44<1:39:09,  2.38it/s]  3% 507/14661 [03:44<1:41:22,  2.33it/s]  3% 508/14661 [03:45<1:40:57,  2.34it/s]  3% 509/14661 [03:45<1:42:32,  2.30it/s]  3% 510/14661 [03:46<1:42:43,  2.30it/s]  3% 511/14661 [03:46<1:39:53,  2.36it/s]  3% 512/14661 [03:47<1:39:34,  2.37it/s]  3% 513/14661 [03:47<1:38:31,  2.39it/s]  4% 514/14661 [03:47<1:37:34,  2.42it/s]  4% 515/14661 [03:48<1:37:51,  2.41it/s]  4% 516/14661 [03:48<1:41:34,  2.32it/s]  4% 517/14661 [03:49<1:40:13,  2.35it/s]  4% 518/14661 [03:49<1:51:27,  2.11it/s]  4% 519/14661 [03:50<1:47:31,  2.19it/s]  4% 520/14661 [03:50<1:47:15,  2.20it/s]  4% 521/14661 [03:51<1:44:35,  2.25it/s]  4% 522/14661 [03:51<1:45:16,  2.24it/s]  4% 523/14661 [03:51<1:43:15,  2.28it/s]  4% 524/14661 [03:52<1:40:47,  2.34it/s]  4% 525/14661 [03:52<1:40:02,  2.35it/s]  4% 526/14661 [03:53<1:42:13,  2.30it/s]  4% 527/14661 [03:53<1:41:25,  2.32it/s]  4% 528/14661 [03:54<1:39:00,  2.38it/s]  4% 529/14661 [03:54<1:38:28,  2.39it/s]  4% 530/14661 [03:54<1:38:11,  2.40it/s]  4% 531/14661 [03:55<1:37:04,  2.43it/s]  4% 532/14661 [03:55<1:35:55,  2.45it/s]  4% 533/14661 [03:56<1:37:19,  2.42it/s]  4% 534/14661 [03:56<1:38:04,  2.40it/s]  4% 535/14661 [03:56<1:38:39,  2.39it/s]  4% 536/14661 [03:57<1:37:11,  2.42it/s]  4% 537/14661 [03:57<1:37:59,  2.40it/s]  4% 538/14661 [03:58<1:39:04,  2.38it/s]  4% 539/14661 [03:58<1:39:23,  2.37it/s]  4% 540/14661 [03:59<1:40:03,  2.35it/s]  4% 541/14661 [03:59<1:41:06,  2.33it/s]  4% 542/14661 [03:59<1:39:37,  2.36it/s]  4% 543/14661 [04:00<1:39:00,  2.38it/s]  4% 544/14661 [04:00<1:38:24,  2.39it/s]  4% 545/14661 [04:01<1:37:05,  2.42it/s]  4% 546/14661 [04:01<1:36:13,  2.44it/s]  4% 547/14661 [04:01<1:36:24,  2.44it/s]  4% 548/14661 [04:02<1:36:51,  2.43it/s]  4% 549/14661 [04:02<1:38:14,  2.39it/s]  4% 550/14661 [04:03<1:38:46,  2.38it/s]  4% 551/14661 [04:03<1:36:55,  2.43it/s]  4% 552/14661 [04:04<1:37:12,  2.42it/s]  4% 553/14661 [04:04<1:35:53,  2.45it/s]  4% 554/14661 [04:04<1:36:08,  2.45it/s]  4% 555/14661 [04:05<1:35:52,  2.45it/s]  4% 556/14661 [04:05<1:35:45,  2.45it/s]  4% 557/14661 [04:06<1:36:15,  2.44it/s]  4% 558/14661 [04:06<1:37:09,  2.42it/s]  4% 559/14661 [04:06<1:37:50,  2.40it/s]  4% 560/14661 [04:07<1:36:51,  2.43it/s]  4% 561/14661 [04:07<1:37:44,  2.40it/s]  4% 562/14661 [04:08<1:37:01,  2.42it/s]  4% 563/14661 [04:08<1:37:26,  2.41it/s]  4% 564/14661 [04:08<1:37:59,  2.40it/s]  4% 565/14661 [04:09<1:36:50,  2.43it/s]  4% 566/14661 [04:09<1:36:03,  2.45it/s]  4% 567/14661 [04:10<1:36:39,  2.43it/s]  4% 568/14661 [04:10<1:35:54,  2.45it/s]  4% 569/14661 [04:10<1:34:57,  2.47it/s]  4% 570/14661 [04:11<1:34:56,  2.47it/s]  4% 571/14661 [04:11<1:35:13,  2.47it/s]  4% 572/14661 [04:12<1:35:29,  2.46it/s]  4% 573/14661 [04:12<1:35:21,  2.46it/s]  4% 574/14661 [04:13<1:36:07,  2.44it/s]  4% 575/14661 [04:13<1:37:11,  2.42it/s]  4% 576/14661 [04:13<1:36:10,  2.44it/s]  4% 577/14661 [04:14<1:36:45,  2.43it/s]  4% 578/14661 [04:14<1:37:46,  2.40it/s]  4% 579/14661 [04:15<1:37:30,  2.41it/s]  4% 580/14661 [04:15<1:37:49,  2.40it/s]  4% 581/14661 [04:15<1:37:56,  2.40it/s]  4% 582/14661 [04:16<1:37:26,  2.41it/s]  4% 583/14661 [04:16<1:37:05,  2.42it/s]  4% 584/14661 [04:17<1:37:53,  2.40it/s]  4% 585/14661 [04:17<1:37:56,  2.40it/s]  4% 586/14661 [04:18<1:38:23,  2.38it/s]  4% 587/14661 [04:18<1:37:38,  2.40it/s]  4% 588/14661 [04:18<1:38:04,  2.39it/s]  4% 589/14661 [04:19<1:39:46,  2.35it/s]  4% 590/14661 [04:19<1:38:16,  2.39it/s]  4% 591/14661 [04:20<1:37:36,  2.40it/s]  4% 592/14661 [04:20<1:36:30,  2.43it/s]  4% 593/14661 [04:20<1:35:39,  2.45it/s]  4% 594/14661 [04:21<1:35:24,  2.46it/s]  4% 595/14661 [04:21<1:35:08,  2.46it/s]  4% 596/14661 [04:22<1:35:26,  2.46it/s]  4% 597/14661 [04:22<1:34:50,  2.47it/s]  4% 598/14661 [04:22<1:36:13,  2.44it/s]  4% 599/14661 [04:23<1:37:07,  2.41it/s]  4% 600/14661 [04:23<1:40:48,  2.32it/s]  4% 601/14661 [04:24<1:39:25,  2.36it/s]  4% 602/14661 [04:24<1:44:48,  2.24it/s]  4% 603/14661 [04:25<1:41:47,  2.30it/s]  4% 604/14661 [04:25<1:41:21,  2.31it/s]  4% 605/14661 [04:26<1:38:40,  2.37it/s]  4% 606/14661 [04:26<1:36:12,  2.43it/s]  4% 607/14661 [04:26<1:36:13,  2.43it/s]  4% 608/14661 [04:27<1:35:30,  2.45it/s]  4% 609/14661 [04:27<1:37:04,  2.41it/s]  4% 610/14661 [04:28<1:36:06,  2.44it/s]  4% 611/14661 [04:28<1:36:15,  2.43it/s]  4% 612/14661 [04:28<1:35:23,  2.45it/s]  4% 613/14661 [04:29<1:35:29,  2.45it/s]  4% 614/14661 [04:29<1:36:28,  2.43it/s]  4% 615/14661 [04:30<1:37:27,  2.40it/s]  4% 616/14661 [04:30<1:38:53,  2.37it/s]  4% 617/14661 [04:30<1:38:42,  2.37it/s]  4% 618/14661 [04:31<1:38:14,  2.38it/s]  4% 619/14661 [04:31<1:37:14,  2.41it/s]  4% 620/14661 [04:32<1:37:43,  2.39it/s]  4% 621/14661 [04:32<1:37:09,  2.41it/s]  4% 622/14661 [04:33<1:36:35,  2.42it/s]  4% 623/14661 [04:33<1:35:55,  2.44it/s]  4% 624/14661 [04:33<1:36:22,  2.43it/s]  4% 625/14661 [04:34<1:35:32,  2.45it/s]  4% 626/14661 [04:34<1:36:03,  2.44it/s]  4% 627/14661 [04:35<1:35:37,  2.45it/s]  4% 628/14661 [04:35<1:35:02,  2.46it/s]  4% 629/14661 [04:35<1:34:09,  2.48it/s]  4% 630/14661 [04:36<1:33:29,  2.50it/s]  4% 631/14661 [04:36<1:32:42,  2.52it/s]  4% 632/14661 [04:37<1:33:30,  2.50it/s]  4% 633/14661 [04:37<1:34:25,  2.48it/s]  4% 634/14661 [04:37<1:35:50,  2.44it/s]  4% 635/14661 [04:38<1:36:15,  2.43it/s]  4% 636/14661 [04:38<1:35:11,  2.46it/s]  4% 637/14661 [04:39<1:34:40,  2.47it/s]  4% 638/14661 [04:39<1:35:35,  2.44it/s]  4% 639/14661 [04:39<1:37:12,  2.40it/s]  4% 640/14661 [04:40<1:36:24,  2.42it/s]  4% 641/14661 [04:40<1:37:29,  2.40it/s]  4% 642/14661 [04:41<1:38:05,  2.38it/s]  4% 643/14661 [04:41<1:36:49,  2.41it/s]  4% 644/14661 [04:42<1:35:36,  2.44it/s]  4% 645/14661 [04:42<1:35:26,  2.45it/s]  4% 646/14661 [04:42<1:35:13,  2.45it/s]  4% 647/14661 [04:43<1:34:48,  2.46it/s]  4% 648/14661 [04:43<1:35:14,  2.45it/s]  4% 649/14661 [04:44<1:34:42,  2.47it/s]  4% 650/14661 [04:44<1:34:41,  2.47it/s]  4% 651/14661 [04:44<1:37:39,  2.39it/s]  4% 652/14661 [04:45<1:36:52,  2.41it/s]  4% 653/14661 [04:45<1:35:33,  2.44it/s]  4% 654/14661 [04:46<1:35:43,  2.44it/s]  4% 655/14661 [04:46<1:35:09,  2.45it/s]  4% 656/14661 [04:46<1:34:25,  2.47it/s]  4% 657/14661 [04:47<1:35:28,  2.44it/s]  4% 658/14661 [04:47<1:34:18,  2.47it/s]  4% 659/14661 [04:48<1:33:40,  2.49it/s]  5% 660/14661 [04:48<1:35:13,  2.45it/s]  5% 661/14661 [04:48<1:35:20,  2.45it/s]  5% 662/14661 [04:49<1:36:31,  2.42it/s]  5% 663/14661 [04:49<1:37:16,  2.40it/s]  5% 664/14661 [04:50<1:37:59,  2.38it/s]  5% 665/14661 [04:50<1:37:24,  2.39it/s]  5% 666/14661 [04:51<1:35:57,  2.43it/s]  5% 667/14661 [04:51<1:35:00,  2.45it/s]  5% 668/14661 [04:51<1:34:27,  2.47it/s]  5% 669/14661 [04:52<1:35:12,  2.45it/s]  5% 670/14661 [04:52<1:34:31,  2.47it/s]  5% 671/14661 [04:53<1:35:32,  2.44it/s]  5% 672/14661 [04:53<1:37:05,  2.40it/s]  5% 673/14661 [04:53<1:40:25,  2.32it/s]  5% 674/14661 [04:54<1:38:37,  2.36it/s]  5% 675/14661 [04:54<1:37:49,  2.38it/s]  5% 676/14661 [04:55<1:36:56,  2.40it/s]  5% 677/14661 [04:55<1:35:16,  2.45it/s]  5% 678/14661 [04:55<1:36:14,  2.42it/s]  5% 679/14661 [04:56<1:36:10,  2.42it/s]  5% 680/14661 [04:56<1:36:10,  2.42it/s]  5% 681/14661 [04:57<1:35:12,  2.45it/s]  5% 682/14661 [04:57<1:34:45,  2.46it/s]  5% 683/14661 [04:58<1:34:54,  2.45it/s]  5% 684/14661 [04:58<1:35:06,  2.45it/s]  5% 685/14661 [04:58<1:35:00,  2.45it/s]  5% 686/14661 [04:59<1:35:56,  2.43it/s]  5% 687/14661 [04:59<1:37:21,  2.39it/s]  5% 688/14661 [05:00<1:38:14,  2.37it/s]  5% 689/14661 [05:00<1:37:06,  2.40it/s]  5% 690/14661 [05:01<1:50:03,  2.12it/s]  5% 691/14661 [05:01<1:45:03,  2.22it/s]  5% 692/14661 [05:01<1:41:34,  2.29it/s]  5% 693/14661 [05:02<1:39:10,  2.35it/s]  5% 694/14661 [05:02<1:37:31,  2.39it/s]  5% 695/14661 [05:03<1:37:35,  2.38it/s]  5% 696/14661 [05:03<1:36:11,  2.42it/s]  5% 697/14661 [05:03<1:36:16,  2.42it/s]  5% 698/14661 [05:04<1:35:28,  2.44it/s]  5% 699/14661 [05:04<1:35:24,  2.44it/s]  5% 700/14661 [05:05<1:34:48,  2.45it/s]  5% 701/14661 [05:05<1:34:50,  2.45it/s]  5% 702/14661 [05:06<1:34:59,  2.45it/s]  5% 703/14661 [05:06<1:34:40,  2.46it/s]  5% 704/14661 [05:06<1:34:37,  2.46it/s]  5% 705/14661 [05:07<1:37:28,  2.39it/s]  5% 706/14661 [05:07<1:37:38,  2.38it/s]  5% 707/14661 [05:08<1:36:56,  2.40it/s]  5% 708/14661 [05:08<1:36:17,  2.41it/s]  5% 709/14661 [05:08<1:36:15,  2.42it/s]  5% 710/14661 [05:09<1:35:37,  2.43it/s]  5% 711/14661 [05:09<1:36:47,  2.40it/s]  5% 712/14661 [05:10<1:35:39,  2.43it/s]  5% 713/14661 [05:10<1:35:02,  2.45it/s]  5% 714/14661 [05:10<1:33:08,  2.50it/s]  5% 715/14661 [05:11<1:33:58,  2.47it/s]  5% 716/14661 [05:11<1:33:44,  2.48it/s]  5% 717/14661 [05:12<1:33:28,  2.49it/s]  5% 718/14661 [05:12<1:32:32,  2.51it/s]  5% 719/14661 [05:12<1:33:59,  2.47it/s]  5% 720/14661 [05:13<1:33:39,  2.48it/s]  5% 721/14661 [05:13<1:34:24,  2.46it/s]  5% 722/14661 [05:14<1:35:10,  2.44it/s]  5% 723/14661 [05:14<1:35:07,  2.44it/s]  5% 724/14661 [05:15<1:35:28,  2.43it/s]  5% 725/14661 [05:15<1:35:41,  2.43it/s]  5% 726/14661 [05:15<1:35:52,  2.42it/s]  5% 727/14661 [05:16<1:35:30,  2.43it/s]  5% 728/14661 [05:16<1:36:05,  2.42it/s]  5% 729/14661 [05:17<1:34:43,  2.45it/s]  5% 730/14661 [05:17<1:35:46,  2.42it/s]  5% 731/14661 [05:17<1:34:54,  2.45it/s]  5% 732/14661 [05:18<1:34:04,  2.47it/s]  5% 733/14661 [05:18<1:33:24,  2.48it/s]  5% 734/14661 [05:19<1:34:20,  2.46it/s]  5% 735/14661 [05:19<1:33:48,  2.47it/s]  5% 736/14661 [05:19<1:36:46,  2.40it/s]  5% 737/14661 [05:20<1:36:33,  2.40it/s]  5% 738/14661 [05:20<1:38:21,  2.36it/s]  5% 739/14661 [05:21<1:37:36,  2.38it/s]  5% 740/14661 [05:21<1:36:51,  2.40it/s]  5% 741/14661 [05:22<1:37:44,  2.37it/s]  5% 742/14661 [05:22<1:35:50,  2.42it/s]  5% 743/14661 [05:22<1:34:39,  2.45it/s]  5% 744/14661 [05:23<1:34:24,  2.46it/s]  5% 745/14661 [05:23<1:36:20,  2.41it/s]  5% 746/14661 [05:24<1:38:16,  2.36it/s]  5% 747/14661 [05:24<1:36:16,  2.41it/s]  5% 748/14661 [05:24<1:34:43,  2.45it/s]  5% 749/14661 [05:25<1:32:55,  2.50it/s]  5% 750/14661 [05:25<1:32:53,  2.50it/s]  5% 751/14661 [05:26<1:34:38,  2.45it/s]  5% 752/14661 [05:26<1:35:53,  2.42it/s]  5% 753/14661 [05:26<1:37:27,  2.38it/s]  5% 754/14661 [05:27<1:38:41,  2.35it/s]  5% 755/14661 [05:27<1:37:48,  2.37it/s]  5% 756/14661 [05:28<1:37:05,  2.39it/s]  5% 757/14661 [05:28<1:36:56,  2.39it/s]  5% 758/14661 [05:29<1:37:05,  2.39it/s]  5% 759/14661 [05:29<1:37:03,  2.39it/s]  5% 760/14661 [05:29<1:35:57,  2.41it/s]  5% 761/14661 [05:30<1:35:43,  2.42it/s]  5% 762/14661 [05:30<1:35:22,  2.43it/s]  5% 763/14661 [05:31<1:38:09,  2.36it/s]  5% 764/14661 [05:31<1:36:37,  2.40it/s]  5% 765/14661 [05:31<1:35:38,  2.42it/s]  5% 766/14661 [05:32<1:35:46,  2.42it/s]  5% 767/14661 [05:32<1:36:17,  2.40it/s]  5% 768/14661 [05:33<1:34:53,  2.44it/s]  5% 769/14661 [05:33<1:34:36,  2.45it/s]  5% 770/14661 [05:34<1:35:24,  2.43it/s]  5% 771/14661 [05:34<1:35:12,  2.43it/s]  5% 772/14661 [05:34<1:35:10,  2.43it/s]  5% 773/14661 [05:35<1:35:08,  2.43it/s]  5% 774/14661 [05:35<1:35:08,  2.43it/s]  5% 775/14661 [05:36<1:35:29,  2.42it/s]  5% 776/14661 [05:36<1:34:38,  2.45it/s]  5% 777/14661 [05:36<1:35:15,  2.43it/s]  5% 778/14661 [05:37<1:45:57,  2.18it/s]  5% 779/14661 [05:37<1:41:35,  2.28it/s]  5% 780/14661 [05:38<1:38:19,  2.35it/s]  5% 781/14661 [05:38<1:36:51,  2.39it/s]  5% 782/14661 [05:39<1:36:51,  2.39it/s]  5% 783/14661 [05:39<1:35:37,  2.42it/s]  5% 784/14661 [05:39<1:35:16,  2.43it/s]  5% 785/14661 [05:40<1:34:14,  2.45it/s]  5% 786/14661 [05:40<1:35:58,  2.41it/s]  5% 787/14661 [05:41<1:37:07,  2.38it/s]  5% 788/14661 [05:41<1:36:50,  2.39it/s]  5% 789/14661 [05:42<1:37:39,  2.37it/s]  5% 790/14661 [05:42<1:37:04,  2.38it/s]  5% 791/14661 [05:42<1:38:08,  2.36it/s]  5% 792/14661 [05:43<1:36:14,  2.40it/s]  5% 793/14661 [05:43<1:34:40,  2.44it/s]  5% 794/14661 [05:44<1:33:30,  2.47it/s]  5% 795/14661 [05:44<1:33:56,  2.46it/s]  5% 796/14661 [05:44<1:36:36,  2.39it/s]  5% 797/14661 [05:45<1:36:17,  2.40it/s]  5% 798/14661 [05:45<1:35:30,  2.42it/s]  5% 799/14661 [05:46<1:35:33,  2.42it/s]  5% 800/14661 [05:46<1:34:33,  2.44it/s]  5% 801/14661 [05:46<1:34:25,  2.45it/s]  5% 802/14661 [05:47<1:33:48,  2.46it/s]  5% 803/14661 [05:47<1:33:23,  2.47it/s]  5% 804/14661 [05:48<1:33:06,  2.48it/s]  5% 805/14661 [05:48<1:33:48,  2.46it/s]  5% 806/14661 [05:49<1:37:47,  2.36it/s]  6% 807/14661 [05:49<1:37:55,  2.36it/s]  6% 808/14661 [05:49<1:38:23,  2.35it/s]  6% 809/14661 [05:50<1:37:59,  2.36it/s]  6% 810/14661 [05:50<1:36:40,  2.39it/s]  6% 811/14661 [05:51<1:35:42,  2.41it/s]  6% 812/14661 [05:51<1:35:20,  2.42it/s]  6% 813/14661 [05:51<1:36:19,  2.40it/s]  6% 814/14661 [05:52<1:35:19,  2.42it/s]  6% 815/14661 [05:52<1:35:10,  2.42it/s]  6% 816/14661 [05:53<1:36:09,  2.40it/s]  6% 817/14661 [05:53<1:38:31,  2.34it/s]  6% 818/14661 [05:54<1:38:41,  2.34it/s]  6% 819/14661 [05:54<1:37:29,  2.37it/s]  6% 820/14661 [05:54<1:36:36,  2.39it/s]  6% 821/14661 [05:55<1:36:36,  2.39it/s]  6% 822/14661 [05:55<1:37:11,  2.37it/s]  6% 823/14661 [05:56<1:36:02,  2.40it/s]  6% 824/14661 [05:56<1:34:32,  2.44it/s]  6% 825/14661 [05:56<1:35:20,  2.42it/s]  6% 826/14661 [05:57<1:35:03,  2.43it/s]  6% 827/14661 [05:57<1:34:51,  2.43it/s]  6% 828/14661 [05:58<1:36:06,  2.40it/s]  6% 829/14661 [05:58<1:35:45,  2.41it/s]  6% 830/14661 [05:59<1:37:48,  2.36it/s]  6% 831/14661 [05:59<1:36:51,  2.38it/s]  6% 832/14661 [05:59<1:36:59,  2.38it/s]  6% 833/14661 [06:00<1:36:42,  2.38it/s]  6% 834/14661 [06:00<1:36:51,  2.38it/s]  6% 835/14661 [06:01<1:37:26,  2.36it/s]  6% 836/14661 [06:01<1:36:36,  2.39it/s]  6% 837/14661 [06:01<1:35:30,  2.41it/s]  6% 838/14661 [06:02<1:36:08,  2.40it/s]  6% 839/14661 [06:02<1:36:56,  2.38it/s]  6% 840/14661 [06:03<1:38:15,  2.34it/s]  6% 841/14661 [06:03<1:37:01,  2.37it/s]  6% 842/14661 [06:04<1:36:27,  2.39it/s]  6% 843/14661 [06:04<1:36:14,  2.39it/s]  6% 844/14661 [06:04<1:36:26,  2.39it/s]  6% 845/14661 [06:05<1:35:49,  2.40it/s]  6% 846/14661 [06:05<1:35:49,  2.40it/s]  6% 847/14661 [06:06<1:36:28,  2.39it/s]  6% 848/14661 [06:06<1:36:51,  2.38it/s]  6% 849/14661 [06:07<1:35:56,  2.40it/s]  6% 850/14661 [06:07<1:37:29,  2.36it/s]  6% 851/14661 [06:07<1:37:34,  2.36it/s]  6% 852/14661 [06:08<1:35:35,  2.41it/s]  6% 853/14661 [06:08<1:34:03,  2.45it/s]  6% 854/14661 [06:09<1:34:37,  2.43it/s]  6% 855/14661 [06:09<1:33:59,  2.45it/s]  6% 856/14661 [06:09<1:33:26,  2.46it/s]  6% 857/14661 [06:10<1:33:28,  2.46it/s]  6% 858/14661 [06:10<1:34:05,  2.45it/s]  6% 859/14661 [06:11<1:34:46,  2.43it/s]  6% 860/14661 [06:11<1:33:35,  2.46it/s]  6% 861/14661 [06:11<1:33:09,  2.47it/s]  6% 862/14661 [06:12<1:33:00,  2.47it/s]  6% 863/14661 [06:12<1:48:33,  2.12it/s]  6% 864/14661 [06:13<1:44:51,  2.19it/s]  6% 865/14661 [06:13<1:43:09,  2.23it/s]  6% 866/14661 [06:14<1:41:01,  2.28it/s]  6% 867/14661 [06:14<1:38:57,  2.32it/s]  6% 868/14661 [06:15<1:36:50,  2.37it/s]  6% 869/14661 [06:15<1:36:09,  2.39it/s]  6% 870/14661 [06:15<1:36:51,  2.37it/s]  6% 871/14661 [06:16<1:37:28,  2.36it/s]  6% 872/14661 [06:16<1:38:41,  2.33it/s]  6% 873/14661 [06:17<1:38:10,  2.34it/s]  6% 874/14661 [06:17<1:35:44,  2.40it/s]  6% 875/14661 [06:17<1:34:03,  2.44it/s]  6% 876/14661 [06:18<1:34:12,  2.44it/s]  6% 877/14661 [06:18<1:33:30,  2.46it/s]  6% 878/14661 [06:19<1:33:01,  2.47it/s]  6% 879/14661 [06:19<1:34:50,  2.42it/s]  6% 880/14661 [06:19<1:34:31,  2.43it/s]  6% 881/14661 [06:20<1:34:14,  2.44it/s]  6% 882/14661 [06:20<1:34:00,  2.44it/s]  6% 883/14661 [06:21<1:33:14,  2.46it/s]  6% 884/14661 [06:21<1:33:32,  2.45it/s]  6% 885/14661 [06:22<1:32:41,  2.48it/s]  6% 886/14661 [06:22<1:31:50,  2.50it/s]  6% 887/14661 [06:22<1:32:36,  2.48it/s]  6% 888/14661 [06:23<1:34:43,  2.42it/s]  6% 889/14661 [06:23<1:37:47,  2.35it/s]  6% 890/14661 [06:24<1:38:39,  2.33it/s]  6% 891/14661 [06:24<1:37:23,  2.36it/s]  6% 892/14661 [06:24<1:37:22,  2.36it/s]  6% 893/14661 [06:25<1:38:27,  2.33it/s]  6% 894/14661 [06:25<1:38:30,  2.33it/s]  6% 895/14661 [06:26<1:37:50,  2.34it/s]  6% 896/14661 [06:26<1:37:13,  2.36it/s]  6% 897/14661 [06:27<1:36:26,  2.38it/s]  6% 898/14661 [06:27<1:36:41,  2.37it/s]  6% 899/14661 [06:27<1:35:14,  2.41it/s]  6% 900/14661 [06:28<1:34:04,  2.44it/s]  6% 901/14661 [06:28<1:33:20,  2.46it/s]  6% 902/14661 [06:29<1:33:13,  2.46it/s]  6% 903/14661 [06:29<1:32:24,  2.48it/s]  6% 904/14661 [06:29<1:32:31,  2.48it/s]  6% 905/14661 [06:30<1:31:56,  2.49it/s]  6% 906/14661 [06:30<1:33:49,  2.44it/s]  6% 907/14661 [06:31<1:33:52,  2.44it/s]  6% 908/14661 [06:31<1:34:08,  2.43it/s]  6% 909/14661 [06:31<1:34:09,  2.43it/s]  6% 910/14661 [06:32<1:34:07,  2.43it/s]  6% 911/14661 [06:32<1:33:55,  2.44it/s]  6% 912/14661 [06:33<1:35:03,  2.41it/s]  6% 913/14661 [06:33<1:37:47,  2.34it/s]  6% 914/14661 [06:34<1:36:23,  2.38it/s]  6% 915/14661 [06:34<1:35:49,  2.39it/s]  6% 916/14661 [06:34<1:34:11,  2.43it/s]  6% 917/14661 [06:35<1:34:03,  2.44it/s]  6% 918/14661 [06:35<1:34:19,  2.43it/s]  6% 919/14661 [06:36<1:33:40,  2.44it/s]  6% 920/14661 [06:36<1:33:48,  2.44it/s]  6% 921/14661 [06:36<1:33:02,  2.46it/s]  6% 922/14661 [06:37<1:33:17,  2.45it/s]  6% 923/14661 [06:37<1:32:10,  2.48it/s]  6% 924/14661 [06:38<1:33:26,  2.45it/s]  6% 925/14661 [06:38<1:33:27,  2.45it/s]  6% 926/14661 [06:38<1:34:21,  2.43it/s]  6% 927/14661 [06:39<1:36:04,  2.38it/s]  6% 928/14661 [06:39<1:41:26,  2.26it/s]  6% 929/14661 [06:40<1:42:56,  2.22it/s]  6% 930/14661 [06:40<1:43:34,  2.21it/s]  6% 931/14661 [06:41<1:46:06,  2.16it/s]  6% 932/14661 [06:41<1:44:24,  2.19it/s]  6% 933/14661 [06:42<1:43:46,  2.20it/s]  6% 934/14661 [06:42<1:42:03,  2.24it/s]  6% 935/14661 [06:43<1:42:23,  2.23it/s]  6% 936/14661 [06:43<1:41:35,  2.25it/s]  6% 937/14661 [06:43<1:39:13,  2.31it/s]  6% 938/14661 [06:44<1:39:57,  2.29it/s]  6% 939/14661 [06:44<1:39:45,  2.29it/s]  6% 940/14661 [06:45<1:37:55,  2.34it/s]  6% 941/14661 [06:45<1:35:56,  2.38it/s]  6% 942/14661 [06:46<1:36:05,  2.38it/s]  6% 943/14661 [06:46<1:36:15,  2.38it/s]  6% 944/14661 [06:46<1:36:33,  2.37it/s]  6% 945/14661 [06:47<1:37:55,  2.33it/s]  6% 946/14661 [06:47<1:37:04,  2.35it/s]  6% 947/14661 [06:48<1:36:59,  2.36it/s]  6% 948/14661 [06:48<1:39:09,  2.30it/s]  6% 949/14661 [06:49<1:37:39,  2.34it/s]  6% 950/14661 [06:49<1:37:12,  2.35it/s]  6% 951/14661 [06:50<1:49:14,  2.09it/s]  6% 952/14661 [06:50<1:45:21,  2.17it/s]  7% 953/14661 [06:50<1:44:38,  2.18it/s]  7% 954/14661 [06:51<1:42:06,  2.24it/s]  7% 955/14661 [06:51<1:38:55,  2.31it/s]  7% 956/14661 [06:52<1:39:38,  2.29it/s]  7% 957/14661 [06:52<1:40:57,  2.26it/s]  7% 958/14661 [06:53<1:40:47,  2.27it/s]  7% 959/14661 [06:53<1:37:41,  2.34it/s]  7% 960/14661 [06:53<1:35:06,  2.40it/s]  7% 961/14661 [06:54<1:35:39,  2.39it/s]  7% 962/14661 [06:54<1:36:58,  2.35it/s]  7% 963/14661 [06:55<1:37:03,  2.35it/s]  7% 964/14661 [06:55<1:35:27,  2.39it/s]  7% 965/14661 [06:56<1:35:43,  2.38it/s]  7% 966/14661 [06:56<1:35:01,  2.40it/s]  7% 967/14661 [06:56<1:34:26,  2.42it/s]  7% 968/14661 [06:57<1:32:56,  2.46it/s]  7% 969/14661 [06:57<1:34:20,  2.42it/s]  7% 970/14661 [06:58<1:35:10,  2.40it/s]  7% 971/14661 [06:58<1:35:22,  2.39it/s]  7% 972/14661 [06:58<1:35:17,  2.39it/s]  7% 973/14661 [06:59<1:35:22,  2.39it/s]  7% 974/14661 [06:59<1:37:54,  2.33it/s]  7% 975/14661 [07:00<1:36:03,  2.37it/s]  7% 976/14661 [07:00<1:34:39,  2.41it/s]  7% 977/14661 [07:00<1:32:39,  2.46it/s]  7% 978/14661 [07:01<1:32:14,  2.47it/s]  7% 979/14661 [07:01<1:32:45,  2.46it/s]  7% 980/14661 [07:02<1:32:43,  2.46it/s]  7% 981/14661 [07:02<1:32:03,  2.48it/s]  7% 982/14661 [07:03<1:33:27,  2.44it/s]  7% 983/14661 [07:03<1:33:43,  2.43it/s]  7% 984/14661 [07:03<1:33:02,  2.45it/s]  7% 985/14661 [07:04<1:33:47,  2.43it/s]  7% 986/14661 [07:04<1:35:31,  2.39it/s]  7% 987/14661 [07:05<1:36:17,  2.37it/s]  7% 988/14661 [07:05<1:37:06,  2.35it/s]  7% 989/14661 [07:05<1:37:26,  2.34it/s]  7% 990/14661 [07:06<1:36:49,  2.35it/s]  7% 991/14661 [07:06<1:38:14,  2.32it/s]  7% 992/14661 [07:07<1:38:01,  2.32it/s]  7% 993/14661 [07:07<1:36:35,  2.36it/s]  7% 994/14661 [07:08<1:34:55,  2.40it/s]  7% 995/14661 [07:08<1:33:48,  2.43it/s]  7% 996/14661 [07:08<1:33:33,  2.43it/s]  7% 997/14661 [07:09<1:35:29,  2.38it/s]  7% 998/14661 [07:09<1:33:37,  2.43it/s]  7% 999/14661 [07:10<1:33:19,  2.44it/s]  7% 1000/14661 [07:10<1:34:54,  2.40it/s]  7% 1001/14661 [07:10<1:33:52,  2.43it/s]  7% 1002/14661 [07:11<1:33:53,  2.42it/s]  7% 1003/14661 [07:11<1:33:58,  2.42it/s]  7% 1004/14661 [07:12<1:31:53,  2.48it/s]  7% 1005/14661 [07:12<1:31:19,  2.49it/s]  7% 1006/14661 [07:12<1:30:52,  2.50it/s]  7% 1007/14661 [07:13<1:32:06,  2.47it/s]  7% 1008/14661 [07:13<1:33:11,  2.44it/s]  7% 1009/14661 [07:14<1:33:49,  2.42it/s]  7% 1010/14661 [07:14<1:33:36,  2.43it/s]  7% 1011/14661 [07:15<1:34:05,  2.42it/s]  7% 1012/14661 [07:15<1:33:55,  2.42it/s]  7% 1013/14661 [07:15<1:33:33,  2.43it/s]  7% 1014/14661 [07:16<1:34:37,  2.40it/s]  7% 1015/14661 [07:16<1:34:17,  2.41it/s]  7% 1016/14661 [07:17<1:33:33,  2.43it/s]  7% 1017/14661 [07:17<1:33:24,  2.43it/s]  7% 1018/14661 [07:17<1:37:09,  2.34it/s]  7% 1019/14661 [07:18<1:36:04,  2.37it/s]  7% 1020/14661 [07:18<1:35:19,  2.38it/s]  7% 1021/14661 [07:19<1:34:29,  2.41it/s]  7% 1022/14661 [07:19<1:33:13,  2.44it/s]  7% 1023/14661 [07:20<1:32:06,  2.47it/s]  7% 1024/14661 [07:20<1:31:59,  2.47it/s]  7% 1025/14661 [07:20<1:35:48,  2.37it/s]  7% 1026/14661 [07:21<1:35:25,  2.38it/s]  7% 1027/14661 [07:21<1:37:04,  2.34it/s]  7% 1028/14661 [07:22<1:38:25,  2.31it/s]  7% 1029/14661 [07:22<1:38:05,  2.32it/s]  7% 1030/14661 [07:23<1:37:51,  2.32it/s]  7% 1031/14661 [07:23<1:35:28,  2.38it/s]  7% 1032/14661 [07:23<1:34:25,  2.41it/s]  7% 1033/14661 [07:24<1:32:43,  2.45it/s]  7% 1034/14661 [07:24<1:32:49,  2.45it/s]  7% 1035/14661 [07:25<1:44:27,  2.17it/s]  7% 1036/14661 [07:25<1:45:14,  2.16it/s]  7% 1037/14661 [07:26<1:41:16,  2.24it/s]  7% 1038/14661 [07:26<1:37:43,  2.32it/s]  7% 1039/14661 [07:26<1:36:14,  2.36it/s]  7% 1040/14661 [07:27<1:35:26,  2.38it/s]  7% 1041/14661 [07:27<1:35:48,  2.37it/s]  7% 1042/14661 [07:28<1:35:39,  2.37it/s]  7% 1043/14661 [07:28<1:36:25,  2.35it/s]  7% 1044/14661 [07:29<1:36:32,  2.35it/s]  7% 1045/14661 [07:29<1:34:35,  2.40it/s]  7% 1046/14661 [07:29<1:32:49,  2.44it/s]  7% 1047/14661 [07:30<1:33:52,  2.42it/s]  7% 1048/14661 [07:30<1:33:52,  2.42it/s]  7% 1049/14661 [07:31<1:34:33,  2.40it/s]  7% 1050/14661 [07:31<1:34:34,  2.40it/s]  7% 1051/14661 [07:31<1:34:47,  2.39it/s]  7% 1052/14661 [07:32<1:33:27,  2.43it/s]  7% 1053/14661 [07:32<1:35:02,  2.39it/s]  7% 1054/14661 [07:33<1:34:45,  2.39it/s]  7% 1055/14661 [07:33<1:33:48,  2.42it/s]  7% 1056/14661 [07:33<1:34:28,  2.40it/s]  7% 1057/14661 [07:34<1:33:31,  2.42it/s]  7% 1058/14661 [07:34<1:32:12,  2.46it/s]  7% 1059/14661 [07:35<1:32:47,  2.44it/s]  7% 1060/14661 [07:35<1:34:42,  2.39it/s]  7% 1061/14661 [07:36<1:33:45,  2.42it/s]  7% 1062/14661 [07:36<1:33:12,  2.43it/s]  7% 1063/14661 [07:36<1:33:06,  2.43it/s]  7% 1064/14661 [07:37<1:33:15,  2.43it/s]  7% 1065/14661 [07:37<1:34:03,  2.41it/s]  7% 1066/14661 [07:38<1:33:18,  2.43it/s]  7% 1067/14661 [07:38<1:32:36,  2.45it/s]  7% 1068/14661 [07:38<1:31:20,  2.48it/s]  7% 1069/14661 [07:39<1:30:08,  2.51it/s]  7% 1070/14661 [07:39<1:32:52,  2.44it/s]  7% 1071/14661 [07:40<1:32:40,  2.44it/s]  7% 1072/14661 [07:40<1:35:06,  2.38it/s]  7% 1073/14661 [07:40<1:34:13,  2.40it/s]  7% 1074/14661 [07:41<1:32:25,  2.45it/s]  7% 1075/14661 [07:41<1:31:48,  2.47it/s]  7% 1076/14661 [07:42<1:31:42,  2.47it/s]  7% 1077/14661 [07:42<1:32:06,  2.46it/s]  7% 1078/14661 [07:43<1:34:18,  2.40it/s]  7% 1079/14661 [07:43<1:37:29,  2.32it/s]  7% 1080/14661 [07:43<1:35:48,  2.36it/s]  7% 1081/14661 [07:44<1:33:55,  2.41it/s]  7% 1082/14661 [07:44<1:35:51,  2.36it/s]  7% 1083/14661 [07:45<1:34:01,  2.41it/s]  7% 1084/14661 [07:45<1:34:23,  2.40it/s]  7% 1085/14661 [07:45<1:35:09,  2.38it/s]  7% 1086/14661 [07:46<1:35:26,  2.37it/s]  7% 1087/14661 [07:46<1:34:36,  2.39it/s]  7% 1088/14661 [07:47<1:34:07,  2.40it/s]  7% 1089/14661 [07:47<1:32:48,  2.44it/s]  7% 1090/14661 [07:48<1:34:13,  2.40it/s]  7% 1091/14661 [07:48<1:34:27,  2.39it/s]  7% 1092/14661 [07:48<1:33:21,  2.42it/s]  7% 1093/14661 [07:49<1:32:11,  2.45it/s]  7% 1094/14661 [07:49<1:30:48,  2.49it/s]  7% 1095/14661 [07:50<1:29:19,  2.53it/s]  7% 1096/14661 [07:50<1:29:04,  2.54it/s]  7% 1097/14661 [07:50<1:29:35,  2.52it/s]  7% 1098/14661 [07:51<1:30:58,  2.48it/s]  7% 1099/14661 [07:51<1:31:14,  2.48it/s]  8% 1100/14661 [07:52<1:33:31,  2.42it/s]  8% 1101/14661 [07:52<1:34:12,  2.40it/s]  8% 1102/14661 [07:52<1:35:16,  2.37it/s]  8% 1103/14661 [07:53<1:34:08,  2.40it/s]  8% 1104/14661 [07:53<1:33:57,  2.40it/s]  8% 1105/14661 [07:54<1:34:37,  2.39it/s]  8% 1106/14661 [07:54<1:33:04,  2.43it/s]  8% 1107/14661 [07:54<1:32:23,  2.44it/s]  8% 1108/14661 [07:55<1:32:18,  2.45it/s]  8% 1109/14661 [07:55<1:32:57,  2.43it/s]  8% 1110/14661 [07:56<1:33:43,  2.41it/s]  8% 1111/14661 [07:56<1:32:31,  2.44it/s]  8% 1112/14661 [07:57<1:32:28,  2.44it/s]  8% 1113/14661 [07:57<1:32:33,  2.44it/s]  8% 1114/14661 [07:57<1:32:23,  2.44it/s]  8% 1115/14661 [07:58<1:35:16,  2.37it/s]  8% 1116/14661 [07:58<1:34:23,  2.39it/s]  8% 1117/14661 [07:59<1:34:40,  2.38it/s]  8% 1118/14661 [07:59<1:34:01,  2.40it/s]  8% 1119/14661 [07:59<1:35:58,  2.35it/s]  8% 1120/14661 [08:00<1:48:52,  2.07it/s]  8% 1121/14661 [08:01<1:46:50,  2.11it/s]  8% 1122/14661 [08:01<1:42:25,  2.20it/s]  8% 1123/14661 [08:01<1:39:09,  2.28it/s]  8% 1124/14661 [08:02<1:37:28,  2.31it/s]  8% 1125/14661 [08:02<1:36:33,  2.34it/s]  8% 1126/14661 [08:03<1:35:24,  2.36it/s]  8% 1127/14661 [08:03<1:33:34,  2.41it/s]  8% 1128/14661 [08:03<1:33:13,  2.42it/s]  8% 1129/14661 [08:04<1:33:50,  2.40it/s]  8% 1130/14661 [08:04<1:33:04,  2.42it/s]  8% 1131/14661 [08:05<1:32:06,  2.45it/s]  8% 1132/14661 [08:05<1:31:53,  2.45it/s]  8% 1133/14661 [08:05<1:32:03,  2.45it/s]  8% 1134/14661 [08:06<1:31:21,  2.47it/s]  8% 1135/14661 [08:06<1:32:09,  2.45it/s]  8% 1136/14661 [08:07<1:32:00,  2.45it/s]  8% 1137/14661 [08:07<1:32:11,  2.44it/s]  8% 1138/14661 [08:08<1:32:04,  2.45it/s]  8% 1139/14661 [08:08<1:34:06,  2.39it/s]  8% 1140/14661 [08:08<1:33:03,  2.42it/s]  8% 1141/14661 [08:09<1:34:35,  2.38it/s]  8% 1142/14661 [08:09<1:34:25,  2.39it/s]  8% 1143/14661 [08:10<1:34:14,  2.39it/s]  8% 1144/14661 [08:10<1:34:02,  2.40it/s]  8% 1145/14661 [08:10<1:34:35,  2.38it/s]  8% 1146/14661 [08:11<1:32:54,  2.42it/s]  8% 1147/14661 [08:11<1:32:05,  2.45it/s]  8% 1148/14661 [08:12<1:31:16,  2.47it/s]  8% 1149/14661 [08:12<1:30:58,  2.48it/s]  8% 1150/14661 [08:12<1:31:04,  2.47it/s]  8% 1151/14661 [08:13<1:30:40,  2.48it/s]  8% 1152/14661 [08:13<1:31:34,  2.46it/s]  8% 1153/14661 [08:14<1:31:51,  2.45it/s]  8% 1154/14661 [08:14<1:33:08,  2.42it/s]  8% 1155/14661 [08:15<1:33:59,  2.39it/s]  8% 1156/14661 [08:15<1:32:09,  2.44it/s]  8% 1157/14661 [08:15<1:33:08,  2.42it/s]  8% 1158/14661 [08:16<1:32:54,  2.42it/s]  8% 1159/14661 [08:16<1:32:13,  2.44it/s]  8% 1160/14661 [08:17<1:33:20,  2.41it/s]  8% 1161/14661 [08:17<1:33:00,  2.42it/s]  8% 1162/14661 [08:17<1:33:10,  2.41it/s]  8% 1163/14661 [08:18<1:31:26,  2.46it/s]  8% 1164/14661 [08:18<1:32:17,  2.44it/s]  8% 1165/14661 [08:19<1:32:27,  2.43it/s]  8% 1166/14661 [08:19<1:31:42,  2.45it/s]  8% 1167/14661 [08:19<1:31:39,  2.45it/s]  8% 1168/14661 [08:20<1:31:45,  2.45it/s]  8% 1169/14661 [08:20<1:35:03,  2.37it/s]  8% 1170/14661 [08:21<1:34:44,  2.37it/s]  8% 1171/14661 [08:21<1:34:01,  2.39it/s]  8% 1172/14661 [08:22<1:33:16,  2.41it/s]  8% 1173/14661 [08:22<1:34:17,  2.38it/s]  8% 1174/14661 [08:22<1:33:28,  2.40it/s]  8% 1175/14661 [08:23<1:33:33,  2.40it/s]  8% 1176/14661 [08:23<1:32:57,  2.42it/s]  8% 1177/14661 [08:24<1:33:03,  2.41it/s]  8% 1178/14661 [08:24<1:32:10,  2.44it/s]  8% 1179/14661 [08:24<1:32:29,  2.43it/s]  8% 1180/14661 [08:25<1:32:42,  2.42it/s]  8% 1181/14661 [08:25<1:33:09,  2.41it/s]  8% 1182/14661 [08:26<1:31:52,  2.45it/s]  8% 1183/14661 [08:26<1:30:56,  2.47it/s]  8% 1184/14661 [08:26<1:30:03,  2.49it/s]  8% 1185/14661 [08:27<1:29:27,  2.51it/s]  8% 1186/14661 [08:27<1:29:53,  2.50it/s]  8% 1187/14661 [08:28<1:29:55,  2.50it/s]  8% 1188/14661 [08:28<1:31:03,  2.47it/s]  8% 1189/14661 [08:28<1:31:51,  2.44it/s]  8% 1190/14661 [08:29<1:33:54,  2.39it/s]  8% 1191/14661 [08:29<1:32:25,  2.43it/s]  8% 1192/14661 [08:30<1:32:03,  2.44it/s]  8% 1193/14661 [08:30<1:33:27,  2.40it/s]  8% 1194/14661 [08:31<1:33:50,  2.39it/s]  8% 1195/14661 [08:31<1:32:49,  2.42it/s]  8% 1196/14661 [08:31<1:35:40,  2.35it/s]  8% 1197/14661 [08:32<1:34:15,  2.38it/s]  8% 1198/14661 [08:32<1:33:25,  2.40it/s]  8% 1199/14661 [08:33<1:32:59,  2.41it/s]  8% 1200/14661 [08:33<1:32:17,  2.43it/s]  8% 1201/14661 [08:33<1:31:00,  2.46it/s]  8% 1202/14661 [08:34<1:30:36,  2.48it/s]  8% 1203/14661 [08:34<1:32:17,  2.43it/s]  8% 1204/14661 [08:35<1:33:51,  2.39it/s]  8% 1205/14661 [08:35<1:32:43,  2.42it/s]  8% 1206/14661 [08:36<1:32:13,  2.43it/s]  8% 1207/14661 [08:36<1:31:54,  2.44it/s]  8% 1208/14661 [08:36<1:31:00,  2.46it/s]  8% 1209/14661 [08:37<1:43:57,  2.16it/s]  8% 1210/14661 [08:37<1:39:42,  2.25it/s]  8% 1211/14661 [08:38<1:37:01,  2.31it/s]  8% 1212/14661 [08:38<1:34:51,  2.36it/s]  8% 1213/14661 [08:39<1:34:06,  2.38it/s]  8% 1214/14661 [08:39<1:33:06,  2.41it/s]  8% 1215/14661 [08:39<1:32:37,  2.42it/s]  8% 1216/14661 [08:40<1:34:34,  2.37it/s]  8% 1217/14661 [08:40<1:32:49,  2.41it/s]  8% 1218/14661 [08:41<1:32:34,  2.42it/s]  8% 1219/14661 [08:41<1:34:14,  2.38it/s]  8% 1220/14661 [08:41<1:33:59,  2.38it/s]  8% 1221/14661 [08:42<1:32:16,  2.43it/s]  8% 1222/14661 [08:42<1:31:33,  2.45it/s]  8% 1223/14661 [08:43<1:32:49,  2.41it/s]  8% 1224/14661 [08:43<1:32:03,  2.43it/s]  8% 1225/14661 [08:44<1:31:55,  2.44it/s]  8% 1226/14661 [08:44<1:31:14,  2.45it/s]  8% 1227/14661 [08:44<1:30:05,  2.49it/s]  8% 1228/14661 [08:45<1:30:40,  2.47it/s]  8% 1229/14661 [08:45<1:31:16,  2.45it/s]  8% 1230/14661 [08:46<1:35:45,  2.34it/s]  8% 1231/14661 [08:46<1:34:33,  2.37it/s]  8% 1232/14661 [08:46<1:32:47,  2.41it/s]  8% 1233/14661 [08:47<1:32:37,  2.42it/s]  8% 1234/14661 [08:47<1:34:17,  2.37it/s]  8% 1235/14661 [08:48<1:34:20,  2.37it/s]  8% 1236/14661 [08:48<1:33:15,  2.40it/s]  8% 1237/14661 [08:48<1:31:57,  2.43it/s]  8% 1238/14661 [08:49<1:32:05,  2.43it/s]  8% 1239/14661 [08:49<1:32:17,  2.42it/s]  8% 1240/14661 [08:50<1:32:00,  2.43it/s]  8% 1241/14661 [08:50<1:32:04,  2.43it/s]  8% 1242/14661 [08:51<1:32:24,  2.42it/s]  8% 1243/14661 [08:51<1:31:37,  2.44it/s]  8% 1244/14661 [08:51<1:30:55,  2.46it/s]  8% 1245/14661 [08:52<1:31:14,  2.45it/s]  8% 1246/14661 [08:52<1:31:28,  2.44it/s]  9% 1247/14661 [08:53<1:31:39,  2.44it/s]  9% 1248/14661 [08:53<1:30:35,  2.47it/s]  9% 1249/14661 [08:53<1:30:06,  2.48it/s]  9% 1250/14661 [08:54<1:31:42,  2.44it/s]  9% 1251/14661 [08:54<1:31:26,  2.44it/s]  9% 1252/14661 [08:55<1:30:52,  2.46it/s]  9% 1253/14661 [08:55<1:30:49,  2.46it/s]  9% 1254/14661 [08:55<1:30:35,  2.47it/s]  9% 1255/14661 [08:56<1:31:38,  2.44it/s]  9% 1256/14661 [08:56<1:32:10,  2.42it/s]  9% 1257/14661 [08:57<1:31:40,  2.44it/s]  9% 1258/14661 [08:57<1:31:36,  2.44it/s]  9% 1259/14661 [08:57<1:30:46,  2.46it/s]  9% 1260/14661 [08:58<1:30:53,  2.46it/s]  9% 1261/14661 [08:58<1:31:09,  2.45it/s]  9% 1262/14661 [08:59<1:30:31,  2.47it/s]  9% 1263/14661 [08:59<1:30:05,  2.48it/s]  9% 1264/14661 [09:00<1:32:18,  2.42it/s]  9% 1265/14661 [09:00<1:32:47,  2.41it/s]  9% 1266/14661 [09:00<1:32:30,  2.41it/s]  9% 1267/14661 [09:01<1:31:48,  2.43it/s]  9% 1268/14661 [09:01<1:31:13,  2.45it/s]  9% 1269/14661 [09:02<1:31:53,  2.43it/s]  9% 1270/14661 [09:02<1:32:39,  2.41it/s]  9% 1271/14661 [09:02<1:33:08,  2.40it/s]  9% 1272/14661 [09:03<1:33:07,  2.40it/s]  9% 1273/14661 [09:03<1:34:33,  2.36it/s]  9% 1274/14661 [09:04<1:34:14,  2.37it/s]  9% 1275/14661 [09:04<1:34:43,  2.36it/s]  9% 1276/14661 [09:05<1:33:56,  2.37it/s]  9% 1277/14661 [09:05<1:32:54,  2.40it/s]  9% 1278/14661 [09:05<1:31:51,  2.43it/s]  9% 1279/14661 [09:06<1:31:42,  2.43it/s]  9% 1280/14661 [09:06<1:31:26,  2.44it/s]  9% 1281/14661 [09:07<1:31:16,  2.44it/s]  9% 1282/14661 [09:07<1:30:51,  2.45it/s]  9% 1283/14661 [09:07<1:32:08,  2.42it/s]  9% 1284/14661 [09:08<1:33:22,  2.39it/s]  9% 1285/14661 [09:08<1:33:07,  2.39it/s]  9% 1286/14661 [09:09<1:31:57,  2.42it/s]  9% 1287/14661 [09:09<1:32:03,  2.42it/s]  9% 1288/14661 [09:09<1:33:33,  2.38it/s]  9% 1289/14661 [09:10<1:35:12,  2.34it/s]  9% 1290/14661 [09:10<1:33:58,  2.37it/s]  9% 1291/14661 [09:11<1:32:35,  2.41it/s]  9% 1292/14661 [09:11<1:39:08,  2.25it/s]  9% 1293/14661 [09:12<1:35:40,  2.33it/s]  9% 1294/14661 [09:12<1:34:56,  2.35it/s]  9% 1295/14661 [09:12<1:33:31,  2.38it/s]  9% 1296/14661 [09:13<1:34:30,  2.36it/s]  9% 1297/14661 [09:13<1:33:53,  2.37it/s]  9% 1298/14661 [09:14<1:33:17,  2.39it/s]  9% 1299/14661 [09:14<1:33:02,  2.39it/s]  9% 1300/14661 [09:15<1:33:32,  2.38it/s]  9% 1301/14661 [09:15<1:32:46,  2.40it/s]  9% 1302/14661 [09:15<1:32:02,  2.42it/s]  9% 1303/14661 [09:16<1:32:08,  2.42it/s]  9% 1304/14661 [09:16<1:33:01,  2.39it/s]  9% 1305/14661 [09:17<1:31:22,  2.44it/s]  9% 1306/14661 [09:17<1:30:26,  2.46it/s]  9% 1307/14661 [09:17<1:30:19,  2.46it/s]  9% 1308/14661 [09:18<1:31:08,  2.44it/s]  9% 1309/14661 [09:18<1:34:06,  2.36it/s]  9% 1310/14661 [09:19<1:33:56,  2.37it/s]  9% 1311/14661 [09:19<1:33:30,  2.38it/s]  9% 1312/14661 [09:20<1:33:13,  2.39it/s]  9% 1313/14661 [09:20<1:31:48,  2.42it/s]  9% 1314/14661 [09:20<1:31:22,  2.43it/s]  9% 1315/14661 [09:21<1:31:37,  2.43it/s]  9% 1316/14661 [09:21<1:31:41,  2.43it/s]  9% 1317/14661 [09:22<1:33:24,  2.38it/s]  9% 1318/14661 [09:22<1:33:18,  2.38it/s]  9% 1319/14661 [09:22<1:31:19,  2.44it/s]  9% 1320/14661 [09:23<1:30:28,  2.46it/s]  9% 1321/14661 [09:23<1:30:54,  2.45it/s]  9% 1322/14661 [09:24<1:32:42,  2.40it/s]  9% 1323/14661 [09:24<1:31:47,  2.42it/s]  9% 1324/14661 [09:25<1:31:50,  2.42it/s]  9% 1325/14661 [09:25<1:32:47,  2.40it/s]  9% 1326/14661 [09:25<1:31:49,  2.42it/s]  9% 1327/14661 [09:26<1:32:21,  2.41it/s]  9% 1328/14661 [09:26<1:31:54,  2.42it/s]  9% 1329/14661 [09:27<1:31:45,  2.42it/s]  9% 1330/14661 [09:27<1:32:33,  2.40it/s]  9% 1331/14661 [09:27<1:32:39,  2.40it/s]  9% 1332/14661 [09:28<1:31:30,  2.43it/s]  9% 1333/14661 [09:28<1:32:29,  2.40it/s]  9% 1334/14661 [09:29<1:33:30,  2.38it/s]  9% 1335/14661 [09:29<1:34:22,  2.35it/s]  9% 1336/14661 [09:30<1:33:26,  2.38it/s]  9% 1337/14661 [09:30<1:32:20,  2.40it/s]  9% 1338/14661 [09:30<1:31:08,  2.44it/s]  9% 1339/14661 [09:31<1:32:49,  2.39it/s]  9% 1340/14661 [09:31<1:33:46,  2.37it/s]  9% 1341/14661 [09:32<1:34:31,  2.35it/s]  9% 1342/14661 [09:32<1:32:32,  2.40it/s]  9% 1343/14661 [09:32<1:31:00,  2.44it/s]  9% 1344/14661 [09:33<1:31:44,  2.42it/s]  9% 1345/14661 [09:33<1:31:26,  2.43it/s]  9% 1346/14661 [09:34<1:33:28,  2.37it/s]  9% 1347/14661 [09:34<1:35:36,  2.32it/s]  9% 1348/14661 [09:35<1:36:35,  2.30it/s]  9% 1349/14661 [09:35<1:37:08,  2.28it/s]  9% 1350/14661 [09:35<1:38:49,  2.24it/s]  9% 1351/14661 [09:36<1:38:35,  2.25it/s]  9% 1352/14661 [09:36<1:38:37,  2.25it/s]  9% 1353/14661 [09:37<1:36:31,  2.30it/s]  9% 1354/14661 [09:37<1:35:07,  2.33it/s]  9% 1355/14661 [09:38<1:35:57,  2.31it/s]  9% 1356/14661 [09:38<1:35:39,  2.32it/s]  9% 1357/14661 [09:39<1:35:02,  2.33it/s]  9% 1358/14661 [09:39<1:32:37,  2.39it/s]  9% 1359/14661 [09:39<1:32:16,  2.40it/s]  9% 1360/14661 [09:40<1:32:06,  2.41it/s]  9% 1361/14661 [09:40<1:31:21,  2.43it/s]  9% 1362/14661 [09:41<1:31:11,  2.43it/s]  9% 1363/14661 [09:41<1:31:30,  2.42it/s]  9% 1364/14661 [09:41<1:30:56,  2.44it/s]  9% 1365/14661 [09:42<1:30:04,  2.46it/s]  9% 1366/14661 [09:42<1:31:07,  2.43it/s]  9% 1367/14661 [09:43<1:30:51,  2.44it/s]  9% 1368/14661 [09:43<1:29:06,  2.49it/s]  9% 1369/14661 [09:43<1:28:54,  2.49it/s]  9% 1370/14661 [09:44<1:28:13,  2.51it/s]  9% 1371/14661 [09:44<1:28:34,  2.50it/s]  9% 1372/14661 [09:45<1:29:30,  2.47it/s]  9% 1373/14661 [09:45<1:28:59,  2.49it/s]  9% 1374/14661 [09:45<1:29:08,  2.48it/s]  9% 1375/14661 [09:46<1:28:52,  2.49it/s]  9% 1376/14661 [09:46<1:30:30,  2.45it/s]  9% 1377/14661 [09:47<1:30:45,  2.44it/s]  9% 1378/14661 [09:47<1:41:32,  2.18it/s]  9% 1379/14661 [09:48<1:36:58,  2.28it/s]  9% 1380/14661 [09:48<1:35:20,  2.32it/s]  9% 1381/14661 [09:48<1:33:34,  2.37it/s]  9% 1382/14661 [09:49<1:34:54,  2.33it/s]  9% 1383/14661 [09:49<1:35:52,  2.31it/s]  9% 1384/14661 [09:50<1:35:41,  2.31it/s]  9% 1385/14661 [09:50<1:34:39,  2.34it/s]  9% 1386/14661 [09:51<1:33:23,  2.37it/s]  9% 1387/14661 [09:51<1:32:34,  2.39it/s]  9% 1388/14661 [09:51<1:31:42,  2.41it/s]  9% 1389/14661 [09:52<1:32:15,  2.40it/s]  9% 1390/14661 [09:52<1:31:37,  2.41it/s]  9% 1391/14661 [09:53<1:30:23,  2.45it/s]  9% 1392/14661 [09:53<1:29:49,  2.46it/s] 10% 1393/14661 [09:53<1:30:36,  2.44it/s] 10% 1394/14661 [09:54<1:30:57,  2.43it/s] 10% 1395/14661 [09:54<1:32:02,  2.40it/s] 10% 1396/14661 [09:55<1:32:15,  2.40it/s] 10% 1397/14661 [09:55<1:31:28,  2.42it/s] 10% 1398/14661 [09:55<1:30:44,  2.44it/s] 10% 1399/14661 [09:56<1:29:56,  2.46it/s] 10% 1400/14661 [09:56<1:30:03,  2.45it/s] 10% 1401/14661 [09:57<1:29:36,  2.47it/s] 10% 1402/14661 [09:57<1:30:04,  2.45it/s] 10% 1403/14661 [09:58<1:31:22,  2.42it/s] 10% 1404/14661 [09:58<1:32:17,  2.39it/s] 10% 1405/14661 [09:58<1:32:32,  2.39it/s] 10% 1406/14661 [09:59<1:31:27,  2.42it/s] 10% 1407/14661 [09:59<1:30:17,  2.45it/s] 10% 1408/14661 [10:00<1:31:27,  2.41it/s] 10% 1409/14661 [10:00<1:32:01,  2.40it/s] 10% 1410/14661 [10:00<1:31:55,  2.40it/s] 10% 1411/14661 [10:01<1:33:07,  2.37it/s] 10% 1412/14661 [10:01<1:31:41,  2.41it/s] 10% 1413/14661 [10:02<1:31:48,  2.40it/s] 10% 1414/14661 [10:02<1:33:23,  2.36it/s] 10% 1415/14661 [10:03<1:32:51,  2.38it/s] 10% 1416/14661 [10:03<1:31:38,  2.41it/s] 10% 1417/14661 [10:03<1:30:50,  2.43it/s] 10% 1418/14661 [10:04<1:29:52,  2.46it/s] 10% 1419/14661 [10:04<1:31:25,  2.41it/s] 10% 1420/14661 [10:05<1:32:03,  2.40it/s] 10% 1421/14661 [10:05<1:31:15,  2.42it/s] 10% 1422/14661 [10:05<1:31:16,  2.42it/s] 10% 1423/14661 [10:06<1:32:30,  2.39it/s] 10% 1424/14661 [10:06<1:30:26,  2.44it/s] 10% 1425/14661 [10:07<1:30:30,  2.44it/s] 10% 1426/14661 [10:07<1:31:04,  2.42it/s] 10% 1427/14661 [10:07<1:29:33,  2.46it/s] 10% 1428/14661 [10:08<1:29:33,  2.46it/s] 10% 1429/14661 [10:08<1:30:08,  2.45it/s] 10% 1430/14661 [10:09<1:30:59,  2.42it/s] 10% 1431/14661 [10:09<1:30:13,  2.44it/s] 10% 1432/14661 [10:09<1:29:27,  2.46it/s] 10% 1433/14661 [10:10<1:28:50,  2.48it/s] 10% 1434/14661 [10:10<1:28:39,  2.49it/s] 10% 1435/14661 [10:11<1:30:25,  2.44it/s] 10% 1436/14661 [10:11<1:30:16,  2.44it/s] 10% 1437/14661 [10:12<1:29:37,  2.46it/s] 10% 1438/14661 [10:12<1:30:13,  2.44it/s] 10% 1439/14661 [10:12<1:29:16,  2.47it/s] 10% 1440/14661 [10:13<1:29:35,  2.46it/s] 10% 1441/14661 [10:13<1:30:52,  2.42it/s] 10% 1442/14661 [10:14<1:31:57,  2.40it/s] 10% 1443/14661 [10:14<1:31:52,  2.40it/s] 10% 1444/14661 [10:14<1:32:33,  2.38it/s] 10% 1445/14661 [10:15<1:31:05,  2.42it/s] 10% 1446/14661 [10:15<1:30:20,  2.44it/s] 10% 1447/14661 [10:16<1:30:16,  2.44it/s] 10% 1448/14661 [10:16<1:29:23,  2.46it/s] 10% 1449/14661 [10:16<1:29:26,  2.46it/s] 10% 1450/14661 [10:17<1:29:40,  2.46it/s] 10% 1451/14661 [10:17<1:30:06,  2.44it/s] 10% 1452/14661 [10:18<1:30:57,  2.42it/s] 10% 1453/14661 [10:18<1:31:32,  2.40it/s] 10% 1454/14661 [10:19<1:30:47,  2.42it/s] 10% 1455/14661 [10:19<1:32:45,  2.37it/s] 10% 1456/14661 [10:19<1:31:47,  2.40it/s] 10% 1457/14661 [10:20<1:31:39,  2.40it/s] 10% 1458/14661 [10:20<1:32:11,  2.39it/s] 10% 1459/14661 [10:21<1:31:03,  2.42it/s] 10% 1460/14661 [10:21<1:31:07,  2.41it/s] 10% 1461/14661 [10:21<1:32:47,  2.37it/s] 10% 1462/14661 [10:22<1:38:06,  2.24it/s] 10% 1463/14661 [10:22<1:35:54,  2.29it/s] 10% 1464/14661 [10:23<1:34:37,  2.32it/s] 10% 1465/14661 [10:23<1:34:22,  2.33it/s] 10% 1466/14661 [10:24<1:34:50,  2.32it/s] 10% 1467/14661 [10:24<1:35:38,  2.30it/s] 10% 1468/14661 [10:25<1:33:41,  2.35it/s] 10% 1469/14661 [10:25<1:32:48,  2.37it/s] 10% 1470/14661 [10:25<1:32:31,  2.38it/s] 10% 1471/14661 [10:26<1:33:14,  2.36it/s] 10% 1472/14661 [10:26<1:33:54,  2.34it/s] 10% 1473/14661 [10:27<1:33:14,  2.36it/s] 10% 1474/14661 [10:27<1:31:22,  2.41it/s] 10% 1475/14661 [10:27<1:30:04,  2.44it/s] 10% 1476/14661 [10:28<1:31:47,  2.39it/s] 10% 1477/14661 [10:28<1:31:30,  2.40it/s] 10% 1478/14661 [10:29<1:30:21,  2.43it/s] 10% 1479/14661 [10:29<1:29:52,  2.44it/s] 10% 1480/14661 [10:30<1:31:00,  2.41it/s] 10% 1481/14661 [10:30<1:31:02,  2.41it/s] 10% 1482/14661 [10:30<1:30:16,  2.43it/s] 10% 1483/14661 [10:31<1:30:12,  2.43it/s] 10% 1484/14661 [10:31<1:31:12,  2.41it/s] 10% 1485/14661 [10:32<1:30:08,  2.44it/s] 10% 1486/14661 [10:32<1:30:56,  2.41it/s] 10% 1487/14661 [10:32<1:30:18,  2.43it/s] 10% 1488/14661 [10:33<1:30:34,  2.42it/s] 10% 1489/14661 [10:33<1:30:27,  2.43it/s] 10% 1490/14661 [10:34<1:31:03,  2.41it/s] 10% 1491/14661 [10:34<1:29:44,  2.45it/s] 10% 1492/14661 [10:34<1:30:19,  2.43it/s] 10% 1493/14661 [10:35<1:29:54,  2.44it/s] 10% 1494/14661 [10:35<1:29:28,  2.45it/s]slurmstepd: error: *** JOB 72845 ON node005 CANCELLED AT 2021-10-30T12:15:39 ***

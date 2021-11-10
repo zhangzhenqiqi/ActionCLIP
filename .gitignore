@@ -9,4 +9,5 @@ thumb.sdb
 .DS_Store
 .idea
 wandb/
+*.out
 trained_models/

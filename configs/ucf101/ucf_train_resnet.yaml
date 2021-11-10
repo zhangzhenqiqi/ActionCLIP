@@ -34,7 +34,7 @@ network:
   fix_text: False
   fix_img: False
   describe:
-  is_action: True #是否添加action模块
+  is_action: False #是否添加action模块
 solver:
   type: cosine
   epochs: 100

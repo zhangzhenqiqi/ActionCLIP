@@ -94,24 +94,24 @@ def main():
     model_text = TextCLIP(model)
     model_image = ImageCLIP(model)
 
-    os.environ['MASTER_ADDR'] = 'localhost'
-    os.environ['MASTER_PORT'] = '5678'
+    # os.environ['MASTER_ADDR'] = 'localhost'
+    # os.environ['MASTER_PORT'] = '5678'
+    #
+    # torch.distributed.init_process_group(backend='nccl', world_size=2,
+    #                                      rank=0)
+    # model_text = model_text.cuda()
+    # model_text = torch.nn.parallel.DistributedDataParallel(model_text)
+    # print("OK.1")
+    # model_image = model_image.cuda()
+    # model_image = torch.nn.parallel.DistributedDataParallel(model_image)
+    # print("OK.2")
+    # fusion_model = fusion_model.cuda()
+    # fusion_model = torch.nn.parallel.DistributedDataParallel(fusion_model)
+    # print("OK.3")
 
-    torch.distributed.init_process_group(backend='nccl', world_size=2,
-                                         rank=0)
-    model_text = model_text.cuda()
-    model_text = torch.nn.parallel.DistributedDataParallel(model_text)
-    print("OK.1")
-    model_image = model_image.cuda()
-    model_image = torch.nn.parallel.DistributedDataParallel(model_image)
-    print("OK.2")
-    fusion_model = fusion_model.cuda()
-    fusion_model = torch.nn.parallel.DistributedDataParallel(fusion_model)
-    print("OK.3")
-
-    # model_text = torch.nn.DataParallel(model_text).cuda()
-    # model_image = torch.nn.DataParallel(model_image).cuda()
-    # fusion_model = torch.nn.DataParallel(fusion_model).cuda()
+    model_text = torch.nn.DataParallel(model_text).cuda()
+    model_image = torch.nn.DataParallel(model_image).cuda()
+    fusion_model = torch.nn.DataParallel(fusion_model).cuda()
 
     # wandb.watch(model)
     # wandb.watch(fusion_model)

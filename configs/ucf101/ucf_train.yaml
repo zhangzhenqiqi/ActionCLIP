@@ -25,7 +25,7 @@ data:
     N: 0 #2
     M: 0  #9
 network:
-  arch: ViT-B/16  #ViT-B/32 ViT-B/16
+  arch: RN50  #ViT-B/32 ViT-B/16
   init: True
   drop_out: 0.0
   emb_dropout: 0.0
@@ -34,9 +34,10 @@ network:
   fix_text: False
   fix_img: False
   describe:
+  is_action: False #是否添加action模块
 solver:
   type: cosine
-  epochs: 50
+  epochs: 100
   start_epoch: 0
   epoch_offset: 0
   optim: adamw

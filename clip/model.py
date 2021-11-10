@@ -195,9 +195,11 @@ class Bottleneck(nn.Module):
         out = self.relu(self.bn2(self.conv2(out)))
         out = self.avgpool(out)
 
-        print('conv3=', self.conv3)
-        print('device=', out.device)
+        # print('conv3=', self.conv3)
+        # print('device=', out.device)
+        # print('size=',out.size())
         out = self.conv3(out)
+        # print('done===')
         out = self.bn3(out)
         # out = self.bn3(self.conv3(out))
 
@@ -558,10 +560,10 @@ def build_model(state_dict: dict, tsm=False, T=8, dropout=0., joint=False, emb_d
     else:
         print('not using full clip pretrained model, only visual!')
 
-        # for k in list(state_dict.keys()):
-        #     if not k.find("visual") > -1:
-        #         state_dict.pop(k)
-        # model.load_state_dict(state_dict, strict=False)
+        for k in list(state_dict.keys()):
+            if not k.find("visual") > -1:
+                state_dict.pop(k)
+        model.load_state_dict(state_dict, strict=False)
 
     ##test
     # import torchvision.models as modles
@@ -572,5 +574,5 @@ def build_model(state_dict: dict, tsm=False, T=8, dropout=0., joint=False, emb_d
         from ActionNet.action import make_temporal_shift
         # 用于添加ACTION模块
         make_temporal_shift(model.visual, T, n_div=8, place='blockres', temporal_pool=False)
-    # convert_weights(model)
+        convert_weights(model)
     return model.eval()

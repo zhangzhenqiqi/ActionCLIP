@@ -12380,7 +12380,6 @@
 /home/10501001/datasets/K400/rawframes/welding/aF1Srs_e1Aw.mkv 180 391
 /home/10501001/datasets/K400/rawframes/sticking_tongue_out/-daBSTzifXA.mp4 360 331
 /home/10501001/datasets/K400/rawframes/triple_jump/YEDn6gNbAEI.mkv 230 367
-/home/10501001/datasets/K400/rawframes/crossing_river/ZVdAl-yh9m0.mp4 0 78
 /home/10501001/datasets/K400/rawframes/getting_a_tattoo/4JLJ6YTCaJc.mp4 288 139
 /home/10501001/datasets/K400/rawframes/frying_vegetables/-DhAghDNh60.mkv 720 135
 /home/10501001/datasets/K400/rawframes/stretching_arm/rSvALTC8NaQ.mp4 360 333

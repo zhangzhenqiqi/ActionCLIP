@@ -14,8 +14,8 @@ data:
   gpus: 2
   num_classes: 101
   image_tmpl: 'img_{:05d}.jpg'
-  train_list: '/home/10501001/datasets/ucf101/ucfTrainTestlist/train_rgb_split1.txt'
-  val_list: '/home/10501001/datasets/ucf101/ucfTrainTestlist/val_rgb_split1.txt'
+  train_list: '/home/10501001/datasets/ucf101/ucfTrainTestlist/train_rgb_split1_complete.txt'
+  val_list: '/home/10501001/datasets/ucf101/ucfTrainTestlist/val_rgb_split1_complete.txt'
   #    train_list: '/public/home/ock/video_clip/video-clip/lists/ucf101/train_rgb_split1.txt'
   #    val_list: '/public/home/ock/video_clip/video-clip/lists/ucf101/val_rgb_split1.txt'
   label_list: 'lists/ucf_labels.csv'

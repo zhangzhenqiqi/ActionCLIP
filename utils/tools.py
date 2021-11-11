@@ -5,6 +5,10 @@
 import numpy
 
 def gen_label(labels):
+    """
+    labels : [0,1,100,99..]
+    gt[i,j]=1 表示 labels[i]==labels[j]
+    """
     num = len(labels)
     gt = numpy.zeros(shape=(num,num))
     for i, label in enumerate(labels):

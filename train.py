@@ -16,6 +16,7 @@ from dotmap import DotMap
 import pprint
 from modules.Visual_Prompt import visual_prompt
 from utils.KLLoss import KLLoss
+from utils.ContrastiveLoss import ContrastiveLoss
 from test import validate
 from utils.Augmentation import *
 from utils.solver import _optimizer, _lr_scheduler
@@ -155,8 +156,11 @@ def main():
             model_text)  # Actually this line is unnecessary since clip by default already on float16
         clip.model.convert_weights(model_image)
 
-    loss_img = KLLoss()
-    loss_txt = KLLoss()
+    # loss_img = KLLoss()
+    # loss_txt = KLLoss()
+
+    loss_img = ContrastiveLoss()
+    loss_txt = ContrastiveLoss()
 
     start_epoch = config.solver.start_epoch
 
@@ -231,12 +235,21 @@ def main():
                 text_embedding.detach_()
 
             logit_scale = model.logit_scale.exp()
-            logits_per_image, logits_per_text = create_logits(image_embedding, text_embedding, logit_scale)
+            # ##origin loss start
+            # logits_per_image, logits_per_text = create_logits(image_embedding, text_embedding,
+            #                                                   logit_scale)  # 16*16 b=16
+            #
+            # ground_truth = torch.tensor(gen_label(list_id), dtype=image_embedding.dtype, device=device)
+            # loss_imgs = loss_img(logits_per_image, ground_truth)
+            # loss_texts = loss_txt(logits_per_text, ground_truth)
+            # total_loss = (loss_imgs + loss_texts) / 2
+            # ##end
 
             ground_truth = torch.tensor(gen_label(list_id), dtype=image_embedding.dtype, device=device)
-            loss_imgs = loss_img(logits_per_image, ground_truth)
-            loss_texts = loss_txt(logits_per_text, ground_truth)
+            loss_imgs = loss_img(image_embedding,text_embedding,ground_truth)
+            loss_texts = loss_txt(text_embedding,image_embedding,ground_truth)
             total_loss = (loss_imgs + loss_texts) / 2
+
             wandb.log({"train_total_loss": total_loss})
             wandb.log({"train_loss_imgs": loss_imgs})
             wandb.log({"train_loss_texts": loss_texts})

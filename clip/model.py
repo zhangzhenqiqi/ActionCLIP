@@ -365,6 +365,7 @@ class CLIP(nn.Module):
                     consensus_type='avg',
                     fc_lr5=True
                 )
+                self.visual.new_fc = nn.Linear(2048, 1024)
                 # import torchvision.models as models
                 # self.visual = models.resnet50(pretrained=True)
                 # self.visual.fc = nn.Linear(2048, 1024)
@@ -445,7 +446,7 @@ class CLIP(nn.Module):
 
     @property
     def dtype(self):
-        return self.visual.conv1.weight.dtype
+        return self.visual.base_model.conv1.weight.dtype
 
     def encode_image(self, image):
         ret = self.visual(image.type(self.dtype))

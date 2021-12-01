@@ -131,7 +131,7 @@ class TSN(nn.Module):
             print('---------------------------')
             if self.is_shift:
                 print('Adding action...')
-                from modelss.action import make_temporal_shift
+                from ActionNet.action import make_temporal_shift
                 # 用于添加ACTION模块
                 make_temporal_shift(self.base_model, self.num_segments,
                                     n_div=self.shift_div, place=self.shift_place, temporal_pool=self.temporal_pool)
@@ -195,7 +195,7 @@ class TSN(nn.Module):
 
             self.base_model.avgpool = nn.AdaptiveAvgPool2d(1)
             if self.is_shift:
-                from modelss.action import Action
+                from ActionNet.action import Action
                 for m in self.base_model.modules():
                     if isinstance(m, InvertedResidual) and len(m.conv) == 8 and m.use_res_connect:
                         m.conv[0] = Action(m.conv[0], n_segment=self.num_segments, shift_div=self.shift_div)

@@ -124,13 +124,13 @@ def main():
                 return False
         return True
 
-    d = ['sigmoid', 'pool', 'dropout', 'relu', 'identity', 'gelu']
-    for name, mod in model.named_modules():
-        # print('mod type',type(mod))
-        # print(str(mod))
-        if len(list(mod.children())) == 0 and testStr(name, d) and testStr(str(mod), d):
-            print(name, ' : ', mod)
-            print('-', mod.weight.dtype)
+    # d = ['sigmoid', 'pool', 'dropout', 'relu', 'identity', 'gelu']
+    # for name, mod in model.named_modules():
+    #     # print('mod type',type(mod))
+    #     # print(str(mod))
+    #     if len(list(mod.children())) == 0 and testStr(name, d) and testStr(str(mod), d):
+    #         print(name, ' : ', mod)
+    #         print('-', mod.weight.dtype)
 
     print('model=' * 20)
     print(model)

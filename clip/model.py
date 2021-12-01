@@ -331,7 +331,7 @@ class CLIP(nn.Module):
                  ):
         super().__init__()
 
-        modifiedRN = True
+        modifiedRN = False
 
         self.context_length = context_length
         if dropout > 0.:

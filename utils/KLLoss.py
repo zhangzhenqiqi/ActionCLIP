@@ -19,6 +19,7 @@ class KLLoss(nn.Module):
         super().__init__()
         print('=========using KL Loss=and has temperature and * bz==========')
         self.error_metric = error_metric
+        nn.MSELoss
 
     def forward(self, prediction, label):
         batch_size = prediction.shape[0]

@@ -156,11 +156,11 @@ def main():
             model_text)  # Actually this line is unnecessary since clip by default already on float16
         clip.model.convert_weights(model_image)
 
-    # loss_img = KLLoss()
-    # loss_txt = KLLoss()
+    loss_img = KLLoss()
+    loss_txt = KLLoss()
 
-    loss_img = ContrastiveLoss()
-    loss_txt = ContrastiveLoss()
+    # loss_img = ContrastiveLoss()
+    # loss_txt = ContrastiveLoss()
 
     start_epoch = config.solver.start_epoch
 
@@ -196,7 +196,8 @@ def main():
     if config.solver.evaluate:
         prec1 = validate(start_epoch, val_loader, classes, device, model, fusion_model, config, num_text_aug)
         return
-
+    loss_img = KLLoss()
+    loss_txt = KLLoss()
     for k, v in model.named_parameters():
         print('{}: {}'.format(k, v.requires_grad))
     for epoch in range(start_epoch, config.solver.epochs):
@@ -236,20 +237,20 @@ def main():
 
             logit_scale = model.logit_scale.exp()
             # ##origin loss start
-            # logits_per_image, logits_per_text = create_logits(image_embedding, text_embedding,
-            #                                                   logit_scale)  # 16*16 b=16
-            #
-            # ground_truth = torch.tensor(gen_label(list_id), dtype=image_embedding.dtype, device=device)
-            # loss_imgs = loss_img(logits_per_image, ground_truth)
-            # loss_texts = loss_txt(logits_per_text, ground_truth)
-            # total_loss = (loss_imgs + loss_texts) / 2
-            # ##end
+            logits_per_image, logits_per_text = create_logits(image_embedding, text_embedding,
+                                                              logit_scale)  # 16*16 b=16
 
             ground_truth = torch.tensor(gen_label(list_id), dtype=image_embedding.dtype, device=device)
-            loss_imgs = loss_img(image_embedding,text_embedding,ground_truth)
-            loss_texts = loss_txt(text_embedding,image_embedding,ground_truth)
+            loss_imgs = loss_img(logits_per_image, ground_truth)
+            loss_texts = loss_txt(logits_per_text, ground_truth)
             total_loss = (loss_imgs + loss_texts) / 2
+            # ##end
 
+            # ground_truth = torch.tensor(gen_label(list_id), dtype=image_embedding.dtype, device=device)
+            # loss_imgs = loss_img(image_embedding, text_embedding, ground_truth)
+            # # loss_texts = loss_txt(text_embedding,image_embedding,ground_truth)
+            # total_loss = loss_imgs
+            #
             wandb.log({"train_total_loss": total_loss})
             wandb.log({"train_loss_imgs": loss_imgs})
             wandb.log({"train_loss_texts": loss_texts})

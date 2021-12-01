@@ -22,15 +22,12 @@ class ContrastiveLoss(torch.nn.Module):
 
     def forward(self, image_embedding, text_embedding, ground_truth):
         n = len(image_embedding)
-        output1 = []
-        output2 = []
-        label = []
+        tot = None
         for i in range(n):
-            for j in range(n):
-                output1.append(list(image_embedding[i]))
-                output2.append(list(text_embedding[j]))
-                label.append(ground_truth[i][j])
-        output1 = torch.tensor(output1)
-        output2 = torch.tensor(output2)
-        label = torch.tensor(label)
-        return self.cal_loss(output1, output2, label)
+            o1 = image_embedding[i].view(1, -1).repeat_interleave(n, dim=0)
+            if tot == None:
+                tot = self.cal_loss(o1, text_embedding, ground_truth[i])
+            else:
+                tot += self.cal_loss(o1, text_embedding, ground_truth[i])
+            # print('tot=', tot)
+        return tot

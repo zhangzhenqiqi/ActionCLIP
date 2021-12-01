@@ -10,6 +10,10 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 
+from ActionNet.spatial_transforms import *
+from ActionNet.temporal_transforms import *
+from ActionNet import models as TSN_model
+
 
 def drop_path(x, drop_prob: float = 0., training: bool = False):
     """Drop paths (Stochastic Depth) per sample (when applied in main path of residual blocks).
@@ -349,9 +353,21 @@ class CLIP(nn.Module):
 
             else:
                 ###ResNet 50
-                import torchvision.models as models
-                self.visual = models.resnet50(pretrained=True)
-                self.visual.fc = nn.Linear(2048, 1024)
+                self.visual = TSN_model(
+                    101, 8, 'RGB',
+                    is_shift=True,
+                    partial_bn=True,
+                    base_model='resnet50',
+                    shift_div=8,
+                    dropout=0.5,
+                    img_feature_dim=224,
+                    pretrain='imagenet',  # 'imagenet' or False
+                    consensus_type='avg',
+                    fc_lr5=True
+                )
+                # import torchvision.models as models
+                # self.visual = models.resnet50(pretrained=True)
+                # self.visual.fc = nn.Linear(2048, 1024)
         else:
             vision_heads = vision_width // 64
             self.visual = VisualTransformer(

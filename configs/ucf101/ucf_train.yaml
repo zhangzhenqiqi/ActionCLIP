@@ -9,13 +9,13 @@ data:
   seg_length: 1
   split: 1
   #  batch_size: 32
-  batch_size: 32  #for debug with 16，32 is right！！
+  batch_size: 16  #for debug with 16，32 is right！！
   workers: 8
   gpus: 2
   num_classes: 101
   image_tmpl: 'img_{:05d}.jpg'
-  train_list: '/home/10501001/datasets/ucf101/ucfTrainTestlist/train_rgb_split1_complete.txt'
-  val_list: '/home/10501001/datasets/ucf101/ucfTrainTestlist/val_rgb_split1_complete.txt'
+  train_list: '/home/10501001/datasets/ucf101/ucfTrainTestlist/train_rgb_split1_complete_shuf.txt'
+  val_list: '/home/10501001/datasets/ucf101/ucfTrainTestlist/val_rgb_split1_complete_shuf.txt'
   #    train_list: '/public/home/ock/video_clip/video-clip/lists/ucf101/train_rgb_split1.txt'
   #    val_list: '/public/home/ock/video_clip/video-clip/lists/ucf101/val_rgb_split1.txt'
   label_list: 'lists/ucf_labels.csv'
@@ -34,7 +34,7 @@ network:
   fix_text: False
   fix_img: False
   describe:
-  is_action: False #是否添加action模块
+  is_action: True #是否添加action模块
 solver:
   type: cosine
   epochs: 100

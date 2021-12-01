@@ -4,24 +4,27 @@
 
 import numpy
 
+
 def gen_label(labels):
     """
     labels : [0,1,100,99..]
     gt[i,j]=1 表示 labels[i]==labels[j]
     """
     num = len(labels)
-    gt = numpy.zeros(shape=(num,num))
+    gt = numpy.zeros(shape=(num, num))
     for i, label in enumerate(labels):
         for k in range(num):
             if labels[k] == label:
-                gt[i,k] = 1
+                gt[i, k] = 1
     return gt
+
 
 def convert_models_to_fp32(model):
     for p in model.parameters():
         p.data = p.data.float()
         if p.grad is not None:
             p.grad.data = p.grad.data.float()
+
 
 def convert_models_to_fp16(model):
     print(model)
@@ -40,3 +43,7 @@ def create_logits(x1, x2, logit_scale):
 
     # shape = [global_batch_size, global_batch_size]
     return logits_per_x1, logits_per_x2
+
+
+def create_output(x1, x2):
+    pass

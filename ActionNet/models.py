@@ -1,8 +1,8 @@
 from torch import nn
 
 # from .basic_ops import  ConsensusModule
-from .basic_ops import ConsensusModule
-from .spatial_transforms import *
+from ActionNet.basic_ops import ConsensusModule
+from ActionNet.spatial_transforms import *
 from torch.nn.init import normal_, constant_
 import torchvision
 import torch

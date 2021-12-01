@@ -353,7 +353,7 @@ class CLIP(nn.Module):
 
             else:
                 ###ResNet 50
-                self.visual = TSN_model(
+                self.visual = TSN_model.TSN(
                     101, 8, 'RGB',
                     is_shift=True,
                     partial_bn=True,

@@ -331,7 +331,7 @@ class CLIP(nn.Module):
                  ):
         super().__init__()
 
-        modifiedRN = False
+        modifiedRN = True
 
         self.context_length = context_length
         if dropout > 0.:
@@ -362,7 +362,7 @@ class CLIP(nn.Module):
                     dropout=0.5,
                     img_feature_dim=224,
                     pretrain='imagenet',  # 'imagenet' or False
-                    consensus_type='avg',
+                    consensus_type='identity',
                     fc_lr5=True
                 )
                 self.visual.new_fc = nn.Linear(2048, 1024)

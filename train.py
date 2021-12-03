@@ -156,11 +156,6 @@ def main():
             model_text)  # Actually this line is unnecessary since clip by default already on float16
         clip.model.convert_weights(model_image)
 
-    loss_img = KLLoss()
-    loss_txt = KLLoss()
-
-    # loss_img = ContrastiveLoss()
-    # loss_txt = ContrastiveLoss()
 
     start_epoch = config.solver.start_epoch
 
@@ -196,8 +191,10 @@ def main():
     if config.solver.evaluate:
         prec1 = validate(start_epoch, val_loader, classes, device, model, fusion_model, config, num_text_aug)
         return
+
     loss_img = KLLoss()
     loss_txt = KLLoss()
+
     for k, v in model.named_parameters():
         print('{}: {}'.format(k, v.requires_grad))
     for epoch in range(start_epoch, config.solver.epochs):

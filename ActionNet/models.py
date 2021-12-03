@@ -12,7 +12,7 @@ import pdb
 class TSN(nn.Module):
     def __init__(self, num_class, num_segments, modality,
                  base_model='resnet101', new_length=None,
-                 consensus_type='avg', before_softmax=True,
+                 consensus_type='identity', before_softmax=True,
                  dropout=0.5, img_feature_dim=112,
                  crop_num=1, partial_bn=True, print_spec=True, pretrain='imagenet',
                  is_shift=False, shift_div=8, shift_place='blockres', fc_lr5=False,

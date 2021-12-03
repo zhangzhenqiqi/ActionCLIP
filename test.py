@@ -51,7 +51,9 @@ def validate(epoch, val_loader, classes, device, model, fusion_model, config, nu
             image = image.view((-1, config.data.num_segments, 3) + image.size()[-2:])
             b, t, c, h, w = image.size()
             class_id = class_id.to(device)
-            image_input = image.to(device).view(-1, c, h, w)
+            # image_input = image.to(device).view(-1, c, h, w)
+            ###adapt for stn-action
+            image_input = image.to(device)
             image_features = model.encode_image(image_input).view(b, t, -1)
             image_features = fusion_model(image_features)
             image_features /= image_features.norm(dim=-1, keepdim=True)
@@ -74,6 +76,7 @@ def validate(epoch, val_loader, classes, device, model, fusion_model, config, nu
 
     print('Epoch: [{}/{}]: Top1: {}, Top5: {}'.format(epoch, config.solver.epochs, top1, top5))
     return top1
+
 
 def main():
     global args, best_prec1
@@ -109,8 +112,8 @@ def main():
     device = "cuda" if torch.cuda.is_available() else "cpu"  # If using GPU then use mixed precision training.
 
     model, clip_state_dict = clip.load(config.network.arch, device=device, jit=False, tsm=config.network.tsm,
-                                                   T=config.data.num_segments, dropout=config.network.drop_out,
-                                                   emb_dropout=config.network.emb_dropout)  # Must set jit=False for training  ViT-B/32
+                                       T=config.data.num_segments, dropout=config.network.drop_out,
+                                       emb_dropout=config.network.emb_dropout)  # Must set jit=False for training  ViT-B/32
 
     transform_val = get_augmentation(False, config)
 
@@ -126,8 +129,8 @@ def main():
     wandb.watch(fusion_model)
 
     val_data = Action_DATASETS(config.data.val_list, config.data.label_list, num_segments=config.data.num_segments,
-                        image_tmpl=config.data.image_tmpl,
-                        transform=transform_val, random_shift=config.random_shift)
+                               image_tmpl=config.data.image_tmpl,
+                               transform=transform_val, random_shift=config.random_shift)
     val_loader = DataLoader(val_data, batch_size=config.data.batch_size, num_workers=config.data.workers, shuffle=False,
                             pin_memory=True, drop_last=True)
 
@@ -155,6 +158,7 @@ def main():
 
     best_prec1 = 0.0
     prec1 = validate(start_epoch, val_loader, classes, device, model, fusion_model, config, num_text_aug)
+
 
 if __name__ == '__main__':
     main()

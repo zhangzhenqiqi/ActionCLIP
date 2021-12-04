@@ -25,7 +25,7 @@ data:
     N: 0 #2
     M: 0  #9
 network:
-  arch: RN101  #ViT-B/32 ViT-B/16
+  arch: RN50x4  #ViT-B/32 ViT-B/16
   init: False
   drop_out: 0.0
   emb_dropout: 0.0
@@ -34,7 +34,7 @@ network:
   fix_text: False
   fix_img: False
   describe:
-  is_action: True #是否添加action模块
+  is_action: False #是否添加action模块
   tsm: False
 solver:
   type: cosine

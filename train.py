@@ -215,14 +215,15 @@ def main():
             text_id = numpy.random.randint(num_text_aug, size=len(list_id))
             texts = torch.stack([text_dict[j][i, :] for i, j in zip(list_id, text_id)])
 
-            # images = images.to(device).view(-1, c, h,w)  # omit the Image.fromarray if the images already in PIL format, change this line to images=list_image if using preprocess inside the dataset class
+            images = images.to(device).view(-1, c, h,w)  # omit the Image.fromarray if the images already in PIL format, change this line to images=list_image if using preprocess inside the dataset class
             # adapt for tsn-action module
-            images = images.to(device)
+            # images = images.to(device)
 
             texts = texts.to(device)
 
             image_embedding = model_image(images)  # (16*8,512)
             image_embedding = image_embedding.view(b, t, -1)
+
             image_embedding = fusion_model(image_embedding)
 
             text_embedding = model_text(texts)

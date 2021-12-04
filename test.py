@@ -51,9 +51,9 @@ def validate(epoch, val_loader, classes, device, model, fusion_model, config, nu
             image = image.view((-1, config.data.num_segments, 3) + image.size()[-2:])
             b, t, c, h, w = image.size()
             class_id = class_id.to(device)
-            # image_input = image.to(device).view(-1, c, h, w)
+            image_input = image.to(device).view(-1, c, h, w)
             ###adapt for stn-action
-            image_input = image.to(device)
+            # image_input = image.to(device)
             image_features = model.encode_image(image_input).view(b, t, -1)
             image_features = fusion_model(image_features)
             image_features /= image_features.norm(dim=-1, keepdim=True)

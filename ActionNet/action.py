@@ -58,16 +58,6 @@ class Action(nn.Module):
         self.action_p3_expand = nn.Conv2d(self.reduced_channels, self.in_channels, kernel_size=(1, 1), stride=(1, 1),
                                           bias=False, padding=(0, 0))
 
-        # STA
-        # self.TA_r = 3
-        # self.TA_conv1_56 = nn.Conv2d(self.in_channels, 1, (56, 56))
-        # self.TA_conv1_28 = nn.Conv2d(self.in_channels, 1, (28, 28))
-        # self.TA_conv1_14 = nn.Conv2d(self.in_channels, 1, (14, 14))
-        # self.TA_conv1_7 = nn.Conv2d(self.in_channels, 1, (7, 7))
-        # self.TA_deconv = nn.UpsamplingBilinear2d(scale_factor=(1, self.TA_r))  # 基于双线性插值的上采样，并非是文章中的Deconv卷积（不知道咋写。。）
-        # self.TA_conv2 = nn.Conv2d(self.TA_r * self.n_segment, self.n_segment, (1, 1))
-
-        # self.SA_conv1 = nn.Conv2d(16 * self.n_segment * self.in_channels, self.in_channels, (56, 56))  # 16:batch-size
         print("SA: ", 16 * self.n_segment * self.in_channels * self.in_channels * 56 * 56)
         print(self.n_segment)
         print(self.in_channels)

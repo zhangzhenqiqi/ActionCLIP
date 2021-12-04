@@ -265,6 +265,9 @@ class ModifiedResNet(nn.Module):
         self.output_dim = output_dim
         self.input_resolution = input_resolution
 
+        self.action_p1_conv1 = nn.Conv3d(1, 1, kernel_size=(3, 3, 3), stride=(1, 1, 1), bias=False, padding=(1, 1, 1))
+        self.sigmoid = nn.Sigmoid()
+
         # the 3-layer stem
         self.conv1 = nn.Conv2d(3, width // 2, kernel_size=3, stride=2, padding=1, bias=False)
         self.bn1 = nn.BatchNorm2d(width // 2)
@@ -302,6 +305,17 @@ class ModifiedResNet(nn.Module):
             return x
 
         x = x.type(self.conv1.weight.dtype)
+
+        ###STE add to the head
+        nt, c, h, w = x.size()
+        n_batch = nt // 8
+        x_p1 = x.view(n_batch, 8, c, h, w).transpose(2, 1).contiguous()
+        x_p1 = x_p1.mean(1, keepdim=True)
+        x_p1 = self.action_p1_conv1(x_p1)
+        x_p1 = x_p1.transpose(2, 1).contiguous().view(nt, 1, h, w)
+        x_p1 = self.sigmoid(x_p1)
+        x = x * x_p1 + x
+
         x = stem(x)
         x = self.layer1(x)
         x = self.layer2(x)
@@ -350,6 +364,7 @@ class CLIP(nn.Module):
                     input_resolution=image_resolution,
                     width=vision_width
                 )
+
 
             else:
                 ###ResNet 50
@@ -446,13 +461,14 @@ class CLIP(nn.Module):
 
     @property
     def dtype(self):
-        return self.visual.base_model.conv1.weight.dtype
+        ##adapt for tsn
+        # return self.visual.base_model.conv1.weight.dtype
+        return self.visual.conv1.weight.dtype
 
     def encode_image(self, image):
         ret = self.visual(image.type(self.dtype))
-        # 128*512 （batch=16）
-        # print('encoded iamge: ', ret)
-        print('encoded image size: ', ret.size())
+        # 128*512 （batch=16）d
+        # print('encoded image size: ', ret.size())
         return ret
 
     def encode_text(self, text):

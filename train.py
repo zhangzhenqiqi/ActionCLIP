@@ -44,6 +44,7 @@ class ImageCLIP(nn.Module):
 
 
 def main():
+    print('this is add nam & ste proc!')
     global args, best_prec1
     global global_step
     parser = argparse.ArgumentParser()
@@ -80,7 +81,8 @@ def main():
                                        T=config.data.num_segments, dropout=config.network.drop_out,
                                        emb_dropout=config.network.emb_dropout, pretrain=config.network.init,
                                        joint=config.network.joint,
-                                       is_action=config.network.is_action)  # Must set jit=False for training  ViT-B/32
+                                       is_action=config.network.is_action, use_sis=config.network.use_sis,
+                                       use_nam=config.network.use_nam)  # Must set jit=False for training  ViT-B/32
 
     transform_train = get_augmentation(True, config)
     transform_val = get_augmentation(False, config)
@@ -156,7 +158,6 @@ def main():
             model_text)  # Actually this line is unnecessary since clip by default already on float16
         clip.model.convert_weights(model_image)
 
-
     start_epoch = config.solver.start_epoch
 
     if config.pretrain:
@@ -215,7 +216,8 @@ def main():
             text_id = numpy.random.randint(num_text_aug, size=len(list_id))
             texts = torch.stack([text_dict[j][i, :] for i, j in zip(list_id, text_id)])
 
-            images = images.to(device).view(-1, c, h,w)  # omit the Image.fromarray if the images already in PIL format, change this line to images=list_image if using preprocess inside the dataset class
+            images = images.to(device).view(-1, c, h,
+                                            w)  # omit the Image.fromarray if the images already in PIL format, change this line to images=list_image if using preprocess inside the dataset class
             # adapt for tsn-action module
             # images = images.to(device)
 

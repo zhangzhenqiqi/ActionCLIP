@@ -174,6 +174,7 @@ class Channel_Att(nn.Module):
 
         x = self.bn2(x)
         weight_bn = self.bn2.weight.data.abs() / torch.sum(self.bn2.weight.data.abs())
+        weight_bn = weight_bn.half()
         x = x.permute(0, 2, 3, 1).contiguous()
         x = torch.mul(weight_bn, x)
         x = x.permute(0, 3, 1, 2).contiguous()
@@ -259,7 +260,7 @@ class Bottleneck(nn.Module):
 
         if self.use_nam:
             out = self.nam(out)
-            
+
         out += identity
         out = self.relu(out)
         return out
@@ -310,11 +311,12 @@ class ModifiedResNet(nn.Module):
     - The final pooling layer is a QKV attention instead of an average pool
     """
 
-    def __init__(self, layers, output_dim, heads, input_resolution=224, width=64, use_sis=False):
+    def __init__(self, layers, output_dim, heads, input_resolution=224, width=64, use_sis=False, use_nam=False):
         super().__init__()
         self.output_dim = output_dim
         self.input_resolution = input_resolution
         self.use_sis = use_sis
+        self.use_nam = use_nam
 
         # action head: ste
         self.action_p1_conv1 = nn.Conv3d(1, 1, kernel_size=(3, 3, 3), stride=(1, 1, 1), bias=False, padding=(1, 1, 1))
@@ -347,11 +349,11 @@ class ModifiedResNet(nn.Module):
         self.attnpool = AttentionPool2d(input_resolution // 32, embed_dim, heads, output_dim)
 
     def _make_layer(self, planes, blocks, stride=1):
-        layers = [Bottleneck(self._inplanes, planes, stride)]
+        layers = [Bottleneck(self._inplanes, planes, stride, use_nam=self.use_nam)]
 
         self._inplanes = planes * Bottleneck.expansion
         for _ in range(1, blocks):
-            layers.append(Bottleneck(self._inplanes, planes))
+            layers.append(Bottleneck(self._inplanes, planes, use_nam=self.use_nam))
 
         return nn.Sequential(*layers)
 
@@ -407,7 +409,9 @@ class CLIP(nn.Module):
                  transformer_heads: int,
                  transformer_layers: int, joint=False,
                  tsm=False, T=8, dropout=0., emb_dropout=0.,
-                 modifiedRN=True
+                 modifiedRN=True,
+                 use_sis=False,
+                 use_nam=False
                  ):
         super().__init__()
 
@@ -428,7 +432,9 @@ class CLIP(nn.Module):
                     output_dim=embed_dim,
                     heads=vision_heads,
                     input_resolution=image_resolution,
-                    width=vision_width
+                    width=vision_width,
+                    use_sis=use_sis,
+                    use_nam=use_nam
                 )
 
 
@@ -566,7 +572,6 @@ class CLIP(nn.Module):
         logit_scale = self.logit_scale.exp()
         logits_per_image = logit_scale * image_features @ text_features.t()
         logits_per_text = logit_scale * text_features @ image_features.t()
-
         # shape = [global_batch_size, global_batch_size]
         return logits_per_image, logits_per_text
 
@@ -596,7 +601,7 @@ def convert_weights(model: nn.Module):
 
 
 def build_model(state_dict: dict, tsm=False, T=8, dropout=0., joint=False, emb_dropout=0., pretrain=True,
-                is_action=False):
+                is_action=False, use_sis=False, use_nam=False):
     vit = "visual.proj" in state_dict
 
     if vit:
@@ -628,7 +633,7 @@ def build_model(state_dict: dict, tsm=False, T=8, dropout=0., joint=False, emb_d
         embed_dim,
         image_resolution, vision_layers, vision_width, vision_patch_size,
         context_length, vocab_size, transformer_width, transformer_heads, transformer_layers, tsm=tsm, T=T, joint=joint,
-        dropout=dropout, emb_dropout=emb_dropout, modifiedRN=False
+        dropout=dropout, emb_dropout=emb_dropout, modifiedRN=False, use_sis=use_sis, use_nam=use_nam
     )
 
     for key in ["input_resolution", "context_length", "vocab_size"]:

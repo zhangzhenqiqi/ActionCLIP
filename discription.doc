@@ -8,3 +8,5 @@
 72846 k400 1gpu layer1+action
 73084 2gpu batchsize-64 
 73092 k400 1gpu shuffle data
+77678 ֻonly add ste mod
+77764 add action in action

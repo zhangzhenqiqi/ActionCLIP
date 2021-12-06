@@ -162,11 +162,46 @@ class VisualTransformer(nn.Module):
         return x
 
 
+class Channel_Att(nn.Module):
+    def __init__(self, channels, t=16):
+        super(Channel_Att, self).__init__()
+        self.channels = channels
+
+        self.bn2 = nn.BatchNorm2d(self.channels, affine=True)
+
+    def forward(self, x):
+        residual = x
+
+        x = self.bn2(x)
+        weight_bn = self.bn2.weight.data.abs() / torch.sum(self.bn2.weight.data.abs())
+        x = x.permute(0, 2, 3, 1).contiguous()
+        x = torch.mul(weight_bn, x)
+        x = x.permute(0, 3, 1, 2).contiguous()
+
+        x = torch.sigmoid(x) * residual  #
+
+        return x
+
+
+class Att(nn.Module):
+    def __init__(self, channels):
+        super(Att, self).__init__()
+        self.Channel_Att = Channel_Att(channels)
+
+    def forward(self, x):
+        x_out1 = self.Channel_Att(x)
+        return x_out1
+
+
 class Bottleneck(nn.Module):
     expansion = 4
 
-    def __init__(self, inplanes, planes, stride=1):
+    def __init__(self, inplanes, planes, stride=1, use_nam=True):
         super().__init__()
+        self.use_nam = use_nam
+
+        self.action_p1_conv1 = nn.Conv3d(1, 1, kernel_size=(3, 3, 3), stride=(1, 1, 1), bias=False, padding=(1, 1, 1))
+        self.sigmoid = nn.Sigmoid()
 
         # all conv layers have stride 1. an avgpool is performed after the second convolution when stride > 1
         self.conv1 = nn.Conv2d(inplanes, planes, 1, bias=False)
@@ -184,6 +219,9 @@ class Bottleneck(nn.Module):
         self.downsample = None
         self.stride = stride
 
+        if self.use_nam:
+            self.nam = Att(planes * 4)
+
         if stride > 1 or inplanes != planes * Bottleneck.expansion:
             # downsampling layer is prepended with an avgpool, and the subsequent convolution has stride 1
             self.downsample = nn.Sequential(OrderedDict([
@@ -194,6 +232,15 @@ class Bottleneck(nn.Module):
 
     def forward(self, x: torch.Tensor):
         identity = x
+
+        nt, c, h, w = x.size()
+        n_batch = nt // 8
+        x_p1 = x.view(n_batch, 8, c, h, w).transpose(2, 1).contiguous()
+        x_p1 = x_p1.mean(1, keepdim=True)
+        x_p1 = self.action_p1_conv1(x_p1)
+        x_p1 = x_p1.transpose(2, 1).contiguous().view(nt, 1, h, w)
+        x_p1 = self.sigmoid(x_p1)
+        x = x * x_p1 + x
 
         out = self.relu(self.bn1(self.conv1(x)))
         out = self.relu(self.bn2(self.conv2(out)))
@@ -210,6 +257,9 @@ class Bottleneck(nn.Module):
         if self.downsample is not None:
             identity = self.downsample(x)
 
+        if self.use_nam:
+            out = self.nam(out)
+            
         out += identity
         out = self.relu(out)
         return out
@@ -260,13 +310,21 @@ class ModifiedResNet(nn.Module):
     - The final pooling layer is a QKV attention instead of an average pool
     """
 
-    def __init__(self, layers, output_dim, heads, input_resolution=224, width=64):
+    def __init__(self, layers, output_dim, heads, input_resolution=224, width=64, use_sis=False):
         super().__init__()
         self.output_dim = output_dim
         self.input_resolution = input_resolution
+        self.use_sis = use_sis
 
+        # action head: ste
         self.action_p1_conv1 = nn.Conv3d(1, 1, kernel_size=(3, 3, 3), stride=(1, 1, 1), bias=False, padding=(1, 1, 1))
         self.sigmoid = nn.Sigmoid()
+
+        if use_sis:
+            # se in se
+            self.act_in_act_conv = nn.Conv2d(64, 2048, kernel_size=3, stride=8)
+            self.act_in_act_bn = nn.BatchNorm2d(2048)
+            self.act_in_act_relu = nn.ReLU(inplace=True)
 
         # the 3-layer stem
         self.conv1 = nn.Conv2d(3, width // 2, kernel_size=3, stride=2, padding=1, bias=False)
@@ -317,10 +375,18 @@ class ModifiedResNet(nn.Module):
         x = x * x_p1 + x
 
         x = stem(x)
+
+        if self.use_sis:
+            x_act_in = self.act_in_act_relu(self.act_in_act_bn(self.act_in_act_conv(x)))
+
         x = self.layer1(x)
         x = self.layer2(x)
         x = self.layer3(x)
         x = self.layer4(x)
+
+        if self.use_sis:
+            x = x + x_act_in
+
         x = self.attnpool(x)
 
         return x

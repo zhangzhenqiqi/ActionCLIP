@@ -9,7 +9,7 @@ data:
   seg_length: 1
   split: 1
   #  batch_size: 32
-  batch_size: 8  #for debug with 16，32 is right！！
+  batch_size: 16  #for debug with 16，32 is right！！
   workers: 8
   gpus: 2
   num_classes: 101
@@ -25,7 +25,7 @@ data:
     N: 0 #2
     M: 0  #9
 network:
-  arch: RN50x4  #ViT-B/32 ViT-B/16
+  arch: RN50  #ViT-B/32 ViT-B/16
   init: False
   drop_out: 0.0
   emb_dropout: 0.0
@@ -38,7 +38,7 @@ network:
   tsm: False
 solver:
   type: cosine
-  epochs: 100
+  epochs: 200
   start_epoch: 0
   epoch_offset: 0
   optim: adamw

@@ -17,8 +17,6 @@ module load cudnn7.6-cuda10.2/
 module load cuda10.0/
 module load nccl2-cuda10.2-gcc/
 
-export MASTER_ADDR = localhost
-export MASTER_PORT = 5678
 
 nvidia-smi
 #cd ~/projects/ActionCLIP/work

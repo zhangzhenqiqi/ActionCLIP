@@ -57,7 +57,8 @@ def main():
                                args.log_time)
     wandb.init(project=config['network']['type'],
                name='{}_{}_{}_{}'.format(args.log_time, config['network']['type'], config['network']['arch'],
-                                         config['data']['dataset']))
+                                         config['data']['dataset']),
+               settings=wandb.Settings(start_method="fork"))
     print('-' * 80)
     print(' ' * 20, "working dir: {}".format(working_dir))
     print('-' * 80)
@@ -189,6 +190,7 @@ def main():
     lr_scheduler = _lr_scheduler(config, optimizer)
 
     best_prec1 = 0.0
+    best_prec5 = 0.0
     if config.solver.evaluate:
         prec1 = validate(start_epoch, val_loader, classes, device, model, fusion_model, config, num_text_aug)
         return
@@ -267,11 +269,14 @@ def main():
                 clip.model.convert_weights(model)
 
         if epoch % config.logging.eval_freq == 0:  # and epoch>0
-            prec1 = validate(epoch, val_loader, classes, device, model, fusion_model, config, num_text_aug)
+            prec1, prec5 = validate(epoch, val_loader, classes, device, model, fusion_model, config, num_text_aug)
 
         is_best = prec1 > best_prec1
         best_prec1 = max(prec1, best_prec1)
-        print('Testing: {}/{}'.format(prec1, best_prec1))
+        best_prec5 = max(prec5, best_prec5)
+
+        print('Testing: prec1/best_prec1: {}/{}'.format(prec1, best_prec1))
+        print('prec5/best_prec5: {}/{}'.format(prec5, best_prec5))
         print('Saving:')
         filename = "{}/last_model.pt".format(working_dir)
 

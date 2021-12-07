@@ -36,8 +36,8 @@ network:
   describe:
   is_action: False #是否添加action模块
   tsm: False
-  use_sis: False
-  use_nam: True
+  use_sis: True
+  use_nam: False
 solver:
   type: cosine
   epochs: 200

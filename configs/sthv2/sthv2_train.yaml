@@ -2,19 +2,19 @@ resume:
 pretrain:
 seed: 1024
 data:
-  dataset: kinetics400
+  dataset: sth-sthv2
   modality: RGB
   num_segments: 8
   seg_length: 1
   batch_size: 16
   workers: 16
-  num_classes: 400
+  num_classes: 174
   image_tmpl: 'img_{:05d}.jpg'
 #  train_list: '/home/10501001/datasets/K400/train.list'
 #  val_list: '/home/10501001/datasets/K400/val.list'
-  train_list: 'lists/k4001/train_frames.txt'
-  val_list: 'lists/k4001/val_frames.txt'
-  label_list: 'lists/kinetics_400_labels.csv'
+  train_list: '/home/10501001/datasets/sthv2/TrainTestValList/train_videofolder.txt'
+  val_list: '/home/10501001/datasets/sthv2/TrainTestValList/val_videofolder.txt'
+  label_list: 'lists/sthv2_labels.csv'
   index_bias: 1
   input_size: 224
   randaug:
@@ -32,11 +32,11 @@ network:
   joint: False
   describe:
   is_action: True #是否添加action模块
-  use_sis: True
+  use_sis: False
   use_nam: False
 solver:
   type: cosine
-  epochs: 50
+  epochs: 250
   start_epoch: 0
   epoch_offset: 0
   optim: adamw

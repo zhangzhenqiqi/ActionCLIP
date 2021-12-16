@@ -174,7 +174,7 @@ class Action_DATASETS(data.Dataset):
             p = int(seg_ind)
             try:
                 # seg_imgs = self._load_image('/home/10501001/datasets/K400/rawframes/' + record.path, p)
-                seg_imgs = self._load_image(record.path, p)
+                seg_imgs = self._load_image(record.path.lower(), p)
             except OSError:
                 print('ERROR: Could not read image "{}"'.format(
                     '/home/10501001/datasets/K400/rawframes/' + record.path))

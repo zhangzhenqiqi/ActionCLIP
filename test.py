@@ -75,7 +75,7 @@ def validate(epoch, val_loader, classes, device, model, fusion_model, config, nu
     wandb.log({"top5": top5})
 
     print('Epoch: [{}/{}]: Top1: {}, Top5: {}'.format(epoch, config.solver.epochs, top1, top5))
-    return top1
+    return (top1,top5)
 
 
 def main():

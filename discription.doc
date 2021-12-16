@@ -12,3 +12,15 @@
 77764 add action in action
 77805 add nam but no sis(se in se |  act in act)
 77886 add sis but not nam 77764 fake! because yaml modified
+77996 modified lr_decay_step 15 -> 25
+78105 400 epoch´ó  
+78150 k400 model
+78660 k400-pretrain ucf101  lr_decay_step=25
+78679 78660+ledecay..=15
+78839 k400pre hmdb51
+78863  78839+bt=64
+79055 vitb16 hmdb
+79061 clip-resnet hmdb no-pretrain
+79211 clip-resnet + ste, hmdb , no-pretrain
+79225 clip-vitb16,sthsthv2,no-pretrain
+79236 clip-resnet + ste,sthsthv2,no-pretrain

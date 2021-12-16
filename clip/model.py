@@ -197,12 +197,16 @@ class Att(nn.Module):
 class Bottleneck(nn.Module):
     expansion = 4
 
-    def __init__(self, inplanes, planes, stride=1, use_nam=True):
+    def __init__(self, inplanes, planes, stride=1, use_nam=True, use_action=True):
+        ##use_action: 是否添加action
         super().__init__()
         self.use_nam = use_nam
+        self.use_action = use_action
 
-        self.action_p1_conv1 = nn.Conv3d(1, 1, kernel_size=(3, 3, 3), stride=(1, 1, 1), bias=False, padding=(1, 1, 1))
-        self.sigmoid = nn.Sigmoid()
+        if self.use_action:
+            self.action_p1_conv1 = nn.Conv3d(1, 1, kernel_size=(3, 3, 3), stride=(1, 1, 1), bias=False,
+                                             padding=(1, 1, 1))
+            self.sigmoid = nn.Sigmoid()
 
         # all conv layers have stride 1. an avgpool is performed after the second convolution when stride > 1
         self.conv1 = nn.Conv2d(inplanes, planes, 1, bias=False)
@@ -234,14 +238,15 @@ class Bottleneck(nn.Module):
     def forward(self, x: torch.Tensor):
         identity = x
 
-        nt, c, h, w = x.size()
-        n_batch = nt // 8
-        x_p1 = x.view(n_batch, 8, c, h, w).transpose(2, 1).contiguous()
-        x_p1 = x_p1.mean(1, keepdim=True)
-        x_p1 = self.action_p1_conv1(x_p1)
-        x_p1 = x_p1.transpose(2, 1).contiguous().view(nt, 1, h, w)
-        x_p1 = self.sigmoid(x_p1)
-        x = x * x_p1 + x
+        if self.use_action:
+            nt, c, h, w = x.size()
+            n_batch = nt // 8
+            x_p1 = x.view(n_batch, 8, c, h, w).transpose(2, 1).contiguous()
+            x_p1 = x_p1.mean(1, keepdim=True)
+            x_p1 = self.action_p1_conv1(x_p1)
+            x_p1 = x_p1.transpose(2, 1).contiguous().view(nt, 1, h, w)
+            x_p1 = self.sigmoid(x_p1)
+            x = x * x_p1 + x
 
         out = self.relu(self.bn1(self.conv1(x)))
         out = self.relu(self.bn2(self.conv2(out)))
@@ -366,15 +371,16 @@ class ModifiedResNet(nn.Module):
 
         x = x.type(self.conv1.weight.dtype)
 
-        ###STE add to the head
-        nt, c, h, w = x.size()
-        n_batch = nt // 8
-        x_p1 = x.view(n_batch, 8, c, h, w).transpose(2, 1).contiguous()
-        x_p1 = x_p1.mean(1, keepdim=True)
-        x_p1 = self.action_p1_conv1(x_p1)
-        x_p1 = x_p1.transpose(2, 1).contiguous().view(nt, 1, h, w)
-        x_p1 = self.sigmoid(x_p1)
-        x = x * x_p1 + x
+        if self.use_sis:
+            ###STE add to the head
+            nt, c, h, w = x.size()
+            n_batch = nt // 8
+            x_p1 = x.view(n_batch, 8, c, h, w).transpose(2, 1).contiguous()
+            x_p1 = x_p1.mean(1, keepdim=True)
+            x_p1 = self.action_p1_conv1(x_p1)
+            x_p1 = x_p1.transpose(2, 1).contiguous().view(nt, 1, h, w)
+            x_p1 = self.sigmoid(x_p1)
+            x = x * x_p1 + x
 
         x = stem(x)
 

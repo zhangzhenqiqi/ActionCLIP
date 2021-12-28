@@ -36,11 +36,11 @@ network:
   use_nam: False
 solver:
   type: cosine
-  epochs: 50
+  epochs: 250
   start_epoch: 0
   epoch_offset: 0
   optim: adamw
-  lr: 5.e-6
+  lr: 5.e-3
   lr_warmup_step: 5
   momentum: 0.9
   weight_decay: 0.2

@@ -14,6 +14,8 @@ from ActionNet.spatial_transforms import *
 from ActionNet.temporal_transforms import *
 from ActionNet import models as TSN_model
 
+from .modeling_resnet import ResNetV2
+
 
 def drop_path(x, drop_prob: float = 0., training: bool = False):
     """Drop paths (Stochastic Depth) per sample (when applied in main path of residual blocks).
@@ -103,15 +105,28 @@ class Transformer(nn.Module):
 
 class VisualTransformer(nn.Module):
     def __init__(self, input_resolution: int, patch_size: int, width: int, layers: int, heads: int, output_dim: int,
-                 dropout=None, joint=False, emb_dropout=0.):
+                 dropout=None, joint=False, emb_dropout=0., hybrid=True):
+        '''
+        hybrid : 混合了ResNet的ViT
+        '''
         super().__init__()
+        self.hybrid = hybrid
+        in_channels = 3
+        n_patches = (input_resolution // patch_size) * (input_resolution // patch_size)
+        if self.hybrid:
+            self.hybrid_model = ResNetV2((3, 4, 9), 1)
+            in_channels = self.hybrid_model.width * 16
+            grid_size = 14
+            patch_size = 1
+            n_patches = (input_resolution // 16) * (input_resolution // 16)
         self.input_resolution = input_resolution
         self.output_dim = output_dim
-        self.conv1 = nn.Conv2d(in_channels=3, out_channels=width, kernel_size=patch_size, stride=patch_size, bias=False)
+        self.conv1 = nn.Conv2d(in_channels=in_channels, out_channels=width, kernel_size=patch_size, stride=patch_size,
+                               bias=False)
 
         scale = width ** -0.5
         self.class_embedding = nn.Parameter(scale * torch.randn(width))
-        self.positional_embedding = nn.Parameter(scale * torch.randn((input_resolution // patch_size) ** 2 + 1, width))
+        self.positional_embedding = nn.Parameter(scale * torch.randn(n_patches + 1, width))
         self.dropout = nn.Dropout(emb_dropout)
         self.ln_pre = LayerNorm(width)
         self.emb_dropout = emb_dropout
@@ -129,6 +144,9 @@ class VisualTransformer(nn.Module):
         self.proj = nn.Parameter(scale * torch.randn(width, output_dim))
 
     def forward(self, x: torch.Tensor):
+        if self.hybrid:
+            x = self.hybrid_model(x)
+
         x = self.conv1(x)  # shape = [*, width, grid, grid]
         x = x.reshape(x.shape[0], x.shape[1], -1)  # shape = [*, width, grid ** 2]
         x = x.permute(0, 2, 1)  # shape = [*, grid ** 2, width]
@@ -204,9 +222,36 @@ class Bottleneck(nn.Module):
         self.use_action = use_action
 
         if self.use_action:
+            self.in_channels = inplanes
+            self.reduced_channels = self.in_channels // 16
+            self.avg_pool = nn.AdaptiveAvgPool2d(1)  # 自适应池化结果为1x1
+            self.sigmoid = nn.Sigmoid()
+
+            # ste
             self.action_p1_conv1 = nn.Conv3d(1, 1, kernel_size=(3, 3, 3), stride=(1, 1, 1), bias=False,
                                              padding=(1, 1, 1))
-            self.sigmoid = nn.Sigmoid()
+
+            # ce
+            self.action_p2_squeeze = nn.Conv2d(self.in_channels, self.reduced_channels, kernel_size=(1, 1),
+                                               stride=(1, 1),
+                                               bias=False, padding=(0, 0))
+            self.action_p2_conv1 = nn.Conv1d(self.reduced_channels, self.reduced_channels, kernel_size=3, stride=1,
+                                             bias=False, padding=1,
+                                             groups=1)
+            self.action_p2_expand = nn.Conv2d(self.reduced_channels, self.in_channels, kernel_size=(1, 1),
+                                              stride=(1, 1),
+                                              bias=False, padding=(0, 0))
+            # me
+            self.pad = (0, 0, 0, 0, 0, 0, 0, 1)
+            self.action_p3_squeeze = nn.Conv2d(self.in_channels, self.reduced_channels, kernel_size=(1, 1),
+                                               stride=(1, 1),
+                                               bias=False, padding=(0, 0))
+            self.action_p3_bn1 = nn.BatchNorm2d(self.reduced_channels)
+            self.action_p3_conv1 = nn.Conv2d(self.reduced_channels, self.reduced_channels, kernel_size=(3, 3),
+                                             stride=(1, 1), bias=False, padding=(1, 1), groups=self.reduced_channels)
+            self.action_p3_expand = nn.Conv2d(self.reduced_channels, self.in_channels, kernel_size=(1, 1),
+                                              stride=(1, 1),
+                                              bias=False, padding=(0, 0))
 
         # all conv layers have stride 1. an avgpool is performed after the second convolution when stride > 1
         self.conv1 = nn.Conv2d(inplanes, planes, 1, bias=False)
@@ -239,6 +284,7 @@ class Bottleneck(nn.Module):
         identity = x
 
         if self.use_action:
+            self.n_segment = 8
             nt, c, h, w = x.size()
             n_batch = nt // 8
             x_p1 = x.view(n_batch, 8, c, h, w).transpose(2, 1).contiguous()
@@ -246,7 +292,39 @@ class Bottleneck(nn.Module):
             x_p1 = self.action_p1_conv1(x_p1)
             x_p1 = x_p1.transpose(2, 1).contiguous().view(nt, 1, h, w)
             x_p1 = self.sigmoid(x_p1)
-            x = x * x_p1 + x
+            x_p1 = x * x_p1 + x
+            # x = x * x_p1 + x
+
+            x_p2 = self.avg_pool(x)
+            x_p2 = self.action_p2_squeeze(x_p2)
+            nt, c, h, w = x_p2.size()
+            x_p2 = x_p2.view(n_batch, self.n_segment, c, 1, 1).squeeze(-1).squeeze(-1).transpose(2,
+                                                                                                 1).contiguous()  # (n,c/16,t)
+            x_p2 = self.action_p2_conv1(x_p2)
+            x_p2 = self.relu(x_p2)  # (n,c/16,t)
+            x_p2 = x_p2.transpose(2, 1).contiguous().view(-1, c, 1, 1)  # (nt,c/16,1,1)
+            x_p2 = self.action_p2_expand(x_p2)  # (nt,c,1,1) 扩张通道
+            x_p2 = self.sigmoid(x_p2)
+            x_p2 = x * x_p2 + x
+
+            x3 = self.action_p3_squeeze(x)
+            x3 = self.action_p3_bn1(x3)
+            nt, c, h, w = x3.size()
+            x3_plus0, _ = x3.view(n_batch, self.n_segment, c, h, w).split([self.n_segment - 1, 1], dim=1)
+            # (n,t-1,c/16,h,w)  (n,1,c/16,h,w)
+            x3_plus1 = self.action_p3_conv1(x3)
+            _, x3_plus1 = x3_plus1.view(n_batch, self.n_segment, c, h, w).split([1, self.n_segment - 1], dim=1)
+            # (n,1,c/16,h,w)  (n,t-1,c/16,h,w)
+            x_p3 = x3_plus1 - x3_plus0  # 这里对应conv(x(t+1)) - x(t) 的操作 (n,t-1,c/16,h,w)
+
+            x_p3 = F.pad(x_p3, self.pad, mode="constant", value=0)  # (n,t,c/16,h,w) 填充第二维
+            x_p3 = self.avg_pool(x_p3.view(nt, c, h, w))  # (nt,c/16,1,1)
+
+            x_p3 = self.action_p3_expand(x_p3)  # (nt,c,1,1)
+            x_p3 = self.sigmoid(x_p3)
+            x_p3 = x * x_p3 + x
+
+            x = x_p1 + x_p2 + x_p3
 
         out = self.relu(self.bn1(self.conv1(x)))
         out = self.relu(self.bn2(self.conv2(out)))
@@ -455,7 +533,7 @@ class CLIP(nn.Module):
                     dropout=0.5,
                     img_feature_dim=224,
                     pretrain='imagenet',  # 'imagenet' or False
-                    consensus_type='identity',
+                    consensus_type='avg',
                     fc_lr5=True
                 )
                 self.visual.new_fc = nn.Linear(2048, 1024)
@@ -586,7 +664,7 @@ def convert_weights(model: nn.Module):
     """Convert applicable model parameters to fp16"""
 
     def _convert_weights_to_fp16(l):
-        if isinstance(l, (nn.Conv1d, nn.Conv2d, nn.Linear, nn.Conv3d)):
+        if isinstance(l, (nn.Conv1d, nn.Conv2d, nn.Linear, nn.Conv3d, nn.GroupNorm)):
             l.weight.data = l.weight.data.half()
             if l.bias is not None:
                 l.bias.data = l.bias.data.half()
@@ -673,6 +751,7 @@ def build_model(state_dict: dict, tsm=False, T=8, dropout=0., joint=False, emb_d
         for k in list(state_dict.keys()):
             if not k.find("visual") > -1:
                 state_dict.pop(k)
+        del state_dict['visual.conv1.weight']
         model.load_state_dict(state_dict, strict=False)
 
     ##test

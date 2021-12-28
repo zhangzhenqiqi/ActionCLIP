@@ -174,7 +174,8 @@ class Action_DATASETS(data.Dataset):
             p = int(seg_ind)
             try:
                 # seg_imgs = self._load_image('/home/10501001/datasets/K400/rawframes/' + record.path, p)
-                seg_imgs = self._load_image(record.path.lower(), p)
+                ###由于hmdb51文件名字大小写，这里暂时加了一句.lower()，对K400会有影响！！
+                seg_imgs = self._load_image(record.path, p)
             except OSError:
                 print('ERROR: Could not read image "{}"'.format(
                     '/home/10501001/datasets/K400/rawframes/' + record.path))

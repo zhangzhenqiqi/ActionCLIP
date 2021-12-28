@@ -1,4 +1,4 @@
-pretrain: '/home/10501001/projects/ActionCLIP/exp/clip_k400/RN50/kinetics400/20211209_225150/model_best.pt' #这里指的是训练好的action-clip
+#pretrain: '/home/10501001/projects/ActionCLIP/exp/clip_k400/RN50/kinetics400/20211209_225150/model_best.pt' #这里指的是训练好的action-clip
 #pretrain: '/home/10501001/models/vit-16.pt'
 resume:
 seed: 1024
@@ -25,7 +25,7 @@ data:
     N: 0 #2
     M: 0  #9
 network:
-  arch: RN50  #ViT-B/32 ViT-B/16
+  arch: ViT-B/16  #ViT-B/32 ViT-B/16
   init: False
   drop_out: 0.0
   emb_dropout: 0.0
@@ -36,15 +36,16 @@ network:
   describe:
   is_action: False #是否添加action模块
   tsm: False
-  use_sis: True
+  use_sis: False
   use_nam: False
 solver:
   type: cosine
-  epochs: 400
+  epochs: 50
   start_epoch: 0
   epoch_offset: 0
   optim: adamw
-  lr: 5.e-6
+#  lr: 5.e-6
+  lr: 1.e-3
   lr_warmup_step: 5
   momentum: 0.9
   weight_decay: 0.2

@@ -83,6 +83,28 @@ def available_models() -> List[str]:
     return list(_MODELS.keys())
 
 
+def load_statedict(name: str, device: Union[str, torch.device] = "cuda" if torch.cuda.is_available() else "cpu",
+                   jit=False):
+    if name in _MODELS:
+        model_path = _download(_MODELS[name])
+    elif os.path.isfile(name):
+        model_path = name
+    else:
+        raise RuntimeError(f"Model {name} not found; available models = {available_models()}")
+
+    try:
+        # loading JIT archive
+        model = torch.jit.load(model_path, map_location=device if jit else "cpu").eval()
+        state_dict = None
+    except RuntimeError:
+        # loading saved state dict
+        if jit:
+            warnings.warn(f"File {model_path} is not a JIT archive. Loading as a state dict instead")
+            jit = False
+        state_dict = torch.load(model_path, map_location="cpu")
+    return state_dict
+
+
 def load(name: str, device: Union[str, torch.device] = "cuda" if torch.cuda.is_available() else "cpu", jit=True,
          tsm=False, joint=False, T=8, dropout=0., emb_dropout=0., pretrain=True, is_action=False, use_sis=False,
          use_nam=False):

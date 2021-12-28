@@ -114,7 +114,8 @@ class VisualTransformer(nn.Module):
         in_channels = 3
         n_patches = (input_resolution // patch_size) * (input_resolution // patch_size)
         if self.hybrid:
-            self.hybrid_model = ResNetV2((3, 4, 9), 1)
+            self.hybrid_model = ModifiedResNetV2(layers=(3, 4, 6, 3), output_dim=1024, heads=32
+                                                 , input_resolution=224, width=64)
             in_channels = self.hybrid_model.width * 16
             grid_size = 14
             patch_size = 1
@@ -384,6 +385,82 @@ class AttentionPool2d(nn.Module):
         )
 
         return x[0]
+
+class ModifiedResNetV2(nn.Module):
+    """
+    A ResNet class that is similar to torchvision's but contains the following changes:
+    - There are now 3 "stem" convolutions as opposed to 1, with an average pool instead of a max pool.
+    - Performs anti-aliasing strided convolutions, where an avgpool is prepended to convolutions with stride > 1
+    - The final pooling layer is a QKV attention instead of an average pool
+    """
+
+    def __init__(self, layers, output_dim, heads, input_resolution=224, width=64, use_sis=False, use_nam=False):
+        super().__init__()
+        self.output_dim = output_dim
+        self.input_resolution = input_resolution
+        self.use_sis = use_sis
+        self.use_nam = use_nam
+
+        # action head: ste
+        self.action_p1_conv1 = nn.Conv3d(1, 1, kernel_size=(3, 3, 3), stride=(1, 1, 1), bias=False, padding=(1, 1, 1))
+        self.sigmoid = nn.Sigmoid()
+
+        if use_sis:
+            # se in se
+            self.act_in_act_conv = nn.Conv2d(64, 2048, kernel_size=3, stride=8)
+            self.act_in_act_bn = nn.BatchNorm2d(2048)
+            self.act_in_act_relu = nn.ReLU(inplace=True)
+
+        # the 3-layer stem
+        self.conv1 = nn.Conv2d(3, width // 2, kernel_size=3, stride=2, padding=1, bias=False)
+        self.bn1 = nn.BatchNorm2d(width // 2)
+        self.conv2 = nn.Conv2d(width // 2, width // 2, kernel_size=3, padding=1, bias=False)
+        self.bn2 = nn.BatchNorm2d(width // 2)
+        self.conv3 = nn.Conv2d(width // 2, width, kernel_size=3, padding=1, bias=False)
+        self.bn3 = nn.BatchNorm2d(width)
+        self.avgpool = nn.AvgPool2d(2)
+        self.relu = nn.ReLU(inplace=True)
+
+        # residual layers
+        self._inplanes = width  # this is a *mutable* variable used during construction
+        self.layer1 = self._make_layer(width, layers[0])
+        self.layer2 = self._make_layer(width * 2, layers[1], stride=2)
+        self.layer3 = self._make_layer(width * 4, layers[2], stride=2)
+        self.layer4 = self._make_layer(width * 8, layers[3], stride=2)
+
+        embed_dim = width * 32  # the ResNet feature dimension
+        self.attnpool = AttentionPool2d(input_resolution // 32, embed_dim, heads, output_dim)
+
+    def _make_layer(self, planes, blocks, stride=1):
+        layers = [Bottleneck(self._inplanes, planes, stride, use_nam=self.use_nam)]
+
+        self._inplanes = planes * Bottleneck.expansion
+        for _ in range(1, blocks):
+            layers.append(Bottleneck(self._inplanes, planes, use_nam=self.use_nam))
+
+        return nn.Sequential(*layers)
+
+    def forward(self, x):
+        def stem(x):
+            for conv, bn in [(self.conv1, self.bn1), (self.conv2, self.bn2), (self.conv3, self.bn3)]:
+                x = self.relu(bn(conv(x)))
+            x = self.avgpool(x)
+            return x
+
+        x = x.type(self.conv1.weight.dtype)
+        x = stem(x)
+        x = self.layer1(x)
+        x = self.layer2(x)
+        x = self.layer3(x)
+        # print('debug7887:',x.size())
+        # x = self.layer4(x)
+
+        # if self.use_sis:
+        #     x = x + x_act_in
+
+        # x = self.attnpool(x)
+
+        return x
 
 
 class ModifiedResNet(nn.Module):

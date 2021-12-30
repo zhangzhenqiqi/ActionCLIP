@@ -23,7 +23,7 @@ try:
 except ImportError:
     BICUBIC = Image.BICUBIC
 
-__all__ = ["available_models", "load", "tokenize"]
+__all__ = ["available_models", "load", "tokenize","load_statedict"]
 _tokenizer = _Tokenizer()
 
 _MODELS = {
@@ -102,7 +102,14 @@ def load_statedict(name: str, device: Union[str, torch.device] = "cuda" if torch
             warnings.warn(f"File {model_path} is not a JIT archive. Loading as a state dict instead")
             jit = False
         state_dict = torch.load(model_path, map_location="cpu")
-    return state_dict
+    d = model.state_dict()
+    l = []
+    for k in d.keys():
+        if k.startswith('visual'):
+            l.append(k)
+    for k in l:
+        d[k[7:]] = d.pop(k)
+    return d
 
 
 def load(name: str, device: Union[str, torch.device] = "cuda" if torch.cuda.is_available() else "cpu", jit=True,

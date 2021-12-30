@@ -31,9 +31,11 @@ echo 'ActionClip boot~'
 #  exit
 #fi
 
-config=configs/ucf101/ucf_train.yaml
+#config=configs/ucf101/ucf_train.yaml
+#config=configs/ucf101/ucf_train_rn50x16.yaml
 #config=configs/k400/k400_train.yaml
 #config=configs/hmdb51/hmdb_train.yaml
+config=configs/hmdb51/hmdb_train_rn50x16.yaml
 #config=configs/sthv2/sthv2_train.yaml
 #config=configs/sthv2/sthv2_train_rn50.yaml
 type=$(python -c "import yaml;print(yaml.load(open('${config}'))['network']['type'])")

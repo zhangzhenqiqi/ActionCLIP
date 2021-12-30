@@ -20,12 +20,12 @@ data:
   #    val_list: '/public/home/ock/video_clip/video-clip/lists/ucf101/val_rgb_split1.txt'
   label_list: 'lists/ucf_labels.csv'
   index_bias: 1
-  input_size: 224
+  input_size: 384
   randaug:
     N: 0 #2
     M: 0  #9
 network:
-  arch: ViT-B/16  #ViT-B/32 ViT-B/16
+  arch: RN50x16  #ViT-B/32 ViT-B/16
   init: False
   drop_out: 0.0
   emb_dropout: 0.0

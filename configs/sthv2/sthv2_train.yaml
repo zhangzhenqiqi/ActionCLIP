@@ -1,5 +1,5 @@
 resume:
-pretrain:
+#pretrain: '/home/10501001/projects/ActionCLIP/exp/clip_k400/RN50/kinetics400/20211209_225150/model_best.pt' #这里指的是训练好的action-clip
 seed: 1024
 data:
   dataset: sth-sthv2
@@ -10,8 +10,8 @@ data:
   workers: 16
   num_classes: 174
   image_tmpl: 'img_{:05d}.jpg'
-#  train_list: '/home/10501001/datasets/K400/train.list'
-#  val_list: '/home/10501001/datasets/K400/val.list'
+  #  train_list: '/home/10501001/datasets/K400/train.list'
+  #  val_list: '/home/10501001/datasets/K400/val.list'
   train_list: '/home/10501001/datasets/sthv2/TrainTestValList/train_videofolder.txt'
   val_list: '/home/10501001/datasets/sthv2/TrainTestValList/val_videofolder.txt'
   label_list: 'lists/sthv2_labels.csv'
@@ -22,7 +22,7 @@ data:
     M: 9  #9
   random_shift: True
 network:
-  arch: RN50  #ViT-B/32 ViT-B/16
+  arch: ViT-B/16  #ViT-B/32 ViT-B/16
   init: False
   tsm: False
   drop_out: 0.0
@@ -36,7 +36,7 @@ network:
   use_nam: False
 solver:
   type: cosine
-  epochs: 50
+  epochs: 500
   start_epoch: 0
   epoch_offset: 0
   optim: adamw

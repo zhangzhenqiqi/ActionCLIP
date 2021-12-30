@@ -26,6 +26,4 @@
 79236 clip-resnet + ste,sthsthv2,no-pretrain
 79259 ActionNet ,sthv2,nopre
 80121 clip-rn50+ste,ce,me
-80258 clip-vitb16,not use params
-80260 clip-rn50,not use params
-80266 clip-rn50,adjust lr
+80580 clip-rn50+vit16 ucf

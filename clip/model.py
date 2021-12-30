@@ -116,7 +116,7 @@ class VisualTransformer(nn.Module):
         if self.hybrid:
             self.hybrid_model = ModifiedResNetV2(layers=(3, 4, 6, 3), output_dim=1024, heads=32
                                                  , input_resolution=224, width=64)
-            in_channels = self.hybrid_model.width * 16
+            in_channels = 64 * 16
             grid_size = 14
             patch_size = 1
             n_patches = (input_resolution // 16) * (input_resolution // 16)
@@ -216,7 +216,7 @@ class Att(nn.Module):
 class Bottleneck(nn.Module):
     expansion = 4
 
-    def __init__(self, inplanes, planes, stride=1, use_nam=True, use_action=True):
+    def __init__(self, inplanes, planes, stride=1, use_nam=False, use_action=False):
         ##use_action: 是否添加action
         super().__init__()
         self.use_nam = use_nam
@@ -386,6 +386,7 @@ class AttentionPool2d(nn.Module):
 
         return x[0]
 
+
 class ModifiedResNetV2(nn.Module):
     """
     A ResNet class that is similar to torchvision's but contains the following changes:
@@ -401,9 +402,6 @@ class ModifiedResNetV2(nn.Module):
         self.use_sis = use_sis
         self.use_nam = use_nam
 
-        # action head: ste
-        self.action_p1_conv1 = nn.Conv3d(1, 1, kernel_size=(3, 3, 3), stride=(1, 1, 1), bias=False, padding=(1, 1, 1))
-        self.sigmoid = nn.Sigmoid()
 
         if use_sis:
             # se in se
@@ -829,6 +827,9 @@ def build_model(state_dict: dict, tsm=False, T=8, dropout=0., joint=False, emb_d
             if not k.find("visual") > -1:
                 state_dict.pop(k)
         del state_dict['visual.conv1.weight']
+        from clip.clip import load_statedict
+        h_state_dict = load_statedict('RN50')
+        model.visual.hybrid_model.load_state_dict(h_state_dict, strict=False)
         model.load_state_dict(state_dict, strict=False)
 
     ##test
